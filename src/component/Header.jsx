@@ -1,15 +1,20 @@
+"use client";
+
 import React from "react";
+import { Dropdown } from "flowbite-react";
+import { HiMenu } from "react-icons/hi";
+import Mobilemenu from "./Mobilemenu";
 
 const Header = () => {
   return (
     <header className="w-full ">
       {/* nav */}
-      <nav className="flex items-center justify-between py-4 pl-8 pr-6 shadow-lg">
+      <nav className="flex items-center justify-between py-2 pl-8 pr-6 shadow-lg ">
         <a href="/">
           {" "}
           <img src="logo.png" alt="" />
         </a>
-        <ul className="flex items-center justify-between text-gray-600">
+        <ul className="items-center justify-between hidden text-gray-600 md:flex">
           <li className="mr-6">
             <a href="/">HTML</a>
           </li>
@@ -26,9 +31,12 @@ const Header = () => {
             <a href="/">Teams</a>
           </li>
         </ul>
-        <button className="px-4 py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700">
-          Sign In
+        <button className=" hidden md:block px-4 py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700">
+          Get Started
         </button>
+
+        {/* mobile nav */}
+        <Mobilemenu />
       </nav>
     </header>
   );
