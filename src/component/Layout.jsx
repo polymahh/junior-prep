@@ -1,15 +1,15 @@
-import React from 'react'
-import Header from './Header'
+import React from "react";
+import Header from "./Header";
+import Authmodel from "./Registermodal";
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
   return (
     <>
-    <Header />
-    <div>
-      {children}
-    </div>
+      <Header />
+      <div>{children}</div>
+      <Authmodel />
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;
