@@ -1,6 +1,6 @@
 import React from "react";
 import Header from "./Header";
-import Authmodel from "./Registermodal";
+import Authmodel from "./authModal/Registermodal";
 
 const Layout = ({ children }) => {
   return (
