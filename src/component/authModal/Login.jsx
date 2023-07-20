@@ -1,6 +1,10 @@
+import { Button } from "flowbite-react";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setView } from "../../reduxToolkit/features/modalSlice";
 
 const Login = () => {
+  const dispatch = useDispatch();
   return (
     <form className="flex flex-col items-center w-full gap-10 text-gray-900">
       <div>
@@ -25,22 +29,37 @@ const Login = () => {
           type="password"
           placeholder="Password"
         />
-        <button className=" self-center px-6  text-sm md:text-base  py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700">
+        <button
+          type="submit"
+          className=" self-center px-6  text-sm md:text-base  py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700"
+        >
           Login
         </button>
         <div className="text-xs text-center">
           {/* forgot password */}
           <p>
             <span>Forgot your password?</span>
-            <a className="ml-1 text-blue-700" href="/">
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(setView({ view: "Reset Password" }));
+              }}
+              className="ml-1 text-blue-700"
+            >
               Reset
-            </a>
+            </button>
           </p>
           <p>
             <span>New here?</span>
-            <a className="ml-1 text-blue-700" href="/">
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(setView({ view: "Signup" }));
+              }}
+              className="ml-1 text-blue-700"
+            >
               SIGN UP
-            </a>
+            </button>
           </p>
         </div>
       </div>

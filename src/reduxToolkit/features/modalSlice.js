@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const views = ["login", "register", "reset"];
+const views = ["Login", "Signup", "Reset Password"];
 const initialState = {
-  view: "login",
+  view: "Login",
   isOpen: false,
 };
 
@@ -19,11 +19,12 @@ const modalSlice = createSlice({
       state.isOpen = false;
     },
     setView: (state, action) => {
-      if (!views.includes(action.payload)) {
-        state.view = "login";
+      console.log(action.payload.view);
+      if (!views.includes(action.payload.view)) {
+        state.view = "Login";
         return;
       }
-      state.view = action.payload;
+      state.view = action.payload.view;
     },
   },
 });

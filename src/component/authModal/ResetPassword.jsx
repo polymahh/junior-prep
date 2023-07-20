@@ -1,6 +1,9 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { setView } from "../../reduxToolkit/features/modalSlice";
 
 const ResetPassword = () => {
+  const dispatch = useDispatch();
   return (
     <form className="flex flex-col items-center w-full gap-4 text-gray-900">
       <div className="flex flex-col gap-4 items-center max-w-[230px] text-center">
@@ -23,13 +26,27 @@ const ResetPassword = () => {
           Reset Password
         </button>
         <div className="text-xs text-center">
-          <a className="ml-1 font-semibold text-blue-700" href="/">
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(setView({ view: "Login" }));
+            }}
+            className="ml-1 font-semibold text-blue-700"
+            href="/"
+          >
             LOGIN
-          </a>
+          </button>
           <span> - OR -</span>
-          <a className="ml-1 font-semibold text-blue-700" href="/">
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(setView({ view: "Signup" }));
+            }}
+            className="ml-1 font-semibold text-blue-700"
+            href="/"
+          >
             SIGN UP
-          </a>
+          </button>
         </div>
       </div>
     </form>
