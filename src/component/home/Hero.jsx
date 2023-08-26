@@ -1,6 +1,9 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { openModal } from "../../reduxToolkit/features/modalSlice";
 
 const Hero = () => {
+  const dispatch = useDispatch();
   return (
     <div className="flex flex-col px-3 pt-12 overflow-x-hidden sm:px-8 lg:items-center lg:justify-center lg:pt-8 lg:flex-row">
       <div className="flex flex-col gap-4">
@@ -14,7 +17,10 @@ const Hero = () => {
           with our comprehensive collection of flashcards, you'll gain the
           knowledge and confidence needed to impress potential employers.
         </p>
-        <button className="px-4 my-4 text-sm md:text-base self-start py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700">
+        <button
+          onClick={() => dispatch(openModal())}
+          className="px-4 my-4 text-sm md:text-base self-start py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700"
+        >
           Get Started
         </button>
       </div>

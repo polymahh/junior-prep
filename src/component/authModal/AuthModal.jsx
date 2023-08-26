@@ -13,13 +13,8 @@ export default function Authmodel() {
   const view = useSelector((store) => store.modal.view);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   // console.log(view);
-  // }, [view]);
-
   return (
     <>
-      <Button onClick={() => dispatch(openModal())}>Toggle modal</Button>
       <Modal
         show={isOpen}
         onClose={() => dispatch(closeModal())}

@@ -1,11 +1,12 @@
 "use client";
 
 import React from "react";
-import { Dropdown } from "flowbite-react";
-import { HiMenu } from "react-icons/hi";
 import Mobilemenu from "./Mobilemenu";
+import { useDispatch } from "react-redux";
+import { openModal } from "../reduxToolkit/features/modalSlice";
 
 const Header = () => {
+  const dispatch = useDispatch();
   return (
     <header className="w-full ">
       {/* nav */}
@@ -31,7 +32,10 @@ const Header = () => {
             <a href="/">Teams</a>
           </li>
         </ul>
-        <button className=" hidden md:block px-4 py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700">
+        <button
+          onClick={() => dispatch(openModal())}
+          className=" hidden md:block px-4 py-2 font-bold text-white bg-[#57007B] rounded hover:bg-blue-700"
+        >
           Get Started
         </button>
 
