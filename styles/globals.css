@@ -78,4 +78,30 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  .bg-gradient-linear {
+    background: hsla(279, 83%, 70%, 1);
+
+    background: linear-gradient(
+      0deg,
+      hsla(279, 83%, 70%, 1) 0%,
+      hsla(321, 90%, 70%, 1) 100%
+    );
+
+    background: -moz-linear-gradient(
+      0deg,
+      hsla(279, 83%, 70%, 1) 0%,
+      hsla(321, 90%, 70%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      0deg,
+      hsla(279, 83%, 70%, 1) 0%,
+      hsla(321, 90%, 70%, 1) 100%
+    );
+
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#C471F2", endColorstr="#F76CC6", GradientType=1 );
+    /* ----------------------------------- */
+    -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 0.55), transparent 70%);
+    mask-image: radial-gradient(rgba(0, 0, 0, 0.55), transparent 70%);
+  }
 }
