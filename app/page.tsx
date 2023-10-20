@@ -14,7 +14,7 @@ export default function IndexPage() {
           <span className="whitespace-nowrap">Junior-Prep</span>.
         </h1>
 
-        <p className="max-w-[700px] text- text-lg text-accent-foreground">
+        <p className=" max-w-[700px]  text-lg">
           Boost Confidence with The Ultimate Interview Preparation Resource
           Empowering Juniors to Excel.
         </p>
@@ -25,13 +25,15 @@ export default function IndexPage() {
           target="_blank"
           rel="noreferrer"
           className={buttonVariants({
-            className: "px-11 py-6 text-xl ",
+            variant: "hero",
+            size: "hero",
+            className: "shadow-md shadow-fuchsia-700 font-semibold",
           })}
         >
           Get Started
         </Link>
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center ">
         <Image src={"/images/scr.webp"} alt="screen" height={500} width={900} />
       </div>
     </section>

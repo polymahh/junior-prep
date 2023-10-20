@@ -31,6 +31,9 @@
     --destructive: 0 100% 50%;
     --destructive-foreground: 210 40% 98%;
 
+    --hero: 222 47.4% 11.2%;
+    --hero-foreground: 0 0% 98%;
+
     --ring: 215 20.2% 65.1%;
 
     --radius: 0.5rem;
@@ -61,6 +64,9 @@
     --secondary: 222.2 47.4% 11.2%;
     --secondary-foreground: 210 40% 98%;
 
+    --hero: 0 0% 982%;
+    --hero-foreground: 295 72% 40%;
+
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
 
@@ -79,6 +85,33 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   .bg-gradient-linear {
+    background: hsla(279, 83%, 70%, 1);
+
+    background: linear-gradient(
+      180deg,
+      hsla(280, 100%, 50%, 1) 0%,
+      hsla(0, 100%, 50%, 1) 100%
+    );
+
+    background: -moz-linear-gradient(
+      180deg,
+      hsla(280, 100%, 50%, 1) 0%,
+      hsla(0, 100%, 50%, 1) 100%
+    );
+
+    background: -webkit-linear-gradient(
+      180deg,
+      hsla(280, 100%, 50%, 1) 0%,
+      hsla(0, 100%, 50%, 1) 100%
+    );
+
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#C471F2", endColorstr="#F76CC6", GradientType=1 );
+    /* ----------------------------------- */
+    -webkit-mask-image: radial-gradient(rgba(0, 0, 0, 0.55), transparent 70%);
+    mask-image: radial-gradient(rgba(0, 0, 0, 0.55), transparent 70%);
+  }
+
+  .dark .bg-gradient-linear {
     background: hsla(279, 83%, 70%, 1);
 
     background: linear-gradient(
