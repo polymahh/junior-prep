@@ -16,7 +16,7 @@ export function PublicLayout({ children }) {
           href="https://github.com/polymahh"
           target="_blank"
           rel="noreferrer"
-          className="underline text-fuchsia-700"
+          className="text-fuchsia-700 underline"
         >
           Othmane
         </Link>
