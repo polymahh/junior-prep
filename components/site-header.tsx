@@ -8,10 +8,10 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background">
-      <div className="container flex items-center h-16 space-x-4 sm:justify-between sm:space-x-0">
+    <header className="w-full border-b  bg-background">
+      <div className="container flex h-16 items-center space-x-4 sm:justify-between sm:space-x-0">
         <MainNav items={siteConfig.mainNav} />
-        <div className="flex items-center justify-end flex-1 space-x-4">
+        <div className="flex flex-1 items-center justify-end space-x-4">
           <nav className="flex items-center space-x-2">
             <Link
               href={siteConfig.links.github}
@@ -24,7 +24,7 @@ export function SiteHeader() {
                   variant: "ghost",
                 })}
               >
-                <Icons.gitHub className="w-8 h-8" />
+                <Icons.gitHub className="h-8 w-8" />
                 <span className="sr-only">GitHub</span>
               </div>
             </Link>
@@ -39,7 +39,7 @@ export function SiteHeader() {
                   variant: "ghost",
                 })}
               >
-                <Icons.discord className="w-8 h-8 fill-current" />
+                <Icons.discord className="h-8 w-8 fill-current" />
                 <span className="sr-only">Discord</span>
               </div>
             </Link>

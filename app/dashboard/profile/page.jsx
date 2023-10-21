@@ -2,12 +2,12 @@ import React from "react"
 
 import { PrivateLayout } from "@/components/templates/private-layout"
 
-function dashboard() {
+const Profile = () => {
   return (
     <PrivateLayout>
-      <div>dashboard</div>
+      <div>Profile</div>
     </PrivateLayout>
   )
 }
 
-export default dashboard
+export default Profile
