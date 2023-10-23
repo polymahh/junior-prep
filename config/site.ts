@@ -16,4 +16,30 @@ export const siteConfig = {
     login: "/login",
     register: "/register",
   },
+  dashboard:[
+    {
+      title:"profile",
+      href:"/dashboard/profile"
+    },
+    {
+      title:"javascript",
+      href:"/dashboard/languages/javascript"
+    },
+    {
+      title:"react",
+      href:"/dashboard/languages/react"
+    },
+    {
+      title:"html",
+      href:"/dashboard/languages/html"
+    },
+    {
+      title:"css",
+      href:"/dashboard/languages/css"
+    },
+    
+    
+  ]
+    
+  
 }

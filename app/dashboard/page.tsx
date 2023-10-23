@@ -1,13 +1,6 @@
-import React from "react"
+import React, { ReactNode } from "react"
 
-import { PrivateLayout } from "@/components/templates/private-layout"
-
-function dashboard() {
-  return (
-    <PrivateLayout>
-      <div>dashboard</div>
-    </PrivateLayout>
-  )
+const Dashboard = () => {
+  return <div>Have a good coding</div>
 }
-
-export default dashboard
+export default Dashboard

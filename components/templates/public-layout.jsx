@@ -1,7 +1,7 @@
 import React from "react"
 import Link from "next/link"
 
-import { SiteFooter } from "@/components/site-footer"
+import { SiteFooter } from "@/components/SiteFooter"
 import { SiteHeader } from "@/components/site-header"
 
 export function PublicLayout({ children }) {
