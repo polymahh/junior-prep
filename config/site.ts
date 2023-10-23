@@ -16,11 +16,15 @@ export const siteConfig = {
     login: "/login",
     register: "/register",
   },
-  dashboard:[
-    {
-      title:"profile",
-      href:"/dashboard/profile"
-    },
+  profile:{
+    title:"profile",
+    href:"/dashboard/profile"
+  },
+  settings:{
+    title:"settings",
+    href:"/dashboard/settings"
+  },
+  languages:[
     {
       title:"javascript",
       href:"/dashboard/languages/javascript"
@@ -37,8 +41,6 @@ export const siteConfig = {
       title:"css",
       href:"/dashboard/languages/css"
     },
-    
-    
   ]
     
   

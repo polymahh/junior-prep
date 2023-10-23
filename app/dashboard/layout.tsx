@@ -17,26 +17,77 @@ export default function DashboardLayout({
             <Icons.logo className="flex h-8 w-44" />
           </Link>
           <div className="flex flex-col gap-2">
-            {siteConfig.dashboard.map((link) => {
-              const Icon = Icons[link.title as keyof typeof Icons]
+            <Link
+              className={buttonVariants({
+                variant: "ghost",
+                size: "dashboardbtn",
+                className: "px-2",
+              })}
+              href={siteConfig.profile.href}
+            >
+              <div className="flex w-full items-center justify-start gap-4">
+                <Icons.profile className="h-8 rounded-sm" />
+                <span className="text-lg capitalize">
+                  {siteConfig.profile.title}
+                </span>
+              </div>
+            </Link>
+            <div className="flex flex-col gap-4">
+              <span className="pl-2 text-muted-foreground">
+                {"</> Languages"}
+              </span>
+              <div className="relative flex flex-col gap-3 pl-8">
+                <div className=" absolute -top-2 left-4 h-full border-l border-dashed" />
+                {siteConfig.languages.map((link) => {
+                  const Icon = Icons[link.title as keyof typeof Icons]
 
-              return (
-                <Link
-                  key={link.title}
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "lg",
-                    className: "px-2",
-                  })}
-                  href={link.href}
-                >
-                  <div className="flex w-full gap-4 items-center justify-start">
-                    <Icon className="h-8 h-8 rounded-sm" />
-                    <span className="text-lg capitalize">{link.title}</span>
-                  </div>
-                </Link>
-              )
-            })}
+                  return (
+                    <Link
+                      key={link.title}
+                      className={buttonVariants({
+                        variant: "ghost",
+                        size: "dashboardbtn",
+                        className: "px-2",
+                      })}
+                      href={link.href}
+                    >
+                      <div className="flex w-full items-center justify-start gap-4">
+                        <Icon className="h-8 rounded-sm" />
+                        <span className="text-lg capitalize">{link.title}</span>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+            <Link
+              className={buttonVariants({
+                variant: "ghost",
+                size: "dashboardbtn",
+                className: "px-2",
+              })}
+              href={siteConfig.settings.href}
+            >
+              <div className="flex w-full items-center justify-start gap-4">
+                <Icons.settings className="h-8 rounded-sm" />
+                <span className="text-lg capitalize">
+                  {siteConfig.settings.title}
+                </span>
+              </div>
+            </Link>
+            <Link
+              className={buttonVariants({
+                variant: "ghost",
+                size: "dashboardbtn",
+                className: "px-2 ",
+              })}
+              href="/"
+            >
+              <div className="flex w-full items-center justify-start gap-4">
+                <Icons.logout className="h-8 rounded-sm" />
+                <span className="text-lg capitalize">Logout</span>
+              </div>
+            </Link>
           </div>
         </div>
         <div className="flex-1">{children}</div>
