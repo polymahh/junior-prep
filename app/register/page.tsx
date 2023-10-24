@@ -8,18 +8,10 @@ import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 import { Button, buttonVariants } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -66,7 +58,7 @@ function Register() {
   }
   return (
     <PublicLayout>
-      <div className="flex h-full flex-col items-center justify-center gap-10 pt-20">
+      <div className="flex h-full flex-col items-center justify-center gap-10 pt-12">
         <div className=" flex flex-col items-center">
           <Icons.logo />
           <h2 className="text-muted-foreground">Create Your Account</h2>
@@ -84,14 +76,14 @@ function Register() {
                 className={buttonVariants({
                   variant: "secondary",
                   size: "lg",
-                  className: "py-2 gap-6 h-12 text-xl",
+                  className: "py-2 gap-4 h-12",
                 })}
                 href={"/"}
               >
                 <Image
                   src={"/images/googlelogo.png"}
-                  height={32}
-                  width={32}
+                  height={24}
+                  width={24}
                   alt="Log in with Google"
                 />
                 <span>Sign up with Google</span>
@@ -122,7 +114,11 @@ function Register() {
                 <FormItem className="w-full">
                   <FormLabel className="text-lg">Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="email@company.com" {...field} />
+                    <Input
+                      type="email"
+                      placeholder="email@company.com"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,7 +131,7 @@ function Register() {
                 <FormItem className="w-full">
                   <FormLabel className="text-lg">Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="********" {...field} />
+                    <Input type="password" placeholder="********" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -148,23 +144,44 @@ function Register() {
                 <FormItem className="w-full ">
                   <FormLabel className="text-lg">Confirm Password</FormLabel>
                   <FormControl>
-                    <Input placeholder="********" {...field} />
+                    <Input type="password" placeholder="********" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
+            <div className="w-full text-sm flex justify-between">
+              <div className="items-center flex space-x-2">
+                <Checkbox id="terms1" />
+                <label
+                  htmlFor="terms1"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Remember me
+                </label>
+              </div>
+              <Link className="text-hero " href={"/"}>
+                Forgot Password?
+              </Link>
+            </div>
             <Button
               type="submit"
               className={buttonVariants({
                 variant: "outline",
-                className: "py-2  text-xl w-full",
+                className: "py-4 text-lg w-full",
               })}
             >
               Sign up
             </Button>
           </form>
+          <div className="flex gap-2">
+            <p className="text-muted-foreground text-sm">
+              Already have an account?
+            </p>
+            <Link className="text-hero text-sm" href={"/"}>
+              Login here.
+            </Link>
+          </div>
         </Form>
       </div>
     </PublicLayout>
