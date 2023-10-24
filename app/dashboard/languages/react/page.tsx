@@ -1,4 +1,4 @@
 const React = () => {
-  return <div>reacg</div>
+  return <div>react</div>
 }
 export default React

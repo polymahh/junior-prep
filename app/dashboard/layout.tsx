@@ -12,11 +12,11 @@ export default function DashboardLayout({
   return (
     <section>
       <div className=" flex flex-1  ">
-        <div className="h-screen border-r p-4">
-          <Link href="/" className="flex items-center space-x-2 pb-10">
+        <div className="flex h-screen flex-col border-r p-4">
+          <Link href="/" className="flex items-center space-x-2 pb-8">
             <Icons.logo className="flex h-8 w-44" />
           </Link>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-1 flex-col gap-2">
             <Link
               className={buttonVariants({
                 variant: "ghost",
@@ -32,7 +32,7 @@ export default function DashboardLayout({
                 </span>
               </div>
             </Link>
-            <div className="flex flex-col gap-4">
+            <div className=" flex flex-col gap-4">
               <span className="pl-2 text-muted-foreground">
                 {"</> Languages"}
               </span>
@@ -64,7 +64,7 @@ export default function DashboardLayout({
               className={buttonVariants({
                 variant: "ghost",
                 size: "dashboardbtn",
-                className: "px-2",
+                className: "px-2 ",
               })}
               href={siteConfig.settings.href}
             >
@@ -75,19 +75,21 @@ export default function DashboardLayout({
                 </span>
               </div>
             </Link>
-            <Link
-              className={buttonVariants({
-                variant: "ghost",
-                size: "dashboardbtn",
-                className: "px-2 ",
-              })}
-              href="/"
-            >
-              <div className="flex w-full items-center justify-start gap-4">
-                <Icons.logout className="h-8 rounded-sm" />
-                <span className="text-lg capitalize">Logout</span>
-              </div>
-            </Link>
+            <div className=" flex w-full grow items-end">
+              <Link
+                className={buttonVariants({
+                  variant: "ghost",
+                  size: "dashboardbtn",
+                  className: "px-2 w-full ",
+                })}
+                href="/"
+              >
+                <div className="flex w-full items-center justify-start gap-4 self-end">
+                  <Icons.logout className="h-8 rounded-sm" />
+                  <span className="text-lg capitalize">Logout</span>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
         <div className="flex-1">{children}</div>
