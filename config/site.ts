@@ -27,19 +27,19 @@ export const siteConfig = {
   languages:[
     {
       title:"javascript",
-      href:"/dashboard/languages/javascript"
+      href:"/dashboard/javascript"
     },
     {
       title:"react",
-      href:"/dashboard/languages/react"
+      href:"/dashboard/react"
     },
     {
       title:"html",
-      href:"/dashboard/languages/html"
+      href:"/dashboard/html"
     },
     {
       title:"css",
-      href:"/dashboard/languages/css"
+      href:"/dashboard/css"
     },
   ]
     

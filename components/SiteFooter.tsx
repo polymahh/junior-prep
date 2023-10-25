@@ -3,14 +3,15 @@ import Link from "next/link"
 
 export function SiteFooter() {
   return (
-    <div className="flex justify-end p-4">
+    <div className="flex justify-end gap-1 p-4">
+      <span>Made with ♥ by</span>
       <Link
         href="https://github.com/polymahh"
         target="_blank"
         rel="noreferrer"
-        className=" text-fuchsia-700"
+        className="text-highlight"
       >
-        Made with ♥ by Othmane
+        Othmane
       </Link>
     </div>
   )
