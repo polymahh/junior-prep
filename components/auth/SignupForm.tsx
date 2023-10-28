@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { auth, fireStore } from "@/firebase/clientApp"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,6 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+
+import OAuthButtons from "./OAuthButton"
 
 const registerSchema = z
   .object({
@@ -68,24 +69,7 @@ const SignupForm = () => {
         className="flex w-full flex-col items-center space-y-6 px-8 sm:w-[600px] "
       >
         <div>
-          <Link
-            target="_blank"
-            rel="noreferrer"
-            className={buttonVariants({
-              variant: "secondary",
-              size: "lg",
-              className: "py-2 gap-4 h-12",
-            })}
-            href={"/"}
-          >
-            <Image
-              src={"/images/googlelogo.png"}
-              height={24}
-              width={24}
-              alt="Log in with Google"
-            />
-            <span>Sign up with Google</span>
-          </Link>
+          <OAuthButtons />
         </div>
 
         <div className="mt-2 flex w-full items-center before:flex-1 before:border-t before:border-border after:flex-1  after:border-t after:border-border">
