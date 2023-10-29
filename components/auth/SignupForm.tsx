@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { auth, fireStore } from "@/firebase/clientApp"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
+import Loader from "../Loader"
+import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
 
 const registerSchema = z
@@ -53,16 +55,22 @@ const SignupForm = () => {
     },
   })
 
-  const [error, setError] = useState("")
   const [createUserWithEmailAndPassword, userCred, loading, userErr] =
     useCreateUserWithEmailAndPassword(auth)
 
   function onSubmit(values: RegiterType) {
-    console.log(values)
     createUserWithEmailAndPassword(values.email, values.password)
   }
 
-  return (
+  useEffect(() => {
+    console.log(userCred)
+  }, [userCred])
+
+  return loading ? (
+    <Loader />
+  ) : userCred ? (
+    <EmailVerification email={userCred?.user.email} />
+  ) : (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
@@ -133,13 +141,7 @@ const SignupForm = () => {
           )}
         />
 
-        <Button
-          type="submit"
-          className={buttonVariants({
-            variant: "outline",
-            className: "py-4 text-lg w-full",
-          })}
-        >
+        <Button type="submit" className="py-4 text-lg w-full">
           Sign up
         </Button>
       </form>
