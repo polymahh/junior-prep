@@ -2,7 +2,10 @@
 
 import React from "react"
 import Link from "next/link"
+import { useRouter, useSearchParams } from "next/navigation"
+import { auth } from "@/firebase/clientApp"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -39,8 +42,21 @@ function LoginForm() {
     },
   })
 
-  function onSubmit(values: LoginType) {
-    console.log(values)
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const origin = searchParams.get("origin")
+
+  const [signInWithEmailAndPassword, user, loading, error] =
+    useSignInWithEmailAndPassword(auth)
+
+  async function onSubmit(values: LoginType) {
+    const success = await signInWithEmailAndPassword(
+      values.email,
+      values.password
+    )
+    if (success) {
+      router.push(origin ? `${origin}` : "/dashboard")
+    }
   }
   return (
     <Form {...form}>
@@ -102,10 +118,8 @@ function LoginForm() {
         </div>
         <Button
           type="submit"
-          className={buttonVariants({
-            variant: "outline",
-            className: "py-4 text-lg w-full",
-          })}
+          className="py-4 text-lg w-full"
+          isLoading={loading}
         >
           Login
         </Button>

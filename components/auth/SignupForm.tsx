@@ -62,13 +62,7 @@ const SignupForm = () => {
     createUserWithEmailAndPassword(values.email, values.password)
   }
 
-  useEffect(() => {
-    console.log(userCred)
-  }, [userCred])
-
-  return loading ? (
-    <Loader />
-  ) : userCred ? (
+  return userCred ? (
     <EmailVerification email={userCred?.user.email} />
   ) : (
     <Form {...form}>
@@ -141,7 +135,11 @@ const SignupForm = () => {
           )}
         />
 
-        <Button type="submit" className="py-4 text-lg w-full">
+        <Button
+          type="submit"
+          className="py-4 text-lg w-full"
+          isLoading={loading}
+        >
           Sign up
         </Button>
       </form>
