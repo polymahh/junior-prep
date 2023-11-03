@@ -25,7 +25,7 @@ export default function Home() {
       </div>
       <div className="relative flex justify-center">
         <Link
-          href={siteConfig.links.login}
+          href={siteConfig.links.dashboard}
           rel="noreferrer"
           className={buttonVariants({
             variant: "hero",

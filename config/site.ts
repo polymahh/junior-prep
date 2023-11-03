@@ -15,6 +15,7 @@ export const siteConfig = {
     github: "https://github.com/shadcn/ui",
     login: "/login",
     register: "/register",
+    dashboard:"/dashboard"
   },
   profile:{
     title:"profile",

@@ -3,23 +3,19 @@
 import React, { useEffect } from "react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
-import { auth } from "@/firebase/clientApp"
-import { useSignInWithGoogle } from "react-firebase-hooks/auth"
+import { signIn } from "next-auth/react"
 
-import { Button, buttonVariants } from "../ui/button"
+import { Button } from "../ui/button"
 
 const OAuthButtons = () => {
-  const [signInWithGoogle, _, loading, error] = useSignInWithGoogle(auth)
-
+  const loading = false
+  const error = {}
   const router = useRouter()
   const searchParams = useSearchParams()
   const origin = searchParams.get("origin")
 
   const handleredirect = async () => {
-    const user = await signInWithGoogle()
-    if (user) {
-      router.push(origin ? `/${origin}` : "/dashboard")
-    }
+    signIn("google")
   }
 
   return (
@@ -41,9 +37,9 @@ const OAuthButtons = () => {
         )}
         <span>Continue with Google</span>
       </Button>
-      {error ? (
-        <p className="text-destructive text-sm">{error.message}</p>
-      ) : null}
+      {/* {error ? (
+        <p className="text-destructive text-sm">{error?.message}</p>
+      ) : null} */}
     </div>
   )
 }

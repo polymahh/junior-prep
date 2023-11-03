@@ -60,18 +60,17 @@ function LoginForm() {
   }
   return (
     <Form {...form}>
+      <div>
+        <OAuthButtons />
+      </div>
+
+      <div className="mt-2 flex w-full items-center before:flex-1 before:border-t before:border-border after:flex-1  after:border-t after:border-border max-w-xl">
+        <p className="mx-4 mb-0 text-center font-semibold ">OR</p>
+      </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col items-center space-y-6 px-8 sm:w-[600px] "
       >
-        <div>
-          <OAuthButtons />
-        </div>
-
-        <div className="mt-2 flex w-full items-center before:flex-1 before:border-t before:border-border after:flex-1  after:border-t after:border-border">
-          <p className="mx-4 mb-0 text-center font-semibold ">OR</p>
-        </div>
-
         <FormField
           control={form.control}
           name="email"
