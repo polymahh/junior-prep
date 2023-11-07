@@ -2,13 +2,11 @@
 
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import { auth, fireStore } from "@/firebase/clientApp"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -19,7 +17,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-import Loader from "../Loader"
 import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
 
@@ -45,6 +42,8 @@ const registerSchema = z
 type RegiterType = z.infer<typeof registerSchema>
 
 const SignupForm = () => {
+  const [userCred, setUserCred] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
   const form = useForm<RegiterType>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -55,15 +54,31 @@ const SignupForm = () => {
     },
   })
 
-  const [createUserWithEmailAndPassword, userCred, loading, userErr] =
-    useCreateUserWithEmailAndPassword(auth)
+  const onSubmit = async (values: RegiterType) => {
+    setLoading(true)
+    const responce = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      }),
+    })
 
-  function onSubmit(values: RegiterType) {
-    createUserWithEmailAndPassword(values.email, values.password)
+    if (responce.ok) {
+      setLoading(false)
+      setUserCred(responce.body)
+    } else {
+      setLoading(false)
+      console.log("Registration failed")
+    }
   }
 
   return userCred ? (
-    <EmailVerification email={userCred?.user.email} />
+    <EmailVerification email={userCred?.email} />
   ) : (
     <Form {...form}>
       <form

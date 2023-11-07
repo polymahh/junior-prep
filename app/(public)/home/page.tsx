@@ -1,11 +1,14 @@
 import Image from "next/image"
 import Link from "next/link"
+import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession()
+  console.log(session)
   return (
     <section className="container relative grid items-center justify-center gap-12 pt-10 pb-8 md:py-16">
       <div className="absolute w-full h-screen bg-gradient-linear top-32 -z-10"></div>

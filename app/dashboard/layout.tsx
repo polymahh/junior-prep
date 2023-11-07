@@ -1,17 +1,25 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
+import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
+import LogoutBtn from "@/components/auth/LogoutBtn"
 import { Icons } from "@/components/icons"
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession()
+  console.log("🚀 ~ file: layout.tsx:16 ~ session:", session)
+  if (!session) {
+    redirect("/login")
+  }
   return (
     <section>
-      <div className=" flex flex-1  ">
+      <div className=" flex flex-1">
         <div className="flex h-screen flex-col border-r p-4">
           <Link href="/" className="flex items-center space-x-2 pb-8">
             <Icons.logo className="flex h-8 w-44" />
@@ -76,19 +84,7 @@ export default function DashboardLayout({
               </div>
             </Link>
             <div className=" flex w-full grow items-end">
-              <Link
-                className={buttonVariants({
-                  variant: "ghost",
-                  size: "dashboardbtn",
-                  className: "px-2 w-full ",
-                })}
-                href="/"
-              >
-                <div className="flex w-full items-center justify-start gap-4 self-end">
-                  <Icons.logout className="h-8 rounded-sm" />
-                  <span className="text-lg capitalize">Logout</span>
-                </div>
-              </Link>
+              <LogoutBtn />
             </div>
           </div>
         </div>

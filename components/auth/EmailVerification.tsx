@@ -37,9 +37,9 @@ function EmailVerification({ email }: { email?: string | null }) {
           variant: "link",
           size: "link",
         })}
-        href={"/dashbord"}
+        href={"/login"}
       >
-        Go to Dashboard <ArrowRight className={"ml-2  h-4 w-4"} />
+        Go to Login <ArrowRight className={"ml-2  h-4 w-4"} />
       </Link>
     </div>
   )
