@@ -14,7 +14,8 @@ export default async function DashboardLayout({
 }) {
   const session = await getServerSession()
   console.log("🚀 ~ file: layout.tsx:16 ~ session:", session)
-  if (!session) {
+  if (!session?.user?.email) {
+    console.log("something is wrong")
     redirect("/login")
   }
   return (

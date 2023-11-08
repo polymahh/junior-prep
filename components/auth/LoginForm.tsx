@@ -1,11 +1,10 @@
 "use client"
 
-import React from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { auth } from "@/firebase/clientApp"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth"
+import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
@@ -34,6 +33,9 @@ const loginSchema = z.object({
 type LoginType = z.infer<typeof loginSchema>
 
 function LoginForm() {
+  const [showErr, setShowErr] = useState(false)
+  const [loading, setLoading] = useState(false)
+
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -45,17 +47,23 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const origin = searchParams.get("origin")
-
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth)
+  console.log(origin ?? "dashboard")
 
   async function onSubmit(values: LoginType) {
-    const success = await signInWithEmailAndPassword(
-      values.email,
-      values.password
-    )
-    if (success) {
-      router.push(origin ? `${origin}` : "/dashboard")
+    setLoading(true)
+    const loginData = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    })
+
+    if (loginData?.error) {
+      setShowErr(true)
+      setLoading(false)
+    } else {
+      setLoading(false)
+      console.log(loginData)
+      router.push(origin ? `/${origin}` : "/dashboard")
     }
   }
   return (
@@ -103,7 +111,7 @@ function LoginForm() {
         />
 
         <div className="w-full text-sm flex justify-between">
-          <div className="items-center flex space-x-2">
+          {/* <div className="items-center flex space-x-2">
             <Checkbox id="terms1" />
             <label
               htmlFor="terms1"
@@ -111,7 +119,7 @@ function LoginForm() {
             >
               Remember me
             </label>
-          </div>
+          </div> */}
 
           <ResetPassword />
         </div>

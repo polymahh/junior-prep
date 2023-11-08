@@ -18,10 +18,7 @@ function LogoutBtn() {
       variant="ghost"
       size="dashboardbtn"
       className="px-2 w-full "
-      onClick={() => {
-        signOut()
-        console.log(session.status)
-      }}
+      onClick={() => signOut()}
       // isLoading={true}
     >
       <div className="flex w-full items-center justify-start gap-4 self-end">

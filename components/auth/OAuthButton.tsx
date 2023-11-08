@@ -11,16 +11,9 @@ const OAuthButtons = () => {
   const session = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const origin = searchParams.get("origin")
+  const error = searchParams.get("error")
 
-  // const handleredirect = async () => {
-  //   await signIn("google")
-  //   if (session.status === "unauthenticated") {
-  //     router.push(`/${origin}` ?? "/dashboard")
-  //   }
-  // }
-
-  // console.log(providers)
+  console.log(error)
 
   return (
     <div className="flex flex-col items-center gap-2">
@@ -28,7 +21,11 @@ const OAuthButtons = () => {
         size="lg"
         variant="secondary"
         className={"h-12 gap-4 py-2"}
-        onClick={() => signIn("google")}
+        onClick={() =>
+          signIn("google", {
+            callbackUrl: "/dashboard",
+          })
+        }
         isLoading={loading}
       >
         {loading ? null : (
