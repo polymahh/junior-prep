@@ -1,5 +1,6 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { BookOpenCheck, Layout, Users } from "lucide-react"
 import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
@@ -32,12 +33,12 @@ export default async function DashboardLayout({
                 size: "dashboardbtn",
                 className: "px-2",
               })}
-              href={siteConfig.profile.href}
+              href={siteConfig.dashboard.href}
             >
               <div className="flex w-full items-center justify-start gap-4">
-                <Icons.profile className="h-8 rounded-sm" />
+                <Layout className="h-8 rounded-sm" />
                 <span className="text-lg capitalize">
-                  {siteConfig.profile.title}
+                  {siteConfig.dashboard.title}
                 </span>
               </div>
             </Link>
@@ -61,7 +62,7 @@ export default async function DashboardLayout({
                       href={link.href}
                     >
                       <div className="flex w-full items-center justify-start gap-4">
-                        <Icon className="h-8 rounded-sm" />
+                        <Icon className="h-7 rounded-sm" />
                         <span className="text-lg capitalize">{link.title}</span>
                       </div>
                     </Link>
@@ -75,16 +76,47 @@ export default async function DashboardLayout({
                 size: "dashboardbtn",
                 className: "px-2 ",
               })}
-              href={siteConfig.settings.href}
+              href={siteConfig.teams.href}
             >
               <div className="flex w-full items-center justify-start gap-4">
-                <Icons.settings className="h-8 rounded-sm" />
+                <Users className="h-8 rounded-sm" />
                 <span className="text-lg capitalize">
-                  {siteConfig.settings.title}
+                  {siteConfig.teams.title}
                 </span>
               </div>
             </Link>
-            <div className=" flex w-full grow items-end">
+            <Link
+              className={buttonVariants({
+                variant: "ghost",
+                size: "dashboardbtn",
+                className: "px-2 ",
+              })}
+              href={siteConfig.courses.href}
+            >
+              <div className="flex w-full items-center justify-start gap-4">
+                <BookOpenCheck className="h-8 rounded-sm" />
+                <span className="text-lg capitalize">
+                  {siteConfig.courses.title}
+                </span>
+              </div>
+            </Link>
+
+            <div className=" flex w-full flex-col grow justify-end">
+              <Link
+                className={buttonVariants({
+                  variant: "ghost",
+                  size: "dashboardbtn",
+                  className: "px-2 ",
+                })}
+                href={siteConfig.settings.href}
+              >
+                <div className="flex w-full items-center justify-start gap-4">
+                  <Icons.settings className="h-8 rounded-sm" />
+                  <span className="text-lg capitalize">
+                    {siteConfig.settings.title}
+                  </span>
+                </div>
+              </Link>
               <LogoutBtn />
             </div>
           </div>

@@ -17,9 +17,17 @@ export const siteConfig = {
     register: "/register",
     dashboard:"/dashboard"
   },
-  profile:{
-    title:"profile",
-    href:"/dashboard/profile"
+  dashboard:{
+    title:"dashboard",
+    href:"/dashboard"
+  },
+  teams:{
+    title:"teams",
+    href:"/dashboard/teams"
+  },
+  courses:{
+    title:"courses",
+    href:"/dashboard/courses"
   },
   settings:{
     title:"settings",
