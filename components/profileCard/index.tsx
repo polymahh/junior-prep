@@ -7,7 +7,7 @@ import ProfileRole from "./ProfileRole"
 
 function ProfileCard() {
   return (
-    <div className=" h-40 w-full flex justify-around rounded-lg border p-4">
+    <div className="flex justify-between rounded-lg border p-4 h-full items-center">
       <ProfileAvatar />
       <ProfileRole />
       <ProfileProgress />

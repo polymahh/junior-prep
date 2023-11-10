@@ -3,20 +3,26 @@
 import { Layout } from "lucide-react"
 
 import ChartCard from "@/components/chartCard"
+import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
 
-const Dashboard = async () => {
+const Dashboard = () => {
   return (
     <div className="container m-auto flex flex-col gap-4 py-4">
       <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
         <Layout className=" h-10 rounded-sm" />
         <h1 className="text-lg font-semibold">Dashboard</h1>
       </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="col-span-2">
+      <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
+        <div className="col-span-2 ">
           <ProfileCard />
         </div>
-        <ChartCard />
+        <div className="row-span-2">
+          <ChartCard />
+        </div>
+        <div className="row-start-2 row-span-4 col-start-2">
+          <CoursesList />
+        </div>
       </div>
     </div>
   )

@@ -43,6 +43,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
+    "recharts": "^2.9.3",
     "sharp": "^0.31.3",
     "tailwind-merge": "^1.13.2",
     "tailwindcss-animate": "^1.0.6",
