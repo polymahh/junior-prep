@@ -22,7 +22,7 @@ export default async function DashboardLayout({
   return (
     <section>
       <div className=" flex flex-1">
-        <div className="flex h-screen flex-col border-r p-4">
+        <div className="flex h-screen flex-col border-r p-4 sticky top-0">
           <Link href="/" className="flex items-center space-x-2 pt-4 pb-8">
             <Icons.logo className="flex h-8 w-44" />
           </Link>

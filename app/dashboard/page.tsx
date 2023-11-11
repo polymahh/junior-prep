@@ -5,6 +5,7 @@ import { Layout } from "lucide-react"
 import ChartCard from "@/components/chartCard"
 import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
+import TeamsCard from "@/components/teamsCard"
 
 const Dashboard = () => {
   return (
@@ -22,6 +23,9 @@ const Dashboard = () => {
         </div>
         <div className="row-start-2 row-span-4 col-start-2">
           <CoursesList />
+        </div>
+        <div className="row-start-4 row-span-2 col-start-1">
+          <TeamsCard />
         </div>
       </div>
     </div>
