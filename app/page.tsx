@@ -39,7 +39,12 @@ export default function IndexPage() {
         <Icons.arrow className="absolute bottom-4 left-[calc(50%+120px)] w-28 " />
       </div>
       <div className="relative flex justify-center ">
-        <Image src={"/images/scr.webp"} alt="screen" height={500} width={900} />
+        <Image
+          src={"/images/jp-dashboard.webp"}
+          alt="screen"
+          height={500}
+          width={900}
+        />
         <Icons.bigarrow className="absolute w-40 -left-44 top-1/3" />
         <Icons.trophy className="absolute w-40 -right-28 top-2/3" />
       </div>

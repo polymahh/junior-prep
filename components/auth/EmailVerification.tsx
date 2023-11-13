@@ -1,16 +1,12 @@
 import React from "react"
 import Link from "next/link"
-import { auth } from "@/firebase/clientApp"
 import { ArrowRight, MailCheck } from "lucide-react"
-import { useSendEmailVerification } from "react-firebase-hooks/auth"
 
 import { Button, buttonVariants } from "../ui/button"
 
 function EmailVerification({ email }: { email?: string | null }) {
-  const [sendEmailVerification, sending, error] = useSendEmailVerification(auth)
-
   const handleResend = () => {
-    sendEmailVerification
+    console.log("not working")
   }
   return (
     <div className="flex flex-col gap-4  items-center text-center">

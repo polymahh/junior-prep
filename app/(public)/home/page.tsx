@@ -10,7 +10,7 @@ export default async function Home() {
   const session = await getServerSession()
   console.log(session)
   return (
-    <section className="container relative grid items-center justify-center gap-12 pt-10 pb-8 md:py-16">
+    <section className="container relative grid items-center justify-center gap-16 pt-10 pb-8 md:py-16">
       <div className="absolute w-full h-screen bg-gradient-linear top-32 -z-10"></div>
       <div className="flex max-w-[980px] flex-col items-center gap-6 text-center">
         <h1 className="text-4xl font-extrabold leading-tight tracking-tighter sm:text-5xl md:text-7xl">
@@ -41,7 +41,12 @@ export default async function Home() {
         <Icons.arrow className="absolute bottom-4 left-[calc(50%+120px)] w-28 " />
       </div>
       <div className="relative flex justify-center ">
-        <Image src={"/images/scr.webp"} alt="screen" height={500} width={900} />
+        <Image
+          src={"/images/jp-dashboard.webp"}
+          alt="screen"
+          height={500}
+          width={1100}
+        />
         <Icons.bigarrow className="absolute w-40 -left-44 top-1/3" />
         <Icons.trophy className="absolute w-40 -right-28 top-2/3" />
       </div>

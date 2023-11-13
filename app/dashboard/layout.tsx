@@ -14,9 +14,7 @@ export default async function DashboardLayout({
   children: React.ReactNode
 }) {
   const session = await getServerSession()
-  console.log("🚀 ~ file: layout.tsx:16 ~ session:", session)
   if (!session?.user?.email) {
-    console.log("something is wrong")
     redirect("/login")
   }
   return (
@@ -31,7 +29,7 @@ export default async function DashboardLayout({
               className={buttonVariants({
                 variant: "ghost",
                 size: "dashboardbtn",
-                className: "px-2",
+                className: "px-2 bg-accent",
               })}
               href={siteConfig.dashboard.href}
             >

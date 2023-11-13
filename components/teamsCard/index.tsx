@@ -11,8 +11,19 @@ import { buttonVariants } from "../ui/button"
 function TeamsCard() {
   return (
     <div className="border h-full rounded-lg flex flex-col gap-6 p-4">
-      <div className="rounded-sm border-b p-1">
+      <div className=" border-b pb-1 flex justify-between">
         <span className="text-lg font-semibold">Teams:</span>
+        <Link
+          className={buttonVariants({
+            variant: "link",
+            size: "link",
+            className: "justify-start",
+          })}
+          href={"/"}
+        >
+          <span>See More</span>
+          <ExternalLink className="h-4" />
+        </Link>
       </div>
 
       <div className="bg-secondary p-4 rounded-md grid grid-cols-3 ">
@@ -75,7 +86,7 @@ function TeamsCard() {
       <div className="bg-secondary p-4 rounded-md grid grid-cols-3">
         <div className="flex  gap-4">
           <Avatar className="h-16 w-16 rounded-sm overflow-hidden">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="/images/stormix.jpg" alt="@shadcn" />
             <AvatarFallback className="text-4xl">PM</AvatarFallback>
           </Avatar>
           <div>
@@ -110,7 +121,7 @@ function TeamsCard() {
             className="bg-secondary-foreground text-secondary flex self-start gap-1 justify-center rounded-sm items-center py-1 px-2"
           >
             <Icons.gitHub className="h-5" />
-            <span>Omigle-clone</span> <ExternalLink className="h-4" />
+            <span>Omegle-clone</span> <ExternalLink className="h-4" />
           </Link>
         </div>
 
@@ -132,7 +143,7 @@ function TeamsCard() {
       <div className="bg-secondary p-4 rounded-md grid grid-cols-3">
         <div className="flex  gap-4">
           <Avatar className="h-16 w-16 rounded-sm overflow-hidden">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src="/images/polymad.jpg" alt="@shadcn" />
             <AvatarFallback className="text-4xl">PM</AvatarFallback>
           </Avatar>
           <div>
@@ -154,9 +165,6 @@ function TeamsCard() {
               <span className="bg-sky-500 rounded-sm px-2 text-white">
                 Frontend
               </span>
-              <span className="bg-fuchsia-700 rounded-sm px-2 text-white">
-                Backend
-              </span>
             </div>
           </div>
         </div>
@@ -176,6 +184,9 @@ function TeamsCard() {
           <div className="flex gap-2 flex-wrap">
             <span className="bg-red-500 rounded-sm  px-2 text-white">
               Design
+            </span>
+            <span className="bg-fuchsia-700 rounded-sm px-2 text-white">
+              Backend
             </span>
             <span className="bg-yellow-500 rounded-sm  px-2 text-white">
               Senior
