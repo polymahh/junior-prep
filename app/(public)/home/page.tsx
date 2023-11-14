@@ -42,7 +42,7 @@ export default async function Home() {
       </div>
       <div className="relative flex justify-center ">
         <Image
-          src={"/images/jp-dashboard.webp"}
+          src={"/images/jp-dashboard.png"}
           alt="screen"
           height={500}
           width={1100}
