@@ -11,8 +11,8 @@ export const siteConfig = {
     // },
   ],
   links: {
-    discord: "https://twitter.com/shadcn",
-    github: "https://github.com/shadcn/ui",
+    discord: "https://discord.gg/4jfGJENm",
+    github: "https://github.com/polymahh/junior-prep",
     login: "/login",
     register: "/register",
     dashboard:"/dashboard"
