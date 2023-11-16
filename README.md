@@ -33,7 +33,8 @@ junior-prep is a website for junior web developers to practice interview questio
 ## How can I contribute?
 
 - you can report issues in our website here [issues](https://github.com/polymahh/junior-prep/issues)
-- you can suggest new questions/answers [here](https://github.com/polymahh/junior-prep/issues/new)
+- you can suggest new questions/answers as an [issue](https://github.com/polymahh/junior-prep/issues/new)
+  start your issue's title with (card suggestion)
 
 (below are the steps to run this website locally)
 
