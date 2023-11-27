@@ -1,12 +1,14 @@
+"use client"
+
 import React from "react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-import { ExternalLink } from "lucide-react"
+import { ChevronRight, ExternalLink, Ghost } from "lucide-react"
 
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "../icons"
-import { buttonVariants } from "../ui/button"
+import { Button, buttonVariants } from "../ui/button"
 
 function TeamsCard() {
   return (
@@ -124,17 +126,29 @@ function TeamsCard() {
             <span>Omegle-clone</span> <ExternalLink className="h-4" />
           </Link>
         </div>
-
-        <div className="flex flex-col gap-2 ">
-          <span className="text-sm text-muted-foreground">Roles needed:</span>
-          <div className="flex gap-2 flex-wrap">
-            <span className="bg-sky-500 rounded-sm  px-2 text-white">
-              Frontend
-            </span>
-            <span className="bg-red-500 rounded-sm  px-2 text-white">
-              Design
-            </span>
+        <div className="flex gap-2 items-center ">
+          <div className="flex flex-col gap-2 flex-1 ">
+            <span className="text-sm text-muted-foreground">Roles needed:</span>
+            <div className="flex gap-2 flex-wrap">
+              <span className="bg-sky-500 rounded-sm  px-2 text-white">
+                Frontend
+              </span>
+              <span className="bg-red-500 rounded-sm  px-2 text-white">
+                Design
+              </span>
+            </div>
           </div>
+          <Link
+            href="/team.id"
+            className={buttonVariants({
+              variant: "ghost",
+              size: "sm",
+              className: "rounded-full",
+            })}
+          >
+            view Team
+            <ChevronRight className="ml-1" />
+          </Link>
         </div>
       </div>
 
