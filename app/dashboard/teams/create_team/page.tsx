@@ -11,9 +11,9 @@ const CreateTeam = () => {
         <h1 className="text-lg font-semibold flex-1">Create Team</h1>
       </div>
       <div>
-        <div>
+        {/* <div>
           <h1>Create Team</h1>
-        </div>
+        </div> */}
         <CreateTeamForm />
       </div>
     </div>

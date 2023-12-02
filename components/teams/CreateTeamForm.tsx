@@ -1,10 +1,9 @@
 "use client"
 
-import React from "react"
-import Link from "next/link"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
+import { cn } from "@/lib/utils"
 import {
   Form,
   FormControl,
@@ -20,18 +19,22 @@ import { Checkbox } from "../ui/checkbox"
 
 const roles = [
   {
+    active: true,
     name: "frontend",
     stack: "",
   },
   {
+    active: false,
     name: "backend",
     stack: "",
   },
   {
+    active: false,
     name: "design",
     stack: "",
   },
   {
+    active: false,
     name: "senior",
     stack: "",
   },
@@ -46,6 +49,7 @@ const teamSchyma = z.object({
   repo: z.string().url({ message: "Invalid Url" }),
   roles: z
     .object({
+      active: z.boolean(),
       name: z.string(),
       stack: z.string(),
     })
@@ -55,22 +59,20 @@ const teamSchyma = z.object({
     }),
 })
 
-// z.object({
-//     name: z.string(),
-//     stack: z.string(),
-//   })
-
 type teamType = z.infer<typeof teamSchyma>
 
 function CreateTeamForm() {
   const form = useForm<teamType>({
+    mode: "onChange",
     defaultValues: {
       name: "",
       description: "",
       repo: "",
-      roles: [{ name: "frontend", stack: "" }],
+      roles: [...roles],
     },
   })
+
+  form.watch("roles")
 
   const onSubmit = () => {}
   return (
@@ -79,6 +81,12 @@ function CreateTeamForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col  space-y-6  sm:w-[600px] "
       >
+        <div className="p-4 bg-muted text-muted-foreground">
+          Create a project repo on github <br />
+          write a description for your project:
+          <br />
+          - what this project about <br />- roles needed and stack used
+        </div>
         <FormField
           control={form.control}
           name="name"
@@ -114,7 +122,7 @@ function CreateTeamForm() {
             <FormItem className="w-full">
               <FormLabel className="text-lg">Project Repo</FormLabel>
               <FormControl>
-                <Textarea placeholder="Type your message here." />
+                <Textarea placeholder="Type your message here." {...field} />
               </FormControl>
 
               <FormMessage />
@@ -123,7 +131,7 @@ function CreateTeamForm() {
         />
         <div className="p-4 bg-muted text-muted-foreground">
           below you can add the roles you need in this Project <br />
-          add languages and technologies used for a role
+          and add languages, technologies used for a role
         </div>
         {roles.map((role, idx) => {
           return (
@@ -131,7 +139,7 @@ function CreateTeamForm() {
               <FormField
                 key={role.name}
                 control={form.control}
-                name="roles"
+                name={`roles.${idx}.active`}
                 render={({ field }) => {
                   return (
                     <FormItem
@@ -140,40 +148,41 @@ function CreateTeamForm() {
                     >
                       <FormControl>
                         <Checkbox
-                          checked={
-                            !!field.value?.find((r) => r.name == role.name)
-                          }
-                          onCheckedChange={(checked) => {
-                            console.log(field)
-                            return checked
-                              ? field.onChange([...field.value, role])
-                              : field.onChange(
-                                  field.value?.filter(
-                                    (value) => value.name !== role.name
-                                  )
-                                )
+                          checked={field.value}
+                          onCheckedChange={(checked: boolean) => {
+                            console.log(checked)
+                            form.setValue(`roles.${idx}.active`, checked)
                           }}
                         />
                       </FormControl>
                       <FormLabel className="font-normal capitalize">
                         {role.name}
                       </FormLabel>
+                      <FormMessage />
                     </FormItem>
                   )
                 }}
               />
               <FormField
-                disabled
+                disabled={
+                  !form.getValues("roles").find((r) => role.name === r.name)
+                    ?.active
+                }
                 control={form.control}
                 name={`roles.${idx}.stack`}
                 render={({ field }) => (
                   <FormItem className="w-full">
-                    <FormLabel className="text-sm text-accent-foreground">
-                      stack{" "}
+                    <FormLabel
+                      className={cn("text-sm text-accent-foreground", {
+                        "text-muted-foreground": !form
+                          .getValues("roles")
+                          .find((r) => role.name === r.name)?.active,
+                      })}
+                    >
+                      stack
                     </FormLabel>
                     <FormControl>
                       <Input
-                        hidden={!!form.getValues("roles").includes(role)}
                         placeholder="languages or technologies used"
                         {...field}
                       />
