@@ -7,7 +7,6 @@ import { Icons } from "@/components/icons"
 
 async function Login() {
   const session = await getServerSession()
-  console.log("🚀 ~ file: lgin.tsx:16 ~ session:", session)
   if (session && session?.user?.name) {
     redirect("/dashboard")
   }
