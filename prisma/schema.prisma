@@ -62,6 +62,7 @@ model User {
   UserAnswer      UserAnswer[]
   Course          Course[]
   Interaction     Interaction[]
+  Team            Team[]
 }
 
 model Project {
@@ -91,11 +92,13 @@ model comment {
 }
 
 model Team {
-  id        String    @id @default(cuid())
+  id        String @id @default(cuid())
   creatorId String
   adminId   String
-  Project   Project[]
-  Role      Role[]
+
+  creator User      @relation(fields: [creatorId], references: [id])
+  Project Project[]
+  Role    Role[]
 }
 
 model Role {

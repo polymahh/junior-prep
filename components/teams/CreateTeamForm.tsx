@@ -13,8 +13,17 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { createTeam } from "@/app/dashboard/teams/actions"
 
+import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 
 const roles = [
@@ -45,8 +54,9 @@ const teamSchyma = z.object({
     .string()
     .min(3, { message: "Username must be at least 3 characters" })
     .max(50, { message: "Username must be less than 50 characters" }),
-  description: z.string(),
+  description: z.string().min(1),
   repo: z.string().url({ message: "Invalid Url" }),
+  creatorRole: z.string({ required_error: "choose at least one role" }).min(1),
   roles: z
     .object({
       active: z.boolean(),
@@ -69,12 +79,35 @@ function CreateTeamForm() {
       description: "",
       repo: "",
       roles: [...roles],
+      creatorRole: "",
     },
   })
 
   form.watch("roles")
 
-  const onSubmit = () => {}
+  const onSubmit = async (values: teamType) => {
+    // setLoading(true)
+    const responce = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: values.name,
+        description: values.description,
+        roles: values.roles,
+        repo: values.repo,
+      }),
+    })
+
+    if (responce.ok) {
+      // setLoading(false)
+      console.log(responce.body)
+    } else {
+      // setLoading(false)
+      console.log("Registration failed")
+    }
+  }
   return (
     <Form {...form}>
       <form
@@ -117,12 +150,15 @@ function CreateTeamForm() {
         />
         <FormField
           control={form.control}
-          name="repo"
+          name="description"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel className="text-lg">Project Repo</FormLabel>
+              <FormLabel className="text-lg">Project Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Type your message here." {...field} />
+                <Textarea
+                  placeholder="Type your description here."
+                  {...field}
+                />
               </FormControl>
 
               <FormMessage />
@@ -195,6 +231,33 @@ function CreateTeamForm() {
             </div>
           )
         })}
+        <FormField
+          control={form.control}
+          name="creatorRole"
+          render={({ field }) => (
+            <FormItem className="w-full">
+              <FormLabel className="text-lg">Your Role</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a Role" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {form
+                    .getValues("roles")
+                    .filter((r) => r.active)
+                    .map((role) => (
+                      <SelectItem value={role.name}>{role.name}</SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
+        <Button type="submit" className="self-center">
+          Create Team
+        </Button>
       </form>
     </Form>
   )
