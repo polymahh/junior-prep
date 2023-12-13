@@ -1,35 +1,13 @@
 
-import Roles from "@/components/roles";
 import { db } from "@/db";
-import { create } from "domain";
+import { teamSchema } from "@/lib/validators/teams";
 import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
-import * as z from "zod"
 
-const teamSchema = z.object({
-    name: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters" })
-      .max(50, { message: "Username must be less than 50 characters" }),
-    description: z.string(),
-    repo: z.string().url({ message: "Invalid Url" }),
-    creatorRole: z.string({ required_error: "choose at least one role" }),
-    roles: z
-      .object({
-        active: z.boolean(),
-        name: z.string(),
-        stack: z.string(),
-      })
-      .array()
-      .nonempty({
-        message: "You have to select at least one role.",
-      }),
-  })
+
 
   export async function POST(req : Request){
 
     try{
-      console.log("🚀palce ")
         const body = await req.json();
     
         const { name , description, repo, roles } = teamSchema.parse(body);
@@ -80,4 +58,35 @@ const teamSchema = z.object({
         return Response.json({  message: "Something went wrong!"}, {status : 500})
 
     }
+}
+
+
+
+export async function GET(req : Request){
+
+  try{
+      
+   const session = await getServerSession()
+
+  //  if(!session){
+  //     return {messge:"not authenticated"}
+  //  }
+
+   
+
+   const team = await db.team.findMany({
+      include:{
+        Project:{
+          where:{
+            isCompleted:false
+          }
+        }
+      }
+   })
+   return Response.json({team: team , message: "team created successfully"}, {status : 201})
+  }catch(error){
+      console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)
+      return Response.json({  message: "Something went wrong!"}, {status : 500})
+
+  }
 }
