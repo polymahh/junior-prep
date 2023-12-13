@@ -4,8 +4,8 @@ import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 
+import { RegiterType, registerSchema } from "@/lib/validators/auth"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -19,27 +19,6 @@ import { Input } from "@/components/ui/input"
 
 import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
-
-const registerSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters" })
-      .max(50, { message: "Username must be less than 50 characters" }),
-    email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-    confirmPassword: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" }),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"], // path of error
-  })
-
-type RegiterType = z.infer<typeof registerSchema>
 
 const SignupForm = () => {
   const [userCred, setUserCred] = useState<any>(null)
@@ -56,7 +35,7 @@ const SignupForm = () => {
 
   const onSubmit = async (values: RegiterType) => {
     setLoading(true)
-    const responce = await fetch("/api/user", {
+    const responce = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,6 +44,7 @@ const SignupForm = () => {
         username: values.username,
         email: values.email,
         password: values.password,
+        confirmPassword: values.confirmPassword,
       }),
     })
 

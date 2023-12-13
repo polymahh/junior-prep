@@ -6,10 +6,9 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 
+import { LoginType, loginSchema } from "@/lib/validators/auth"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -22,15 +21,6 @@ import { Input } from "@/components/ui/input"
 
 import OAuthButtons from "./OAuthButton"
 import ResetPassword from "./ResetPassword"
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-})
-
-type LoginType = z.infer<typeof loginSchema>
 
 function LoginForm() {
   const [showErr, setShowErr] = useState(false)
