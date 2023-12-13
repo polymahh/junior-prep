@@ -1,19 +1,9 @@
 import { db } from "@/db";
 import { NextResponse } from "next/server";
 import {hash} from 'bcrypt'
-import * as z from "zod"
+import { registerSchema } from "@/lib/validators/auth";
 
-const userSchema = z
-  .object({
-    username: z
-      .string()
-      .min(3, { message: "Username must be at least 3 characters" })
-      .max(50, { message: "Username must be less than 50 characters" }),
-    email: z.string().email("Invalid email address"),
-    password: z
-      .string()
-      .min(6, { message: "Password must be at least 6 characters" })
-  })
+
  
 
 export async function POST(req : Request) {
@@ -21,13 +11,17 @@ export async function POST(req : Request) {
     try{
         const body = await req.json();
     
-        const { username , email, password, } = userSchema.parse(body);
+        const { username , email, password, confirmPassword } = registerSchema.parse(body);
 
         // check if the email exist in the db
 
         const existingEmail = await db.user.findUnique({
             where:{email : email}
         })
+
+        if(password !== confirmPassword){
+            return NextResponse.json({user:null , message:"Passwords don't match"},{status:409})
+        }
         
         if(existingEmail){
             return NextResponse.json({user:null , message:"Email already exists"},{status:409})

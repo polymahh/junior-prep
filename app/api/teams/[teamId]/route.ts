@@ -143,7 +143,7 @@ export async function DELETE (req: Request,{params}:{params:{teamId:string}}) {
 
 
     if(user?.email !== session?.user?.email){
-        return Response.json({message:"You are not authorized to delete this project"},{status:401})
+        return Response.json({message:"You are not authorized"},{status:401})
     }
 
     await db.team.delete({
