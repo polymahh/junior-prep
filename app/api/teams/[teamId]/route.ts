@@ -30,7 +30,8 @@ export async function GET (req: Request,{params}:{params:{teamId:string}}) {
             id:teamId,
         },
         include:{
-            Project:true
+            Project:true,
+            Role: true
         }
     })
 
@@ -53,14 +54,7 @@ export async function PUT (req: Request,{params}:{params:{teamId:string}}) {
     const {teamId} = params
 
     if (!teamId) {
-        return NextResponse.json(
-          {
-            message: 'Missing Team Id',
-          },
-          {
-            status: 400,
-          },
-        );
+        return NextResponse.json({message: 'Missing Team Id'},{status: 400});
       }
 
     const session = await getServerSession()
@@ -68,7 +62,7 @@ export async function PUT (req: Request,{params}:{params:{teamId:string}}) {
     //     return {messge:"not authenticated"}
     //  }
 
-    const team = await db.project.update({
+    const project = await db.project.update({
         where:{
             teamId:teamId,
         },
@@ -84,18 +78,15 @@ export async function PUT (req: Request,{params}:{params:{teamId:string}}) {
         }
     })
 
-    if (!team) {
-        return NextResponse.json(
-          {
-            message: 'Team not found',
-          },
-          {
-            status: 400,
-          },
-        );
+    if (!project) {
+        return NextResponse.json({message: 'Team not found'},{status: 400});
       }
 
-    return Response.json({team:team,message:"Team found"},{status:201})
+      if(project?.team.creatorId !== session?.user?.email){
+        return Response.json({message:"You are not authorized"},{status:401})
+    }
+
+    return Response.json({team:project,message:"Team found"},{status:201})
 
     }catch(error){
         console.log(error)
