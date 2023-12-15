@@ -2,22 +2,26 @@
 
 import React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import Email from "next-auth/providers/email"
+import { useSession } from "next-auth/react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
+
+import { commentSchema, commentType } from "@/lib/validators/comment"
 
 import { Button, buttonVariants } from "../ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form"
 import { Input } from "../ui/input"
 import { Textarea } from "../ui/textarea"
 
-const commentSchema = z.object({
-  comment: z.string(),
-})
 function CommentInput() {
-  const form = useForm<z.infer<typeof commentSchema>>({
+  const session = useSession()
+  const email = session?.data?.user?.email
+  const form = useForm<commentType>({
     resolver: zodResolver(commentSchema),
     defaultValues: {
       comment: "",
+      email: "",
     },
   })
 
