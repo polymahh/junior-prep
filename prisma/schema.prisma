@@ -83,9 +83,9 @@ model comment {
   content   String
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
-  userId    String
+  userEmail String
   ProjectId String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   project   Project  @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
 
   @@index([ProjectId])
@@ -101,9 +101,16 @@ model Team {
   Role    Role[]
 }
 
+enum roleName {
+  FRONTEND
+  BACKEND
+  DESIGN
+  SENIOR
+}
+
 model Role {
   id        String     @id @default(cuid())
-  roleName  String
+  roleName  roleName
   stack     String
   createdAt DateTime   @default(now())
   updateAt  DateTime   @updatedAt
@@ -119,11 +126,11 @@ model Role {
 
 model Request {
   id         String   @id @default(cuid())
-  userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  userEmail  String
+  user       User     @relation(fields: [userEmail], references: [id])
   roleId     String
   role       Role     @relation(fields: [roleId], references: [id])
-  isAccepted DateTime
+  isAccepted Boolean  @default(false)
   createdAt  DateTime @default(now())
   updateAt   DateTime @updatedAt
 }

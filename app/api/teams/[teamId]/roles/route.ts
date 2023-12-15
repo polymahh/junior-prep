@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { roleSchema } from "@/lib/validators/roles";
+import { roleName } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -36,7 +37,7 @@ export async function POST(req : Request, {params}: {params:{teamId:string}}){
 
      const role = await db.role.create({
         data:{
-            roleName:name,
+            roleName:name as roleName,
             stack,
             team : {
                 connect:{

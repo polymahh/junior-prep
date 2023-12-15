@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { roleSchema } from "@/lib/validators/roles";
+import { roleName } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
@@ -70,12 +71,12 @@ export async function PUT(req : Request, {params}: {params:{teamId:string,roleNa
 
    const role =  await db.role.update({
         where:{
-            roleName_teamId:{roleName,teamId}
+            roleName_teamId:{roleName : roleName as roleName,teamId}
         }
 
         ,
         data:{
-            roleName:name,
+            roleName:name as roleName,
             stack
         }
         
@@ -122,7 +123,7 @@ export async function DELETE(req : Request, {params}: {params:{teamId:string,rol
 
    const role =  await db.role.delete({
         where:{
-            roleName_teamId:{roleName,teamId}
+            roleName_teamId:{roleName : roleName as roleName,teamId}
         }
       })
     
