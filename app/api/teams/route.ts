@@ -1,6 +1,7 @@
 
 import { db } from "@/db";
 import { teamSchema } from "@/lib/validators/teams";
+import { roleName } from "@prisma/client";
 import { getServerSession } from "next-auth";
 
 
@@ -27,7 +28,6 @@ import { getServerSession } from "next-auth";
      const team = await db.team.create({
         data:{
             creatorId: user?.id!,
-            adminId:user?.id!,
             Project:{
                 create : [
                     {
@@ -41,7 +41,7 @@ import { getServerSession } from "next-auth";
             Role:{
               create : roles.filter(role => role.active).map(role => {
                 return {
-                  roleName:role.name,
+                  roleName:role.name as roleName,
                   stack:role.stack
                 }
               }

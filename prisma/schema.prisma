@@ -94,7 +94,6 @@ model comment {
 model Team {
   id        String @id @default(cuid())
   creatorId String
-  adminId   String
 
   creator User      @relation(fields: [creatorId], references: [id])
   Project Project[]
@@ -136,12 +135,13 @@ model Request {
 }
 
 model UserRole {
-  roleId String
-  role   Role   @relation(fields: [roleId], references: [id])
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  roleId    String
+  role      Role    @relation(fields: [roleId], references: [id])
+  userEmail String
+  user      User    @relation(fields: [userEmail], references: [id])
+  isAdmin   Boolean @default(false)
 
-  @@unique([roleId, userId])
+  @@unique([roleId, userEmail])
   @@index([roleId])
 }
 
