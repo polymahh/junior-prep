@@ -1,4 +1,5 @@
 import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
@@ -23,6 +24,21 @@ export const authOptions : NextAuthOptions = {
             response_type: "code"
           }
         }
+      }),
+      GitHubProvider({
+        clientId: process.env.GITHUB_ID as string,
+        clientSecret: process.env.GITHUB_SECRET as string,
+        profile(profile) {
+          return {
+            id: profile.id.toString(),
+            name: profile.name || profile.login,
+            email: profile.email,
+            image: profile.avatar_url,
+            username: profile.login,
+          }  ;
+        },
+
+
       }),
       CredentialsProvider({
         name: "Credentials",
@@ -56,13 +72,26 @@ export const authOptions : NextAuthOptions = {
             return {
                 id: `${existingUser.id}`,
                 username: existingUser.username,
-                email: existingUser.email
+                email: existingUser.email,
             }
     
        
         }
       })
     ],
+
+    callbacks:{
+
+      async jwt({token,user,session}){
+        console.log("jwt", user, token,session)
+        return token
+      },
+      async session({token,user,session}){
+        console.log("session", user, token,session)
+        return session
+      },
+
+    },
     pages: {
       signIn: '/login',
       signOut: '/auth/signout',

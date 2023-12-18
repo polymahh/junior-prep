@@ -22,7 +22,7 @@ const OAuthButtons = () => {
         variant="secondary"
         className={"h-12 gap-4 py-2"}
         onClick={() =>
-          signIn("google", {
+          signIn("github", {
             callbackUrl: "/dashboard",
           })
         }
