@@ -5,6 +5,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/db";
 import { NextAuthOptions } from "next-auth";
 import { compare } from "bcrypt";
+import { User } from "@prisma/client";
 
 
 export const authOptions : NextAuthOptions = {
@@ -30,10 +31,9 @@ export const authOptions : NextAuthOptions = {
         clientSecret: process.env.GITHUB_SECRET as string,
         profile(profile) {
           return {
-            id: profile.id.toString(),
-            name: profile.name || profile.login,
+            id: profile.id,
+            name: profile.name,
             email: profile.email,
-            image: profile.avatar_url,
             username: profile.login,
           }  ;
         },
@@ -82,14 +82,21 @@ export const authOptions : NextAuthOptions = {
 
     callbacks:{
 
-      async jwt({token,user,session}){
-        console.log("jwt", user, token,session)
+      async jwt({token,user}){
+        if(!!user){
+            token.username  = (user as User).username
+        }
         return token
       },
-      async session({token,user,session}){
-        console.log("session", user, token,session)
+
+      async session({token,session}){
+
+        session.user = {
+          ...session.user,
+          username: token.username as string
+        }
         return session
-      },
+      }
 
     },
     pages: {
