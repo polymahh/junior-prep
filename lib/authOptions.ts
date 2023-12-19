@@ -35,7 +35,7 @@ export const authOptions : NextAuthOptions = {
             name: profile.name,
             email: profile.email,
             username: profile.login,
-          }  ;
+          };
         },
 
 
