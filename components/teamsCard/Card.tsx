@@ -10,14 +10,12 @@ import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
 
 export default function Card({ team }: any) {
-  console.log("🚀 ~ file: Card.tsx:13 ~ Card ~ team:", team?.Project)
-
   const { Project, creatorRole, Role, creator } = team
   return (
     <div className="grid grid-cols-3 rounded-md bg-secondary p-4 ">
       <div className="flex  gap-4">
         <Avatar className="h-16 w-16 overflow-hidden rounded-sm bg-primary">
-          <AvatarImage src="" alt="@shadcn" />
+          <AvatarImage src={creator?.image} alt="@shadcn" />
           <AvatarFallback className="flex h-full items-center justify-center text-4xl text-primary-foreground">
             {creator?.username[0].toUpperCase()}
           </AvatarFallback>

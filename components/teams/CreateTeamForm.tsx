@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { redirect, useRouter } from "next/navigation"
 import { roleName } from "@prisma/client"
 import { useForm } from "react-hook-form"
@@ -53,6 +53,7 @@ const roles = [
 
 function CreateTeamForm() {
   const [status, setStatus] = useState(0)
+  const [data, setData] = useState<any>()
   const [loading, setLoading] = useState(false)
 
   const router = useRouter()
@@ -91,15 +92,20 @@ function CreateTeamForm() {
         return res.json()
       })
       .then((data) => {
-        if (status === 201) {
-          console.log(data.message)
-          router.push(`/dashboard/teams/${data.team.id}`)
-        } else {
-          setLoading(false)
-          console.log(data.message)
-        }
+        console.log(data)
+        setData(data)
       })
   }
+
+  useEffect(() => {
+    if (status === 201) {
+      console.log(data?.message)
+      router.push(`/dashboard/teams/${data?.team?.id}`)
+    } else {
+      console.log(data?.message)
+      setLoading(false)
+    }
+  }, [data])
   return (
     <Form {...form}>
       <form

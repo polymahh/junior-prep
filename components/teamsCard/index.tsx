@@ -21,9 +21,6 @@ function TeamsCard() {
       .then((res) => res.json())
       .then((data) => setTeams(data.team))
   }, [])
-  useEffect(() => {
-    console.log(teams)
-  }, [teams])
 
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
