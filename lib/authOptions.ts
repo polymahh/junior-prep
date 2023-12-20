@@ -35,10 +35,9 @@ export const authOptions : NextAuthOptions = {
             name: profile.name,
             email: profile.email,
             username: profile.login,
+            image:profile.avatar_url
           };
         },
-
-
       }),
       CredentialsProvider({
         name: "Credentials",

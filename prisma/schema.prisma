@@ -63,6 +63,8 @@ model User {
   Course          Course[]
   Interaction     Interaction[]
   Team            Team[]
+
+  @@index([id])
 }
 
 model Project {
@@ -76,6 +78,8 @@ model Project {
   teamId      String    @unique
   team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
   comment     comment[]
+
+  @@index([teamId])
 }
 
 model comment {
@@ -92,12 +96,15 @@ model comment {
 }
 
 model Team {
-  id        String @id @default(cuid())
-  creatorId String
+  id          String   @id @default(cuid())
+  creatorId   String?
+  creatorRole roleName
 
-  creator User      @relation(fields: [creatorId], references: [id])
+  creator User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
   Project Project[]
   Role    Role[]
+
+  @@index([id])
 }
 
 enum roleName {
@@ -142,7 +149,7 @@ model UserRole {
   isAdmin   Boolean @default(false)
 
   @@unique([roleId, userEmail])
-  @@index([roleId])
+  @@index([userEmail])
 }
 
 model UserAnswer {
