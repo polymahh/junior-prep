@@ -10,8 +10,9 @@ import { getServerSession } from "next-auth";
 
     try{
         const body = await req.json();
-    
-        const { name , description, repo, roles } = teamSchema.parse(body);
+        console.log("🚀 ~ file: route.ts:13 ~ POST ~ body:", body)
+        
+        const { name , description, repo, roles, creatorRole } = teamSchema.parse(body);
      const session = await getServerSession()
 
     //  if(!session){
@@ -28,6 +29,7 @@ import { getServerSession } from "next-auth";
      const team = await db.team.create({
         data:{
             creatorId: user?.id!,
+            creatorRole:creatorRole as roleName,
             Project:{
                 create : [
                     {
@@ -40,11 +42,11 @@ import { getServerSession } from "next-auth";
             },
             Role:{
               create : roles.filter(role => role.active).map(role => {
-                return {
-                  roleName:role.name as roleName,
-                  stack:role.stack
-                }
-              }
+                    return {
+                      roleName:role.name as roleName,
+                      stack:role.stack
+                    }
+                  }
                 
                 )
             }
@@ -79,6 +81,12 @@ export async function GET(req : Request){
         Project:{
           where:{
             isCompleted:false
+          },
+        },
+        Role:true,
+        creator:{
+          include:{
+            UserRole:true
           }
         }
       }

@@ -1,5 +1,8 @@
 "use client"
 
+import { useState } from "react"
+import { redirect, useRouter } from "next/navigation"
+import { roleName } from "@prisma/client"
 import { useForm } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
@@ -28,27 +31,32 @@ import { Checkbox } from "../ui/checkbox"
 const roles = [
   {
     active: true,
-    name: "frontend",
+    name: "FRONTEND",
     stack: "",
   },
   {
     active: false,
-    name: "backend",
+    name: "BACKEND",
     stack: "",
   },
   {
     active: false,
-    name: "design",
+    name: "DESIGN",
     stack: "",
   },
   {
     active: false,
-    name: "senior",
+    name: "SENIOR",
     stack: "",
   },
 ] as const
 
 function CreateTeamForm() {
+  const [status, setStatus] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  const router = useRouter()
+
   const form = useForm<teamType>({
     mode: "onChange",
     defaultValues: {
@@ -63,8 +71,9 @@ function CreateTeamForm() {
   form.watch("roles")
 
   const onSubmit = async (values: teamType) => {
-    // setLoading(true)
-    const responce = await fetch("/api/user", {
+    console.log("🚀 ~ file: CreateTeamForm.tsx:66 ~ onSubmit ~ values:", values)
+    setLoading(true)
+    const responce = await fetch("/api/teams", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -72,18 +81,24 @@ function CreateTeamForm() {
       body: JSON.stringify({
         name: values.name,
         description: values.description,
-        roles: values.roles,
+        roles: values.roles.filter((role) => role.active),
         repo: values.repo,
+        creatorRole: values.creatorRole,
       }),
     })
-
-    if (responce.ok) {
-      // setLoading(false)
-      console.log(responce.body)
-    } else {
-      // setLoading(false)
-      console.log("Registration failed")
-    }
+      .then((res) => {
+        setStatus(res.status)
+        return res.json()
+      })
+      .then((data) => {
+        if (status === 201) {
+          console.log(data.message)
+          router.push(`/dashboard/teams/${data.team.id}`)
+        } else {
+          setLoading(false)
+          console.log(data.message)
+        }
+      })
   }
   return (
     <Form {...form}>
@@ -186,7 +201,7 @@ function CreateTeamForm() {
                 render={({ field }) => (
                   <FormItem className="w-full">
                     <FormLabel
-                      className={cn("text-sm text-accent-foreground", {
+                      className={cn("text-sm  text-accent-foreground ", {
                         "text-muted-foreground": !form
                           .getValues("roles")
                           .find((r) => role.name === r.name)?.active,
@@ -232,7 +247,7 @@ function CreateTeamForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="self-center">
+        <Button type="submit" className="self-center" disabled={loading}>
           Create Team
         </Button>
       </form>

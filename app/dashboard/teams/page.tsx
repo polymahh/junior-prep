@@ -1,11 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import Link from "next/link"
 import { Plus, Users } from "lucide-react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
 import TeamsCard from "@/components/teamsCard"
 
-const teams = () => {
+const teams = async () => {
   return (
     <div className="container m-auto flex flex-col gap-4 py-4">
       <div className="flex h-16 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4  ">
