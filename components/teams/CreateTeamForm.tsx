@@ -253,7 +253,7 @@ function CreateTeamForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="self-center" disabled={loading}>
+        <Button type="submit" className="self-center" isLoading={loading}>
           Create Team
         </Button>
       </form>

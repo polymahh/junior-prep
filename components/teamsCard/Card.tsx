@@ -10,7 +10,7 @@ import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
 
 export default function Card({ team }: any) {
-  const { Project, creatorRole, Role, creator } = team
+  const { Project, creatorRole, Role, creator, id } = team
   return (
     <div className="grid grid-cols-3 rounded-md bg-secondary p-4 ">
       <div className="flex  gap-4">
@@ -56,21 +56,29 @@ export default function Card({ team }: any) {
         </Link>
       </div>
 
-      <div className="flex flex-col gap-2 ">
-        <span className="text-sm text-muted-foreground">Roles needed:</span>
-        <div className="flex flex-wrap gap-2">
-          {Role.map((role: any) => {
-            return (
-              <Badge
-                className={badgeVariants({
-                  variant: role.roleName.toLowerCase(),
-                })}
-              >
-                {role.roleName.toLowerCase()}
-              </Badge>
-            )
-          })}
+      <div className="flex">
+        <div className="flex flex-col gap-2 flex-1 ">
+          <span className="text-sm text-muted-foreground">Roles needed:</span>
+          <div className="flex flex-wrap gap-2">
+            {Role.map((role: any) => {
+              return (
+                <Badge
+                  className={badgeVariants({
+                    variant: role.roleName.toLowerCase(),
+                  })}
+                >
+                  {role.roleName.toLowerCase()}
+                </Badge>
+              )
+            })}
+          </div>
         </div>
+        <Link
+          href={`dashboard/teams/${id}`}
+          className={buttonVariants({ variant: "link" })}
+        >
+          <span>View</span> <ChevronRight className="h-4" />
+        </Link>
       </div>
     </div>
   )

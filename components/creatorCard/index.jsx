@@ -2,11 +2,12 @@
 
 import React from "react"
 import Link from "next/link"
-import { ExternalLink } from "lucide-react"
+import { ExternalLink, Pencil } from "lucide-react"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { Icons } from "../icons"
+import { Button, buttonVariants } from "../ui/button"
 
 function CreatorCard() {
   return (
@@ -35,6 +36,16 @@ function CreatorCard() {
           <span>Junior-prep</span> <ExternalLink className="h-5 pt-1" />
         </Link>
       </div>
+      <Button
+        className={buttonVariants({
+          variant: "secondary",
+          className: "self-start",
+          size: "sm",
+        })}
+      >
+        <Pencil className="h-5 mr-2" />
+        Edit
+      </Button>
     </div>
   )
 }
