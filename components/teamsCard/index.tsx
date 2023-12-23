@@ -42,7 +42,7 @@ function TeamsCard() {
           ? "Loading ..."
           : isError
           ? "something went wrong"
-          : data.team.map((team: any) => <Card key={team.id} team={team} />)}
+          : data.teams.map((team: any) => <Card key={team.id} team={team} />)}
       </div>
     </div>
   )

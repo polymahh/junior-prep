@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react"
 import { redirect, useRouter } from "next/navigation"
 import { roleName } from "@prisma/client"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
+import { postItems } from "@/lib/resquest"
 import { cn } from "@/lib/utils"
 import { teamType } from "@/lib/validators/teams"
 import {
@@ -53,8 +55,7 @@ const roles = [
 
 function CreateTeamForm() {
   const [status, setStatus] = useState(0)
-  const [data, setData] = useState<any>()
-  const [loading, setLoading] = useState(false)
+  const [values, setValues] = useState<any>()
 
   const router = useRouter()
 
@@ -71,48 +72,69 @@ function CreateTeamForm() {
 
   form.watch("roles")
 
+  const queryClient = useQueryClient()
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async () => {
+      const data = await postItems(values, "/api/teams")
+      console.log(data)
+      return data
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({ queryKey: ["teams"] })
+      router.push(`/dashboard/teams/${data?.team?.id}`)
+    },
+  })
+
   const onSubmit = async (values: teamType) => {
     console.log("🚀 ~ file: CreateTeamForm.tsx:66 ~ onSubmit ~ values:", values)
-    setLoading(true)
-    const responce = await fetch("/api/teams", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: values.name,
-        description: values.description,
-        roles: values.roles.filter((role) => role.active),
-        repo: values.repo,
-        creatorRole: values.creatorRole,
-      }),
+    setValues({
+      name: values.name,
+      description: values.description,
+      roles: values.roles.filter((role) => role.active),
+      repo: values.repo,
+      creatorRole: values.creatorRole,
     })
-      .then((res) => {
-        setStatus(res.status)
-        return res.json()
-      })
-      .then((data) => {
-        console.log(data)
-        setData(data)
-      })
+    mutateAsync()
+    // const responce = await fetch("/api/teams", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     name: values.name,
+    //     description: values.description,
+    //     roles: values.roles.filter((role) => role.active),
+    //     repo: values.repo,
+    //     creatorRole: values.creatorRole,
+    //   }),
+    // })
+    //   .then((res) => {
+    //     setStatus(res.status)
+    //     return res.json()
+    //   })
+    //   .then((data) => {
+    //     console.log(data)
+    //     setData(data)
+    //   })
   }
 
-  useEffect(() => {
-    if (status === 201) {
-      console.log(data?.message)
-      router.push(`/dashboard/teams/${data?.team?.id}`)
-    } else {
-      console.log(data?.message)
-      setLoading(false)
-    }
-  }, [data])
+  // useEffect(() => {
+  //   if (status === 201) {
+  //     console.log(data?.message)
+  //     router.push(`/dashboard/teams/${data?.team?.id}`)
+  //   } else {
+  //     console.log(data?.message)
+  //     setLoading(false)
+  //   }
+  // }, [data])
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col  space-y-6  sm:w-[600px] "
       >
-        <div className="p-4 bg-muted text-muted-foreground">
+        <div className="bg-muted p-4 text-muted-foreground">
           Create a project repo on github <br />
           write a description for your project:
           <br />
@@ -163,7 +185,7 @@ function CreateTeamForm() {
             </FormItem>
           )}
         />
-        <div className="p-4 bg-muted text-muted-foreground">
+        <div className="bg-muted p-4 text-muted-foreground">
           below you can add the roles you need in this Project <br />
           and add languages, technologies used for a role
         </div>
@@ -253,7 +275,7 @@ function CreateTeamForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="self-center" isLoading={loading}>
+        <Button type="submit" className="self-center" isLoading={isPending}>
           Create Team
         </Button>
       </form>

@@ -91,7 +91,7 @@ export async function GET(req : Request){
         }
       }
    })
-   return Response.json({team: team , message: "teams list"}, {status : 201})
+   return Response.json({teams: team , message: "teams list success"}, {status : 201})
   }catch(error){
       console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)
       return Response.json({  message: "Something went wrong!"}, {status : 500})
