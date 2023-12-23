@@ -3,24 +3,23 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import { useQuery } from "@tanstack/react-query"
 import { ChevronRight, ExternalLink, Ghost } from "lucide-react"
 
 import { siteConfig } from "@/config/site"
+import { getItems } from "@/lib/resquest"
 
 import { Icons } from "../icons"
 import { Button, buttonVariants } from "../ui/button"
 import Card from "./Card"
 
 function TeamsCard() {
-  const [teams, setTeams] = useState([])
+  const { data, isFetching, isError } = useQuery({
+    queryKey: ["teams"],
+    queryFn: () => getItems("/api/teams"),
+  })
 
-  useEffect(() => {
-    fetch("/api/teams", {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => setTeams(data.team))
-  }, [])
+  console.log(data)
 
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
@@ -39,9 +38,11 @@ function TeamsCard() {
         </Link>
       </div>
       <div className="flex h-full flex-col gap-6 ">
-        {teams.length
-          ? teams.map((team: any) => <Card key={team.id} team={team} />)
-          : "Loading ..."}
+        {isFetching
+          ? "Loading ..."
+          : isError
+          ? "something went wrong"
+          : data.team.map((team: any) => <Card key={team.id} team={team} />)}
       </div>
     </div>
   )

@@ -74,7 +74,7 @@ export default function Card({ team }: any) {
           </div>
         </div>
         <Link
-          href={`dashboard/teams/${id}`}
+          href={`/dashboard/teams/${id}`}
           className={buttonVariants({ variant: "link" })}
         >
           <span>View</span> <ChevronRight className="h-4" />

@@ -1,9 +1,15 @@
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import {
+  HydrationBoundary,
+  QueryClient,
+  dehydrate,
+} from "@tanstack/react-query"
 import { BookOpenCheck, Layout, Users } from "lucide-react"
 import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
+import { getItems } from "@/lib/resquest"
 import { buttonVariants } from "@/components/ui/button"
 import LogoutBtn from "@/components/auth/LogoutBtn"
 import { Icons } from "@/components/icons"
@@ -16,9 +22,17 @@ export default async function DashboardLayout({
   const session = await getServerSession()
 
   console.log(session)
-  if (!session?.user?.email) {
+  if (!session || !session?.user?.email) {
     redirect("/login")
   }
+
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ["teams"],
+    queryFn: () => getItems(`${process.env.NEXTAUTH_URL}/api/teams`),
+  })
+
   return (
     <section>
       <div className=" flex flex-1">
@@ -121,7 +135,11 @@ export default async function DashboardLayout({
             </div>
           </div>
         </div>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {children}
+          </HydrationBoundary>
+        </div>
       </div>
     </section>
   )
