@@ -3,8 +3,10 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
+import { postItems } from "@/lib/resquest"
 import { RegiterType, registerSchema } from "@/lib/validators/auth"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,41 +22,39 @@ import { Input } from "@/components/ui/input"
 import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
 
+const initalValues = {
+  username: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+}
+
 const SignupForm = () => {
+  const [values, setValues] = useState(initalValues)
   const [userCred, setUserCred] = useState<any>(null)
-  const [loading, setLoading] = useState(false)
   const form = useForm<RegiterType>({
     resolver: zodResolver(registerSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+    defaultValues: initalValues,
+  })
+
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async () => {
+      const data = await postItems(values, "/api/users")
+      return data
+    },
+    onSuccess: (data) => {
+      setUserCred(data.user)
     },
   })
 
   const onSubmit = async (values: RegiterType) => {
-    setLoading(true)
-    const responce = await fetch("/api/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        confirmPassword: values.confirmPassword,
-      }),
+    setValues({
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirmPassword: values.confirmPassword,
     })
-
-    if (responce.ok) {
-      setLoading(false)
-      setUserCred(responce.body)
-    } else {
-      setLoading(false)
-      console.log("Registration failed")
-    }
+    mutateAsync()
   }
 
   return userCred ? (
@@ -133,7 +133,7 @@ const SignupForm = () => {
         <Button
           type="submit"
           className="py-4 text-lg w-full"
-          isLoading={loading}
+          isLoading={isPending}
         >
           Sign up
         </Button>

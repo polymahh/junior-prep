@@ -77,7 +77,6 @@ function CreateTeamForm() {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
       const data = await postItems(values, "/api/teams")
-      console.log(data)
       return data
     },
     onSuccess: async (data) => {
@@ -87,7 +86,6 @@ function CreateTeamForm() {
   })
 
   const onSubmit = async (values: teamType) => {
-    console.log("🚀 ~ file: CreateTeamForm.tsx:66 ~ onSubmit ~ values:", values)
     setValues({
       name: values.name,
       description: values.description,
@@ -96,38 +94,8 @@ function CreateTeamForm() {
       creatorRole: values.creatorRole,
     })
     mutateAsync()
-    // const responce = await fetch("/api/teams", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     name: values.name,
-    //     description: values.description,
-    //     roles: values.roles.filter((role) => role.active),
-    //     repo: values.repo,
-    //     creatorRole: values.creatorRole,
-    //   }),
-    // })
-    //   .then((res) => {
-    //     setStatus(res.status)
-    //     return res.json()
-    //   })
-    //   .then((data) => {
-    //     console.log(data)
-    //     setData(data)
-    //   })
   }
 
-  // useEffect(() => {
-  //   if (status === 201) {
-  //     console.log(data?.message)
-  //     router.push(`/dashboard/teams/${data?.team?.id}`)
-  //   } else {
-  //     console.log(data?.message)
-  //     setLoading(false)
-  //   }
-  // }, [data])
   return (
     <Form {...form}>
       <form

@@ -5,7 +5,7 @@ import { Layout } from "lucide-react"
 import ChartCard from "@/components/chartCard"
 import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
-import TeamsCard from "@/components/teamsCard"
+import TeamsCard from "@/components/teams/TeamsList"
 
 const Dashboard = () => {
   return (

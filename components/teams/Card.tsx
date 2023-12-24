@@ -9,8 +9,7 @@ import { Icons } from "../icons"
 import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
 
-export default function Card({ team }: any) {
-  const { Project, creatorRole, Role, creator, id } = team
+export default function Card({ Project, creatorRole, Role, creator, id }: any) {
   return (
     <div className="grid grid-cols-3 rounded-md bg-secondary p-4 ">
       <div className="flex  gap-4">
@@ -56,13 +55,14 @@ export default function Card({ team }: any) {
         </Link>
       </div>
 
-      <div className="flex">
+      <div className="flex items-center">
         <div className="flex flex-col gap-2 flex-1 ">
           <span className="text-sm text-muted-foreground">Roles needed:</span>
           <div className="flex flex-wrap gap-2">
             {Role.map((role: any) => {
               return (
                 <Badge
+                  key={role.roleName}
                   className={badgeVariants({
                     variant: role.roleName.toLowerCase(),
                   })}

@@ -13,13 +13,11 @@ import { Icons } from "../icons"
 import { Button, buttonVariants } from "../ui/button"
 import Card from "./Card"
 
-function TeamsCard() {
+function TeamList() {
   const { data, isFetching, isError } = useQuery({
     queryKey: ["teams"],
     queryFn: () => getItems("/api/teams"),
   })
-
-  console.log(data)
 
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
@@ -42,10 +40,10 @@ function TeamsCard() {
           ? "Loading ..."
           : isError
           ? "something went wrong"
-          : data.teams.map((team: any) => <Card key={team.id} team={team} />)}
+          : data.teams.map((team: any) => <Card key={team.id} {...team} />)}
       </div>
     </div>
   )
 }
 
-export default TeamsCard
+export default TeamList
