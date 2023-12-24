@@ -127,7 +127,7 @@ export async function DELETE (req: Request,{params}:{params:{teamId:string}}) {
 
     const user = await db.user.findUnique({
         where:{
-            id: team?.creatorId
+            id: team?.creatorId as string
         }
     })
     

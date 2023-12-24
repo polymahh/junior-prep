@@ -31,14 +31,11 @@ import { getServerSession } from "next-auth";
             creatorId: user?.id!,
             creatorRole:creatorRole as roleName,
             Project:{
-                create : [
-                    {
+                create : {
                         name,
                         description,
                         githubRepo : repo,
-                        
                     }
-                ]
             },
             Role:{
               create : roles.filter(role => role.active).map(role => {

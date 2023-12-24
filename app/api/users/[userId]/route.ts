@@ -29,6 +29,11 @@ export async function GET({params}:{params:{userId:string}}){
         where:{
             id:userId,
         },
+        select:{
+            username:true,
+            githubId:true,
+            image:true,
+        }
         
     })
 
