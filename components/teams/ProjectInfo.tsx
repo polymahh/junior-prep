@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Icons } from "../icons"
 import { Badge, badgeVariants } from "../ui/badge"
 import { Button, buttonVariants } from "../ui/button"
+import EditTeam from "./EditTeam"
 
 function ProjectInfo({ creator, project, roles }: any) {
   return (
@@ -41,16 +42,7 @@ function ProjectInfo({ creator, project, roles }: any) {
             <span>{project?.name}</span> <ExternalLink className="h-5 pt-1" />
           </Link>
         </div>
-        <Button
-          className={buttonVariants({
-            variant: "secondary",
-            className: "self-start",
-            size: "sm",
-          })}
-        >
-          <Pencil className="mr-2 h-5" />
-          Edit
-        </Button>
+        <EditTeam />
       </div>
       {/* project info */}
       <div className=" flex flex-col gap-8 pt-6  ">
