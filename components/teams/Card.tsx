@@ -9,7 +9,13 @@ import { Icons } from "../icons"
 import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
 
-export default function Card({ Project, creatorRole, Role, creator, id }: any) {
+export default function Card({
+  project,
+  creatorRole,
+  roles,
+  creator,
+  id,
+}: any) {
   return (
     <div className="grid grid-cols-3 rounded-md bg-secondary p-4 ">
       <div className="flex  gap-4">
@@ -46,12 +52,12 @@ export default function Card({ Project, creatorRole, Role, creator, id }: any) {
       <div className="flex flex-col gap-2 ">
         <span className="text-sm text-muted-foreground">Project repo:</span>
         <Link
-          href={`${Project[0]?.githubRepo}`}
+          href={`${project?.githubRepo}`}
           target="_blank"
           className="flex items-center justify-center gap-1 self-start rounded-sm bg-secondary-foreground px-2 py-1 text-secondary"
         >
           <Icons.gitHub className="h-5" />
-          <span>{Project[0]?.name}</span> <ExternalLink className="h-4" />
+          <span>{project?.name}</span> <ExternalLink className="h-4" />
         </Link>
       </div>
 
@@ -59,7 +65,7 @@ export default function Card({ Project, creatorRole, Role, creator, id }: any) {
         <div className="flex flex-col gap-2 flex-1 ">
           <span className="text-sm text-muted-foreground">Roles needed:</span>
           <div className="flex flex-wrap gap-2">
-            {Role.map((role: any) => {
+            {roles.map((role: any) => {
               return (
                 <Badge
                   key={role.roleName}

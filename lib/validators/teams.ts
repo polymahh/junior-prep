@@ -33,3 +33,5 @@ export const updateTeam = z.object({
 
 
   export type teamType = z.infer<typeof teamSchema>
+
+  // TODO: validate team response 

@@ -76,9 +76,13 @@ export async function GET(req : Request){
    const team = await db.team.findMany({
       include:{
         Project:{
-          where:{
-            isCompleted:false
-          },
+          select:{
+            name:true,
+            githubRepo:true,
+            description:true,
+            isCompleted:true,
+            createdAt:true
+        }
         },
         Role:true,
         creator:{
@@ -88,7 +92,12 @@ export async function GET(req : Request){
         }
       }
    })
-   return Response.json({teams: team , message: "teams list success"}, {status : 201})
+
+   const teams = team.map((team)=> {
+    const {Project, Role: roles, ...rest} = team
+    return {project : Project[0], roles, ...rest}
+   })
+   return Response.json({teams , message: "teams list success"}, {status : 201})
   }catch(error){
       console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)
       return Response.json({  message: "Something went wrong!"}, {status : 500})

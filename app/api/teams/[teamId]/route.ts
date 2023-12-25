@@ -30,12 +30,31 @@ export async function GET (req: Request,{params}:{params:{teamId:string}}) {
             id:teamId,
         },
         include:{
-            Project:true,
-            Role: true
-        }
+            Project:{
+                select:{
+                    name:true,
+                    githubRepo:true,
+                    description:true,
+                    isCompleted:true,
+                    createdAt:true,
+                }
+            },
+            Role: true,
+            creator:{
+                select:{
+                  username : true,
+                  image:true,
+                  githubId:true
+                }
+              }
+            
+        },
+        
     })
 
-    return Response.json({team:team,message:"team with ID found"},{status:201})
+    const {Project, Role: roles, ...rest} = team!
+
+    return Response.json({team:{project : Project[0], roles, ...rest},message:"team with ID found"},{status:201})
 
     }catch(error){
         console.log(error)

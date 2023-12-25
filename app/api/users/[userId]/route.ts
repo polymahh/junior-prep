@@ -4,7 +4,8 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 
-export async function GET({params}:{params:{userId:string}}){
+export async function GET(req: Request,{params}:{params:{userId:string}}){
+    console.log("🚀 ~ file: route.ts:8 ~ GET ~ params:", params)
     try{
 
         const {userId} = params
@@ -41,7 +42,7 @@ export async function GET({params}:{params:{userId:string}}){
         return NextResponse.json({message: 'Missing user'},{status: 400});
       }
 
-    return Response.json({team:user,message:"user found"},{status:201})
+    return Response.json({user:user,message:"user found"},{status:201})
 
     }catch(error){
         console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)

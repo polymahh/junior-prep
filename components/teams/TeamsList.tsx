@@ -18,6 +18,7 @@ function TeamList() {
     queryKey: ["teams"],
     queryFn: () => getItems("/api/teams"),
   })
+  console.log("🚀 ~ file: TeamsList.tsx:21 ~ TeamList ~ data:", data)
 
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
