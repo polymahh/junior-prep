@@ -14,27 +14,18 @@ import ProjectInfo from "./ProjectInfo"
 
 function TeamPreview({ teamid }: { teamid: string }) {
   const queryClient = useQueryClient()
-  const {
-    data: team,
-    isLoading,
-    isSuccess,
-  } = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: ["teams", teamid],
     queryFn: () => getItems(`/api/teams/${teamid}`),
     initialData: () => {
-      return queryClient
+      const team = queryClient
         .getQueryData<{ teams?: [] }>(["teams"])
         ?.teams?.find((team: any) => team.id === teamid)
+      return team
     },
   })
-  // //TODO : if the user is the same as session user use session data
-  console.log("🚀 ~ file: TeamPreview.tsx:19 ~ TeamPreview ~ data:", team)
 
-  console.log(
-    queryClient
-      .getQueryData<{ teams?: [] }>(["teams"])
-      ?.teams?.find((team: any) => team.id === teamid)
-  )
+  const team = data?.team
 
   return isSuccess ? (
     <>

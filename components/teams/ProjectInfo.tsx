@@ -10,7 +10,7 @@ import { Badge, badgeVariants } from "../ui/badge"
 import { Button, buttonVariants } from "../ui/button"
 import EditTeam from "./EditTeam"
 
-function ProjectInfo({ creator, project, roles }: any) {
+function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
   return (
     <div className=" flex h-full flex-col justify-between rounded-lg border p-4">
       {/* creator info */}
@@ -42,7 +42,7 @@ function ProjectInfo({ creator, project, roles }: any) {
             <span>{project?.name}</span> <ExternalLink className="h-5 pt-1" />
           </Link>
         </div>
-        <EditTeam />
+        <EditTeam team={{ creator, project, roles, creatorRole, id }} />
       </div>
       {/* project info */}
       <div className=" flex flex-col gap-8 pt-6  ">

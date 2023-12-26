@@ -6,7 +6,7 @@ import { roleName } from "@prisma/client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
-import { postItems } from "@/lib/resquest"
+import { postItems, putItems } from "@/lib/resquest"
 import { cn } from "@/lib/utils"
 import { teamType } from "@/lib/validators/teams"
 import {
@@ -30,7 +30,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
 
-const roles = [
+const defaultRoles = [
   {
     active: true,
     name: "FRONTEND",
@@ -53,21 +53,34 @@ const roles = [
   },
 ] as const
 
-function CreateTeamForm() {
+function CreateTeamForm({ team, setOpen }: any) {
+  //TODO: needs team response type
   const [status, setStatus] = useState(0)
   const [values, setValues] = useState<any>()
+
+  console.log(team)
 
   const router = useRouter()
 
   const form = useForm<teamType>({
     mode: "onChange",
-    defaultValues: {
-      name: "",
-      description: "",
-      repo: "",
-      roles: [...roles],
-      creatorRole: "",
-    },
+    defaultValues: !!team
+      ? {
+          name: team?.project?.name,
+          description: team?.project?.description,
+          repo: team?.project?.githubRepo,
+          roles: team?.roles?.map((role: any) => {
+            return { stack: role.stack, name: role.roleName, active: true }
+          }),
+          creatorRole: team?.creatorRole,
+        }
+      : {
+          name: "",
+          description: "",
+          repo: "",
+          roles: [...defaultRoles],
+          creatorRole: "",
+        },
   })
 
   form.watch("roles")
@@ -76,12 +89,21 @@ function CreateTeamForm() {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      const data = await postItems(values, "/api/teams")
+      const data = !team
+        ? await postItems(values, "/api/teams")
+        : await putItems(values, `/api/teams/${team.id}`)
       return data
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({ queryKey: ["teams"] })
-      router.push(`/dashboard/teams/${data?.team?.id}`)
+      if (!team) {
+        router.push(`/dashboard/teams/${team.id}`)
+      } else {
+        await queryClient.invalidateQueries({
+          queryKey: ["teams", team.id],
+        })
+        setOpen(false)
+      }
     },
   })
 
@@ -93,6 +115,7 @@ function CreateTeamForm() {
       repo: values.repo,
       creatorRole: values.creatorRole,
     })
+
     mutateAsync()
   }
 
@@ -102,12 +125,14 @@ function CreateTeamForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex w-full flex-col  space-y-6  sm:w-[600px] "
       >
-        <div className="bg-muted p-4 text-muted-foreground">
-          Create a project repo on github <br />
-          write a description for your project:
-          <br />
-          - what this project about <br />- roles needed and stack used
-        </div>
+        {!team && (
+          <div className="bg-muted p-4 text-muted-foreground">
+            Create a project repo on github <br />
+            write a description for your project:
+            <br />
+            - what this project about <br />- roles needed and stack used
+          </div>
+        )}
         <FormField
           control={form.control}
           name="name"
@@ -153,15 +178,16 @@ function CreateTeamForm() {
             </FormItem>
           )}
         />
-        <div className="bg-muted p-4 text-muted-foreground">
-          below you can add the roles you need in this Project <br />
-          and add languages, technologies used for a role
-        </div>
-        {roles.map((role, idx) => {
+        {!team && (
+          <div className="bg-muted p-4 text-muted-foreground">
+            below you can add the roles you need in this Project <br />
+            and add languages, technologies used for a role
+          </div>
+        )}
+        {defaultRoles.map((role, idx) => {
           return (
-            <div className="space-y-3">
+            <div key={role.name} className="space-y-3">
               <FormField
-                key={role.name}
                 control={form.control}
                 name={`roles.${idx}.active`}
                 render={({ field }) => {
@@ -236,7 +262,9 @@ function CreateTeamForm() {
                     .getValues("roles")
                     .filter((r) => r.active)
                     .map((role) => (
-                      <SelectItem value={role.name}>{role.name}</SelectItem>
+                      <SelectItem key={role.name} value={role.name}>
+                        {role.name}
+                      </SelectItem>
                     ))}
                 </SelectContent>
               </Select>
@@ -244,7 +272,7 @@ function CreateTeamForm() {
           )}
         />
         <Button type="submit" className="self-center" isLoading={isPending}>
-          Create Team
+          {!team ? "Create Team" : "Edit Team"}
         </Button>
       </form>
     </Form>

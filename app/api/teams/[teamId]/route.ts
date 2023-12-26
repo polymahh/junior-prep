@@ -101,9 +101,9 @@ export async function PUT (req: Request,{params}:{params:{teamId:string}}) {
         return NextResponse.json({message: 'Team not found'},{status: 400});
       }
 
-      if(project?.team.creatorId !== session?.user?.email){
-        return Response.json({message:"You are not authorized"},{status:401})
-    }
+    // if(project?.team.creatorId !== session?.user?.email){
+    //     return Response.json({message:"You are not authorized"},{status:401})
+    // }
 
     return Response.json({team:project,message:"Team found"},{status:201})
 
