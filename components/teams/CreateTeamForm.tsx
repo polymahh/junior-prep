@@ -55,11 +55,7 @@ const defaultRoles = [
 
 function CreateTeamForm({ team, setOpen }: any) {
   //TODO: needs team response type
-  const [status, setStatus] = useState(0)
   const [values, setValues] = useState<any>()
-
-  console.log(team)
-
   const router = useRouter()
 
   const form = useForm<teamType>({

@@ -6,10 +6,9 @@ import { Users } from "lucide-react"
 
 import { getItems } from "@/lib/resquest"
 import Comments from "@/components/comments"
-import CreatorCard from "@/components/creatorCard"
-import ProjectDescription from "@/components/projectDescription"
 import Roles from "@/components/roles"
 
+import MemberSection from "../members/MemberSection"
 import ProjectInfo from "./ProjectInfo"
 
 function TeamPreview({ teamid }: { teamid: string }) {
@@ -21,7 +20,7 @@ function TeamPreview({ teamid }: { teamid: string }) {
       const team = queryClient
         .getQueryData<{ teams?: [] }>(["teams"])
         ?.teams?.find((team: any) => team.id === teamid)
-      return team
+      return { team }
     },
   })
 
@@ -38,7 +37,7 @@ function TeamPreview({ teamid }: { teamid: string }) {
           <ProjectInfo {...team} />
         </div>
         <Comments />
-        <Roles />
+        <MemberSection />
       </div>
     </>
   ) : (

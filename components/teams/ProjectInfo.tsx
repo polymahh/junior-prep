@@ -48,12 +48,7 @@ function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
       <div className=" flex flex-col gap-8 pt-6  ">
         <div className="flex flex-col justify-start gap-4">
           <span className="border-b text-lg font-semibold">Description:</span>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur aut
-            odio autem facere impedit esse numquam asperiores earum doloremque
-            nulla iste sit voluptatum itaque, modi tempore in! Expedita,
-            delectus commodi?
-          </p>
+          <p>{project?.description}</p>
         </div>
         <div className="flex flex-col gap-4 ">
           <span className="border-b text-lg font-semibold ">Roles:</span>

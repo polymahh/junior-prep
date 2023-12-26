@@ -5,7 +5,6 @@ import { Pencil } from "lucide-react"
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -22,7 +21,7 @@ function EditTeam({ team }: any) {
   const [open, setOpen] = useState(false)
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="self-start">
         <div
           className={buttonVariants({
