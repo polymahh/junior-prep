@@ -11,42 +11,26 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@index([userId])
+enum roleName {
+  FRONTEND
+  BACKEND
+  DESIGN
+  SENIOR
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
+enum provider {
+  LOCAL
+  GITHUB
+  DISCORD
 }
 
 model User {
-  id              String        @id @default(cuid())
+  id              String        @id @default(uuid())
   name            String?
   username        String?       @unique
   password        String?
   email           String        @unique
+  provider        provider       
   emailVerified   DateTime?
   image           String?
   createdAt       DateTime      @default(now())
@@ -54,8 +38,6 @@ model User {
   githubId        String?
   discordId       String?
   discordVerified DateTime?
-  accounts        Account[]
-  sessions        Session[]
   UserRole        UserRole[]
   Request         Request[]
   comment         comment[]
@@ -107,12 +89,7 @@ model Team {
   @@index([id])
 }
 
-enum roleName {
-  FRONTEND
-  BACKEND
-  DESIGN
-  SENIOR
-}
+
 
 model Role {
   id        String     @id @default(cuid())

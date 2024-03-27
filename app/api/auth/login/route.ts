@@ -9,7 +9,7 @@ export async function Post(req: Request) {
 
   try {
     const existingUser = await db.user.findUnique({
-      where: { email },
+      where: { email, provider: "LOCAL" },
     })
 
     if (!existingUser) {
@@ -19,20 +19,18 @@ export async function Post(req: Request) {
       )
     }
 
-    if (existingUser.password) {
-      const passwordMatch = compare(existingUser.password, password)
-      if (!passwordMatch) {
-        return null
-      }
+    const passwordMatch = compare(existingUser.password!, password)
+    if (!passwordMatch) {
+      return NextResponse.json(
+        { message: "Email or password is incorrect!" },
+        { status: 401 }
+      )
     }
 
-    const accessToken = generateAccessToken(
-      existingUser.id,
-      existingUser.username || "test"
-    )
+    const accessToken = generateAccessToken(existingUser.id, existingUser.email)
     const refreshToken = generateRefreshToken(
       existingUser.id,
-      existingUser.username || "test"
+      existingUser.email
     )
 
     const next = NextResponse.next()
@@ -43,7 +41,7 @@ export async function Post(req: Request) {
       secure: true,
       httpOnly: true,
       sameSite: "strict",
-      expires: new Date(Date.now() + 2592000000), //how many seconds until it expires in ms (30 days)
+      expires: new Date(Date.now() + 2592000000), //expires in (30 days)
     })
     return NextResponse.json(
       { user: existingUser, accessToken },
