@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
+import { provider } from "@prisma/client"
 import { compare, genSalt, hash } from "bcrypt"
 
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt-tokens"
 
-export async function Post(req: Request) {
+export async function POST(req: Request) {
   const { email, password, confirmPassword } = await req.json()
 
   try {
@@ -34,12 +35,12 @@ export async function Post(req: Request) {
       data: {
         email,
         password: hashedPassword,
-        provider: "LOCAL",
+        provider: "LOCAL" as provider,
       },
     })
 
-    const accessToken = generateAccessToken(user.id, user.email)
-    const refreshToken = generateRefreshToken(user.id, user.email)
+    const accessToken = await generateAccessToken(user.id, user.email)
+    const refreshToken = await generateRefreshToken(user.id, user.email)
 
     const next = NextResponse.next()
 

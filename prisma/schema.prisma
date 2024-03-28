@@ -21,11 +21,10 @@ enum roleName {
 enum provider {
   LOCAL
   GITHUB
-  DISCORD
 }
 
 model User {
-  id              String        @id @default(uuid())
+  id              String        @id @default(cuid())
   name            String?
   username        String?       @unique
   password        String?

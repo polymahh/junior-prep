@@ -27,8 +27,11 @@ export async function Post(req: Request) {
       )
     }
 
-    const accessToken = generateAccessToken(existingUser.id, existingUser.email)
-    const refreshToken = generateRefreshToken(
+    const accessToken = await generateAccessToken(
+      existingUser.id,
+      existingUser.email
+    )
+    const refreshToken = await generateRefreshToken(
       existingUser.id,
       existingUser.email
     )
