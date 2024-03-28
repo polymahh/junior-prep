@@ -6,7 +6,6 @@ import {
   dehydrate,
 } from "@tanstack/react-query"
 import { BookOpenCheck, Layout, Users } from "lucide-react"
-import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
 import { getItems } from "@/lib/resquest"
@@ -19,13 +18,6 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const session = await getServerSession()
-
-  console.log(session)
-  if (!session || !session?.user?.email) {
-    redirect("/login")
-  }
-
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({

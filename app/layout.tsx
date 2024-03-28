@@ -1,6 +1,5 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
-import { getServerSession } from "next-auth"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
@@ -27,12 +26,11 @@ interface RootLayoutProps {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const session = await getServerSession()
   return (
     <>
       <html lang="en" suppressHydrationWarning>
         <head />
-        <Providers session={session}>
+        <Providers>
           <body
             className={cn(
               "min-h-screen bg-background font-sans antialiased",

@@ -3,16 +3,8 @@
 import { ReactNode, useState } from "react"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
-import { Session } from "next-auth"
-import { SessionProvider } from "next-auth/react"
 
-function Providers({
-  children,
-  session,
-}: {
-  children: ReactNode
-  session: Session | null
-}) {
+function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -29,7 +21,7 @@ function Providers({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <SessionProvider session={session}>{children}</SessionProvider>
+      {children}
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   )

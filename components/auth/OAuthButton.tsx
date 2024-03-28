@@ -2,13 +2,11 @@
 
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signIn, useSession } from "next-auth/react"
 
 import { Button } from "../ui/button"
 
 const OAuthButtons = () => {
   const loading = false
-  const session = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
@@ -21,11 +19,7 @@ const OAuthButtons = () => {
         size="lg"
         variant="secondary"
         className={"h-12 gap-4 py-2"}
-        onClick={() =>
-          signIn("github", {
-            callbackUrl: "/dashboard",
-          })
-        }
+        // onClick={() => signIn("github")}
         isLoading={loading}
       >
         {loading ? null : (

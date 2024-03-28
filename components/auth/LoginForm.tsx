@@ -4,7 +4,6 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
 import { useForm } from "react-hook-form"
 
 import { LoginType, loginSchema } from "@/lib/validators/auth"
@@ -40,21 +39,20 @@ function LoginForm() {
   console.log(origin ?? "dashboard")
 
   async function onSubmit(values: LoginType) {
-    setLoading(true)
-    const loginData = await signIn("credentials", {
-      email: values.email,
-      password: values.password,
-      redirect: false,
-    })
-
-    if (loginData?.error) {
-      setShowErr(true)
-      setLoading(false)
-    } else {
-      setLoading(false)
-      console.log(loginData)
-      router.push(origin ? `/${origin}` : "/dashboard")
-    }
+    // setLoading(true)
+    // const loginData = await signIn("credentials", {
+    //   email: values.email,
+    //   password: values.password,
+    //   redirect: false,
+    // })
+    // if (loginData?.error) {
+    //   setShowErr(true)
+    //   setLoading(false)
+    // } else {
+    //   setLoading(false)
+    //   console.log(loginData)
+    //   router.push(origin ? `/${origin}` : "/dashboard")
+    // }
   }
   return (
     <Form {...form}>
