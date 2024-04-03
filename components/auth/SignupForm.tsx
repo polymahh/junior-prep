@@ -3,9 +3,10 @@
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
+import { authApi } from "@/lib/api/authApi"
 import { postItems } from "@/lib/resquest"
 import { RegiterType, registerSchema } from "@/lib/validators/auth"
 import { Button } from "@/components/ui/button"
@@ -23,42 +24,35 @@ import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
 
 const initalValues = {
-  username: "",
   email: "",
   password: "",
   confirmPassword: "",
 }
 
+const queryClient = new QueryClient()
+
 const SignupForm = () => {
-  const [values, setValues] = useState(initalValues)
-  const [userCred, setUserCred] = useState<any>(null)
   const form = useForm<RegiterType>({
     resolver: zodResolver(registerSchema),
     defaultValues: initalValues,
   })
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: async () => {
-      const data = await postItems(values, "/api/users")
+  const { mutateAsync, data, isPending, isSuccess } = useMutation({
+    mutationFn: async (userDetails: RegiterType) => {
+      const data = await authApi.signup(userDetails)
       return data
     },
     onSuccess: (data) => {
-      setUserCred(data.user)
+      queryClient.setQueryData(["user"], () => data)
     },
   })
 
   const onSubmit = async (values: RegiterType) => {
-    setValues({
-      username: values.username,
-      email: values.email,
-      password: values.password,
-      confirmPassword: values.confirmPassword,
-    })
-    mutateAsync()
+    mutateAsync(values)
   }
 
-  return userCred ? (
-    <EmailVerification email={userCred?.email} />
+  return isSuccess ? (
+    <EmailVerification email={data?.email} />
   ) : (
     <Form {...form}>
       <form
@@ -72,20 +66,7 @@ const SignupForm = () => {
         <div className="mt-2 flex w-full items-center before:flex-1 before:border-t before:border-border after:flex-1  after:border-t after:border-border">
           <p className="mx-4 mb-0 text-center font-semibold ">OR</p>
         </div>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem className="w-full">
-              <FormLabel className="text-lg">Username</FormLabel>
-              <FormControl>
-                <Input placeholder="Username" {...field} />
-              </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="email"

@@ -1,18 +1,13 @@
-import { SignJWT, jwtVerify, type JWTPayload } from "jose"
-import { sign } from "jsonwebtoken"
+import { SignJWT } from "jose"
 
 async function generateAccessToken(
   id: string,
   username: string
 ): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000)
-  const exp = iat + 60 * 60 // one hour
-
   return new SignJWT({ id, username })
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setExpirationTime(exp)
-    .setIssuedAt(iat)
-    .setNotBefore(iat)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("1h")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 
@@ -20,14 +15,10 @@ async function generateRefreshToken(
   id: string,
   username: string
 ): Promise<string> {
-  const iat = Math.floor(Date.now() / 1000)
-  const exp = iat + parseInt(process.env.REFRESH_TOKEN_EXPIRES_IN!)
-
   return new SignJWT({ id, username })
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setExpirationTime(exp)
-    .setIssuedAt(iat)
-    .setNotBefore(iat)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("4weeks")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 

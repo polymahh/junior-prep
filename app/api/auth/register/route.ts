@@ -1,14 +1,18 @@
+import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { provider } from "@prisma/client"
-import { compare, genSalt, hash } from "bcrypt"
+import { genSalt, hash } from "bcrypt"
 
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt-tokens"
+import { registerSchema } from "@/lib/validators/auth"
 
 export async function POST(req: Request) {
-  const { email, password, confirmPassword } = await req.json()
-
   try {
+    const body = await req.json()
+    //validation
+    const { email, password } = registerSchema.parse(body)
+
     const existingEmail = await db.user.findUnique({
       where: { email },
     })
@@ -16,15 +20,6 @@ export async function POST(req: Request) {
     if (existingEmail) {
       return NextResponse.json(
         { message: "This email is already in use" },
-        { status: 401 }
-      )
-    }
-
-    const passwordMatched = password === confirmPassword
-
-    if (!passwordMatched) {
-      return NextResponse.json(
-        { message: "Passwords don't match" },
         { status: 401 }
       )
     }
@@ -42,17 +37,29 @@ export async function POST(req: Request) {
     const accessToken = await generateAccessToken(user.id, user.email)
     const refreshToken = await generateRefreshToken(user.id, user.email)
 
-    const next = NextResponse.next()
+    cookies().set({
+      name: "_acc__token",
+      value: accessToken,
+      secure: true,
+      httpOnly: true,
+      sameSite: "strict",
+      expires: new Date(
+        Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
+      ), //expires in (15 min)
+    })
 
-    next.cookies.set({
+    cookies().set({
       name: "_ref__token",
       value: refreshToken,
       secure: true,
       httpOnly: true,
       sameSite: "strict",
-      expires: new Date(Date.now() + 2592000000), //expires in (30 days)
+      expires: new Date(
+        Date.now() + Number(process.env.REFRESH_TOKEN_EXPIRES_IN)
+      ), //expires in (30 days)
     })
-    return NextResponse.json({ user: user, accessToken }, { status: 200 })
+
+    return NextResponse.json({ user: user }, { status: 200 })
   } catch (error) {
     console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)
     return NextResponse.json(

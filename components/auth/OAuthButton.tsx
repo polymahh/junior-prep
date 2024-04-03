@@ -11,8 +11,6 @@ const OAuthButtons = () => {
   const searchParams = useSearchParams()
   const error = searchParams.get("error")
 
-  console.log(error)
-
   return (
     <div className="flex flex-col items-center gap-2">
       <Button

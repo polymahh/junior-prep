@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { redirect, useRouter } from "next/navigation"
-import { roleName } from "@prisma/client"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
@@ -196,7 +195,10 @@ function CreateTeamForm({ team, setOpen }: any) {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={(checked: boolean) => {
-                            console.log(checked)
+                            console.log(
+                              "🚀 ~ {defaultRoles.map ~ checked:",
+                              checked
+                            )
                             form.setValue(`roles.${idx}.active`, checked)
                           }}
                         />

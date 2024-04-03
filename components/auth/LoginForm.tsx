@@ -6,6 +6,8 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
+import { authApi } from "@/lib/api/authApi"
+import { axios } from "@/lib/axios"
 import { LoginType, loginSchema } from "@/lib/validators/auth"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -34,9 +36,6 @@ function LoginForm() {
   })
 
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const origin = searchParams.get("origin")
-  console.log(origin ?? "dashboard")
 
   async function onSubmit(values: LoginType) {
     // setLoading(true)
@@ -53,6 +52,11 @@ function LoginForm() {
     //   console.log(loginData)
     //   router.push(origin ? `/${origin}` : "/dashboard")
     // }
+    const response = await authApi.signin(values)
+    console.log("🚀 ~ onSubmit ~ response:", response)
+    if (response.status === 200) {
+      router.push("/dashboard")
+    }
   }
   return (
     <Form {...form}>

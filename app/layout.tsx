@@ -1,11 +1,12 @@
 import "@/styles/globals.css"
 import { Metadata } from "next"
+import { cookies } from "next/headers"
 
 import { siteConfig } from "@/config/site"
 import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
-import Providers from "@/components/Providers"
-import { ThemeProvider } from "@/components/theme-provider"
+import Providers from "@/components/providers"
+import { ThemeProvider } from "@/components/providers/theme-provider"
 
 export const metadata: Metadata = {
   title: {
