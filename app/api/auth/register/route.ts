@@ -26,8 +26,11 @@ export async function POST(req: Request) {
 
     const salt = await genSalt(10)
     const hashedPassword = await hash(password, salt)
+
+    const username = `Junior-${Math.random().toString(36).slice(2)}`
     const user = await db.user.create({
       data: {
+        username,
         email,
         password: hashedPassword,
         provider: "LOCAL" as provider,
@@ -61,7 +64,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ user: user }, { status: 200 })
   } catch (error) {
-    console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)
+    console.log("🚀 ~ file: route.ts:65 ~ POST ~ error:", error)
     return NextResponse.json(
       { message: "Something went wrong!" },
       { status: 500 }

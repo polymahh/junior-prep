@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Plus, Users } from "lucide-react"
 
 import { Button, buttonVariants } from "@/components/ui/button"
-import TeamsCard from "@/components/teams/TeamsList"
+import TeamsList from "@/components/teams/TeamsList"
 
 const teams = async () => {
   return (
@@ -24,7 +24,7 @@ const teams = async () => {
         </Link>
       </div>
       <div>
-        <TeamsCard />
+        <TeamsList />
       </div>
     </div>
   )

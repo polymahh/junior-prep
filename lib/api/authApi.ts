@@ -10,19 +10,6 @@ export const authApi = {
   signin: async (userDetails: LoginType) => {
     const response = await axios.post("api/auth/login", userDetails)
     return response.data
-
-    // const response = await fetch("api/auth/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(userDetails),
-    // })
-
-    // const result = await response.json()
-    // console.log("🚀 ~ signin: ~ result:", result)
-
-    // return result
   },
 
   //   googleAuth: async () => {
@@ -36,7 +23,8 @@ export const authApi = {
   //   },
 
   getProfile: async () => {
-    const response = await axios.get("/profile")
+    const response = await axios.get("api/auth/profile")
+    console.log("🚀 ~ getProfile: ~ response:", response)
     return response.data
   },
 

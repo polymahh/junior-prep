@@ -9,20 +9,14 @@ import { Icons } from "../icons"
 import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
 
-export default function Card({
-  project,
-  creatorRole,
-  roles,
-  creator,
-  id,
-}: any) {
+export default function Card({ project, creatorRole, Role, creator, id }: any) {
   return (
     <div className="grid grid-cols-3 rounded-md bg-secondary p-4 ">
       <div className="flex  gap-4">
         <Avatar className="h-16 w-16 overflow-hidden rounded-sm bg-primary">
           <AvatarImage src={creator?.image} alt="@shadcn" />
           <AvatarFallback className="flex h-full items-center justify-center text-4xl text-primary-foreground">
-            {creator?.username[0].toUpperCase()}
+            {creator?.username ? creator?.username[0].toUpperCase() : "X"}
           </AvatarFallback>
         </Avatar>
         <div>
@@ -43,6 +37,9 @@ export default function Card({
           <div className="flex gap-2">
             <Badge
               className={badgeVariants({ variant: creatorRole.toLowerCase() })}
+              tooltip={`Stack: ${
+                Role?.find((r: any) => r.roleName === creatorRole)?.stack
+              }`}
             >
               {creatorRole.toLowerCase()}
             </Badge>
@@ -65,13 +62,12 @@ export default function Card({
         <div className="flex flex-col gap-2 flex-1 ">
           <span className="text-sm text-muted-foreground">Roles needed:</span>
           <div className="flex flex-wrap gap-2">
-            {roles.map((role: any) => {
+            {Role?.map((role: any) => {
               return (
                 <Badge
                   key={role.roleName}
-                  className={badgeVariants({
-                    variant: role.roleName.toLowerCase(),
-                  })}
+                  variant={role.roleName.toLowerCase()}
+                  tooltip={`Stack: ${role.stack}`}
                 >
                   {role.roleName.toLowerCase()}
                 </Badge>

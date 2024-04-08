@@ -1,6 +1,5 @@
 import React from "react"
-import { redirect } from "next/navigation"
-import { Plus, PlusCircle } from "lucide-react"
+import { PlusCircle } from "lucide-react"
 
 import CreateTeamForm from "@/components/teams/CreateTeamForm"
 

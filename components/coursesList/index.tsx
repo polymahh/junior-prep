@@ -38,7 +38,7 @@ function CoursesList() {
       <div className="flex flex-col items-center py-4 gap-2">
         {courses?.map((item, indx) => {
           return (
-            <div className="w-full">
+            <div key={indx} className="w-full">
               <Image
                 key={indx}
                 src={`/images${item.img}`}

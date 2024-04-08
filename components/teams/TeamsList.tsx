@@ -14,12 +14,18 @@ import { Button, buttonVariants } from "../ui/button"
 import Card from "./Card"
 
 function TeamList() {
-  const { data, isFetching, isError } = useQuery({
+  const { data, isSuccess } = useQuery({
     queryKey: ["teams"],
     queryFn: () => getItems("/api/teams"),
   })
-  console.log("🚀 ~ file: TeamsList.tsx:21 ~ TeamList ~ data:", data)
 
+  //TODO: create defirent teams list for teams page
+
+  useEffect(() => {
+    if (isSuccess) {
+      console.log("🚀 ~ TeamList ~ data:", data.teams)
+    }
+  }, [isSuccess])
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
       <div className=" flex justify-between border-b pb-1">
@@ -37,11 +43,10 @@ function TeamList() {
         </Link>
       </div>
       <div className="flex h-full flex-col gap-6 ">
-        {isFetching
-          ? "Loading ..."
-          : isError
-          ? "something went wrong"
-          : data.teams.map((team: any) => <Card key={team.id} {...team} />)}
+        {isSuccess &&
+          data?.teams?.map((team: any) => (
+            <Card key={team.id} project={team.Project[0]} {...team} />
+          ))}
       </div>
     </div>
   )

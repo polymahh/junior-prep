@@ -12,6 +12,7 @@ export async function POST(req: Request) {
       teamSchema.parse(body)
 
     const user = await db.user.findUnique({
+      // TODO: take email from jwt token
       where: {
         email: "admin@admin.com",
         // email: session.user?.email as string
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     const team = await db.team.create({
       data: {
         creatorId: user?.id!,
-        creatorRole: creatorRole as roleName,
+        creatorRole: creatorRole,
         Project: {
           create: {
             name,
@@ -30,14 +31,9 @@ export async function POST(req: Request) {
           },
         },
         Role: {
-          create: roles
-            .filter((role) => role.active)
-            .map((role) => {
-              return {
-                roleName: role.name as roleName,
-                stack: role.stack,
-              }
-            }),
+          createMany: {
+            data: roles,
+          },
         },
       },
     })
@@ -46,7 +42,7 @@ export async function POST(req: Request) {
       { status: 201 }
     )
   } catch (error) {
-    console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)
+    console.log("🚀 ~ file: teams route.ts:45 ~ POST ~ error:", error)
     return Response.json({ message: "Something went wrong!" }, { status: 500 })
   }
 }
@@ -70,7 +66,11 @@ export async function GET(req: Request) {
         },
         Role: true,
         creator: {
-          include: {
+          select: {
+            username: true,
+            image: true,
+            githubId: true,
+            email: true,
             UserRole: true,
           },
         },

@@ -2,8 +2,9 @@
 
 import React, { useState } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { redirect, useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useMutation } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { authApi } from "@/lib/api/authApi"
@@ -24,8 +25,7 @@ import OAuthButtons from "./OAuthButton"
 import ResetPassword from "./ResetPassword"
 
 function LoginForm() {
-  const [showErr, setShowErr] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const router = useRouter()
 
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
@@ -35,28 +35,19 @@ function LoginForm() {
     },
   })
 
-  const router = useRouter()
+  const { mutateAsync, isPending, isSuccess, error, isError } = useMutation({
+    mutationFn: async (userDetails: LoginType) => {
+      const data = await authApi.signin(userDetails)
+      return data
+    },
+    onSuccess: () => {
+      console.log("signin success")
+      window.location.href = "/dashboard"
+    },
+  })
 
   async function onSubmit(values: LoginType) {
-    // setLoading(true)
-    // const loginData = await signIn("credentials", {
-    //   email: values.email,
-    //   password: values.password,
-    //   redirect: false,
-    // })
-    // if (loginData?.error) {
-    //   setShowErr(true)
-    //   setLoading(false)
-    // } else {
-    //   setLoading(false)
-    //   console.log(loginData)
-    //   router.push(origin ? `/${origin}` : "/dashboard")
-    // }
-    const response = await authApi.signin(values)
-    console.log("🚀 ~ onSubmit ~ response:", response)
-    if (response.status === 200) {
-      router.push("/dashboard")
-    }
+    mutateAsync(values)
   }
   return (
     <Form {...form}>
@@ -118,7 +109,7 @@ function LoginForm() {
         <Button
           type="submit"
           className="py-4 text-lg w-full"
-          isLoading={loading}
+          isLoading={isPending}
         >
           Login
         </Button>

@@ -1,24 +1,21 @@
 import { SignJWT } from "jose"
 
-async function generateAccessToken(
-  id: string,
-  username: string
-): Promise<string> {
-  return new SignJWT({ id, username })
+async function generateAccessToken(id: string, email: string): Promise<string> {
+  return new SignJWT({ id, email })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1h")
+    .setExpirationTime("1m")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 
 async function generateRefreshToken(
   id: string,
-  username: string
+  email: string
 ): Promise<string> {
-  return new SignJWT({ id, username })
+  return new SignJWT({ id, email })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("4weeks")
+    .setExpirationTime("4w")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 

@@ -12,9 +12,9 @@ export async function POST(req: Request) {
   try {
     const tokens = cookies()
     const refreshToken = tokens.get("_ref__token")?.value
-    console.log("🚀 ~ POST ~ refreshToken:", refreshToken)
+    console.log("🚀 ~ POST route ~ refreshToken:", refreshToken)
 
-    if (!!refreshToken) {
+    if (refreshToken) {
       const { payload }: { payload: Token } = await jwtVerify(
         refreshToken,
         new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
       })
       return NextResponse.json({ user, accessToken }, { status: 200 })
     } else {
-      return Response.redirect(new URL("http://localhost:3000/login"))
+      return Response.redirect(new URL("/login", req.url))
     }
   } catch (error) {
     console.log("🚀 ~ POST ~ error:", error)

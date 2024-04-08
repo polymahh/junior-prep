@@ -1,108 +1,113 @@
-import { db } from "@/db";
-import { userSchema } from "@/lib/validators/users";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { NextResponse } from "next/server"
+import { db } from "@/db"
+import { getServerSession } from "next-auth"
 
+import { userSchema } from "@/lib/validators/users"
 
-export async function GET(req: Request,{params}:{params:{userId:string}}){
-    console.log("🚀 ~ file: route.ts:8 ~ GET ~ params:", params)
-    try{
-
-        const {userId} = params
+export async function GET(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
+  console.log("🚀 ~ file: route.ts:8 ~ GET ~ params:", params)
+  try {
+    const { userId } = params
 
     if (!userId) {
-        return NextResponse.json(
-          {
-            message: 'Missing user Id',
-          },
-          {
-            status: 400,
-          },
-        );
-      }
+      return NextResponse.json(
+        {
+          message: "Missing user Id",
+        },
+        {
+          status: 400,
+        }
+      )
+    }
 
     const session = await getServerSession()
-    //  if(!session){                           
+    //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
 
     const user = await db.user.findUnique({
-        where:{
-            id:userId,
-        },
-        select:{
-            username:true,
-            githubId:true,
-            image:true,
-        }
-        
+      where: {
+        id: userId,
+      },
+      select: {
+        username: true,
+        githubId: true,
+        image: true,
+      },
     })
 
     if (!user) {
-        return NextResponse.json({message: 'Missing user'},{status: 400});
-      }
-
-    return Response.json({user:user,message:"user found"},{status:201})
-
-    }catch(error){
-        console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)
-        return Response.json({  message: "Something went wrong!"}, {status : 500})
+      return NextResponse.json({ message: "Missing user" }, { status: 400 })
     }
+
+    return Response.json({ user: user, message: "user found" }, { status: 201 })
+  } catch (error) {
+    console.log("🚀 ~ file: userid route.ts:45 ~ POST ~ error:", error)
+    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+  }
 }
 
+export async function PUT(
+  req: Request,
+  { params }: { params: { userId: string } }
+) {
+  try {
+    const { userId } = params
 
-export async function PUT(req:Request, {params}:{params:{userId:string}}){
-    try{
+    if (!userId) {
+      return NextResponse.json({ message: "Missing user Id" }, { status: 400 })
+    }
 
-    const {userId} = params
-
-    if (!userId) {return NextResponse.json({message: 'Missing user Id'},{status: 400})} 
-
-        const body = req.body
-        const {name, username, email, image, githubId, discordId} = userSchema.parse(body)
-
-    
-    
+    const body = req.body
+    const { name, username, email, image, githubId, discordId } =
+      userSchema.parse(body)
 
     // check if user is authenticaed
     const session = await getServerSession()
-    //  if(!session){                           
+    //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
 
     const user = await db.user.findUnique({
-        where:{
-            id:userId,
-        },
-        
+      where: {
+        id: userId,
+      },
     })
 
     if (!user) {
-        return NextResponse.json({message: 'Missing user'},{status: 400});
+      return NextResponse.json({ message: "Missing user" }, { status: 400 })
     }
 
-    if(session?.user?.email !== user.email ){
-        return NextResponse.json({message:"You are not authorized"}, {status:401})
+    if (session?.user?.email !== user.email) {
+      return NextResponse.json(
+        { message: "You are not authorized" },
+        { status: 401 }
+      )
     }
 
     const updateUser = await db.user.update({
-        where:{
-            id:userId
-        },
-        data:{
-            name,
-            username,
-            email,
-            image,
-            githubId,
-            discordId
-        }
+      where: {
+        id: userId,
+      },
+      data: {
+        name,
+        username,
+        email,
+        image,
+        githubId,
+        discordId,
+      },
     })
 
-    return Response.json({team:updateUser,message:"user updated"},{status:201})
-
-    }catch(error){
-        console.log("🚀 ~ file: route.ts:45 ~ POST ~ error:", error)
-        return Response.json({  message: "Something went wrong!"}, {status : 500})
-    }
+    return Response.json(
+      { team: updateUser, message: "user updated" },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.log("🚀 ~ file: userid route.ts:45 ~ POST ~ error:", error)
+    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+  }
 }

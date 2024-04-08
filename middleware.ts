@@ -1,25 +1,77 @@
+import { error } from "console"
 import { cookies, headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
-import { jwtVerify } from "jose"
+import { errors, jwtVerify } from "jose"
 
+import getRefreshToken from "./lib/get_refresh_token"
+import { generateAccessToken } from "./lib/jwt-tokens"
 import { Token } from "./types/token"
 
 export default async function isAuthenticated(req: NextRequest) {
   const cookieStore = cookies()
-  const token = cookieStore.get("_acc__token")?.value
+  const accessToken = cookieStore.get("_acc__token")?.value
+  const refreshToken = cookieStore.get("_ref__token")?.value
+  let invalidAccessToken = false
+  let invalidRefreshToken = false
 
-  if (!token) return NextResponse.redirect(new URL(`/login`, req.url))
+  if (accessToken) {
+    try {
+      const { payload } = await jwtVerify(
+        accessToken,
+        new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+      )
+      console.log("valid access token")
+      return NextResponse.next()
+    } catch (err) {
+      console.log("invalid access token")
+      invalidAccessToken = true
+    }
+  } else {
+    console.log("no access token")
+    invalidAccessToken = true
+  }
 
-  try {
-    const { payload }: { payload: Token } = await jwtVerify(
-      token,
-      new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
-    )
+  if (invalidAccessToken) {
+    if (refreshToken) {
+      console.log("🚀 ~ isAuthenticated ~ refreshToken:", refreshToken)
+      try {
+        const { payload } = await jwtVerify(
+          refreshToken,
+          new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+        )
+        const accessToken = await generateAccessToken(
+          payload.id as string,
+          payload.email as string
+        )
 
-    return NextResponse.next()
-  } catch (error) {
-    console.log("🚀 ~ isAuthenticated ~ error:", error)
-    return NextResponse.redirect(new URL(`/login`, req.url))
+        console.log("valid refresh token and generated new access token")
+
+        const response = NextResponse.next()
+        response.cookies.set({
+          name: "_acc__token",
+          value: accessToken,
+          secure: true,
+          httpOnly: true,
+          sameSite: "strict",
+          expires: new Date(
+            Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
+          ),
+        })
+
+        return response
+      } catch (err) {
+        console.log("invalid refresh token", err)
+        invalidRefreshToken = true
+      }
+    }
+
+    if (!refreshToken || invalidRefreshToken) {
+      console.log(
+        "🚀 ~ isAuthenticated ~ !refreshToken || invalidRefreshToken:"
+      )
+      return NextResponse.redirect(new URL("/login", req.url))
+    }
   }
 }
 

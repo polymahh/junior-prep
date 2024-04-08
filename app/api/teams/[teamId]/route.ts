@@ -94,6 +94,8 @@ export async function PUT(
       return NextResponse.json({ message: "Team not found" }, { status: 400 })
     }
 
+    //TODO: get the user from token
+
     // if(project?.team.creatorId !== session?.user?.email){
     //     return Response.json({message:"You are not authorized"},{status:401})
     // }

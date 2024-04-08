@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation"
 import Axios from "axios"
 
 import { authApi } from "./api/authApi"
@@ -10,27 +11,28 @@ export const axios = Axios.create({
 // axios.interceptors.response.use(
 //   (response) => {
 //     return response
-//   },
-
-//   async (error) => {
-//     console.log("🚀 ~ error:", error)
-//     const originalRequest = error.config
-
-//     if (
-//       error.response.status === 401 &&
-//       !originalRequest._retry &&
-//       originalRequest.url !== "/api/auth/refresh" &&
-//       originalRequest.url !== "/api/auth/login"
-//     ) {
-//       originalRequest._retry = true
-//       try {
-//         await authApi.refreshToken()
-//         return axios(originalRequest)
-//       } catch (_error) {
-//         return Promise.reject(_error)
-//       }
-//     }
-
-//     return Promise.reject(error.response.data)
 //   }
+
+// async (error) => {
+//   console.log("🚀 axios ~ error:", error.config)
+//   const originalRequest = error.config
+
+//   if (
+//     error.response.status === 401 &&
+//     !originalRequest._retry &&
+//     originalRequest.url !== "/api/auth/refresh" &&
+//     originalRequest.url !== "/api/auth/login"
+//   ) {
+//     originalRequest._retry = true
+//     try {
+//       // await authApi.refreshToken()
+//       // return axios(originalRequest)
+//       redirect("/login")
+//     } catch (_error) {
+//       return Promise.reject(_error)
+//     }
+//   }
+
+//   return Promise.reject(error.response.data)
+// }
 // )

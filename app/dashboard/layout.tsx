@@ -19,17 +19,18 @@ import LogoutBtn from "@/components/auth/LogoutBtn"
 import { Icons } from "@/components/icons"
 import { AppProvider } from "@/components/providers/app-provider"
 
+import { queryClient } from "../layout"
+
 export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const queryClient = new QueryClient()
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: ["isAuthenticated"],
-  //   queryFn: () => authApi.refreshToken(),
-  // })
+  const data = await queryClient.prefetchQuery({
+    queryKey: ["profile"],
+    queryFn: async () => await authApi.getProfile(),
+  })
+  // console.log("🚀 ~ data:", data)
 
   // await queryClient.prefetchQuery({
   //   queryKey: ["teams"],
@@ -170,11 +171,7 @@ export default async function DashboardLayout({
             </div>
           </div>
         </div>
-        <div className="flex-1">
-          <HydrationBoundary state={dehydrate(queryClient)}>
-            {children}
-          </HydrationBoundary>
-        </div>
+        <div className="flex-1">{children}</div>
       </div>
     </section>
   )
