@@ -1,12 +1,8 @@
-import { error } from "console"
 import { cookies, headers } from "next/headers"
-import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
 import { errors, jwtVerify } from "jose"
 
-import getRefreshToken from "./lib/get_refresh_token"
 import { generateAccessToken } from "./lib/jwt-tokens"
-import { Token } from "./types/token"
 
 export default async function isAuthenticated(req: NextRequest) {
   const cookieStore = cookies()

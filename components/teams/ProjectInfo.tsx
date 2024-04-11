@@ -12,7 +12,7 @@ import EditTeam from "./EditTeam"
 
 function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
   return (
-    <div className=" flex h-full flex-col justify-between rounded-lg border p-4">
+    <div className=" flex h-full flex-col  rounded-lg border p-4">
       {/* creator info */}
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div className="flex grow items-center gap-4">
@@ -45,8 +45,8 @@ function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
         <EditTeam team={{ creator, project, roles, creatorRole, id }} />
       </div>
       {/* project info */}
-      <div className=" flex flex-col gap-8 pt-6  ">
-        <div className="flex flex-col justify-start gap-4">
+      <div className=" flex flex-col gap-8 pt-6 h-full  ">
+        <div className="flex flex-col grow justify-start gap-4">
           <span className="border-b text-lg font-semibold">Description:</span>
           <p>{project?.description}</p>
         </div>

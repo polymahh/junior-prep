@@ -35,8 +35,11 @@
 
     --hero: 222 47.4% 11.2%;
     --hero-foreground: 0 0% 98%;
-    /* --hero: hsl(222 47.4% 11.2%);
-    --hero-foreground: hsl(0 0% 98%); */
+
+    --again: 356 73% 60%;
+    --hard: 306 100% 30%;
+    --good: 195 95% 48%;
+    --easy: 162 58% 54%;
 
     --ring: 215 20.2% 65.1%;
     --highlight: 211 100% 50%;
@@ -73,6 +76,11 @@
 
     --destructive: 0 63% 47%; /*this is custom*/
     --destructive-foreground: 210 40% 98%;
+
+    --again: 356 73% 60%;
+    --hard: 306 100% 30%;
+    --good: 195 95% 48%;
+    --easy: 162 58% 54%;
 
     --ring: 216 34% 17%;
     --highlight: 286 79% 45%;

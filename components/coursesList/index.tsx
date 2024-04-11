@@ -14,18 +14,18 @@ function CoursesList() {
       source: "youtube",
     },
     {
-      img: "/hqdefault (1).jpg",
+      img: "/hqdefault(1).jpg",
       title:
         "Bun Tutorial - JavaScript Runtime (Node.js Alternative) [Full Course]",
       source: "youtube",
     },
     {
-      img: "/hqdefault (2).jpg",
+      img: "/hqdefault(2).jpg",
       title: "Next.js 13 E-Commerce Tutorial",
       source: "youtube",
     },
     {
-      img: "/hqdefault (3).jpg",
+      img: "/hqdefault(3).jpg",
       title: "Full Stack Next.js, Typescript, Firebase Tutorial",
       source: "youtube",
     },

@@ -16,7 +16,7 @@ function LogoutBtn() {
     >
       <div className="flex w-full items-center justify-start gap-4 self-end">
         <Icons.logout className="h-8 rounded-sm" />
-        <span className="text-lg capitalize">Logout</span>
+        <span className="capitalize">Logout</span>
       </div>
     </Button>
   )
