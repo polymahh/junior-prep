@@ -9,7 +9,7 @@ import {
 
 import { siteConfig } from "@/config/site"
 import { authApi } from "@/lib/api/authApi"
-import { fontSans } from "@/lib/fonts"
+import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import Providers from "@/components/providers"
 import { ThemeProvider } from "@/components/providers/theme-provider"
@@ -41,12 +41,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <head />
         <Providers>
           <body
             className={cn(
               "min-h-screen bg-background font-sans antialiased",
-              fontSans.variable
+              fontSans.variable,
+              fontMono.variable
             )}
           >
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

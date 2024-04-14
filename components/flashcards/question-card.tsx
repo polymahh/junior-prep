@@ -1,8 +1,17 @@
 "use client"
 
 import React, { useEffect } from "react"
-import { ArrowRightCircle, CheckCircle, HelpCircle } from "lucide-react"
+import {
+  ArrowRightCircle,
+  Check,
+  CheckCheck,
+  CheckCircle,
+  CircleAlert,
+  HelpCircle,
+  X,
+} from "lucide-react"
 
+import { FlashcardResponse } from "@/types/flashcard"
 import { cn } from "@/lib/utils"
 import {
   Carousel,
@@ -11,7 +20,13 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel"
 
-function QuestionCard() {
+import { Button } from "../ui/button"
+
+function QuestionCard({
+  handleResponse,
+}: {
+  handleResponse: (response: FlashcardResponse) => void
+}) {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
 
@@ -28,16 +43,21 @@ function QuestionCard() {
   }, [api])
 
   return (
-    <div className="grow relative z-10 rounded-xl  p-2 group flex jjustify-center items-center  ">
-      <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-4/6 w-full max-w-[800px] pt-12 pb-4 px-4 md:px-12 gap-6 overflow-hidden">
-        <div className="absolute top-4 left-8 flex gap-1 items-center ">
+    <div className="grow relative z-10 rounded-xl  p-2 group flex flex-col  justify-center items-center  ">
+      <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-12 pb-4 px-4 lg:px-12 gap-6 overflow-hidden">
+        <div className="text-sm text-muted-foreground absolute top-4 right-4 flex gap-1 items-center self-end ">
+          <span>current - </span>
           <span className="h-2 w-2 bg-again rounded-full"></span>
-          <span className="text-sm text-muted-foreground">12/43</span>
+          <span className="">12/43</span>
         </div>
 
-        <Carousel className="flex h-4/6 w-fit" setApi={setApi}>
+        <Carousel
+          className="flex h-full w-fit"
+          setApi={setApi}
+          opts={{ align: "end" }}
+        >
           <CarouselContent className="h-full">
-            <CarouselItem className="h-full flex gap-4 w-[90%]">
+            <CarouselItem className="h-full flex gap-4   ">
               {/* <div className="rounded-3xl bg-secondary border h-full w-[90vw] md:w-[60vw] max-w-[660px] flex  justify-center items-center"> */}
               <div className="rounded-3xl bg-secondary border h-full flex  justify-center items-center">
                 <div className="max-w-[80%]">
@@ -50,7 +70,7 @@ function QuestionCard() {
                   </p>
                 </div>
               </div>
-              <div className="flex items-center">
+              <div className="hidden sm:flex items-center">
                 <ArrowRightCircle
                   className={cn(
                     "h-8 w-8 my-auto text-border",
@@ -60,7 +80,7 @@ function QuestionCard() {
               </div>
             </CarouselItem>
 
-            <CarouselItem className=" h-full w-[90%]">
+            <CarouselItem className=" h-full basis-[90%]">
               <div className="rounded-3xl bg-secondary border h-full flex  justify-center items-center">
                 <div className="max-w-[80%]">
                   <h2 className="text-3xl text-muted-foreground pb-4">
@@ -99,6 +119,45 @@ function QuestionCard() {
             <span>answer</span>
           </div>
         </div>
+      </div>
+
+      <div className="flex flex-wrap justify-center gap-4 min-h-[40px] mt-4">
+        {current === 2 && (
+          <>
+            <Button
+              variant="outline"
+              className="border-again rounded-xl"
+              onClick={() => handleResponse("again")}
+            >
+              <X className="mr-2 text-again" />
+              again
+            </Button>
+            <Button
+              variant="outline"
+              className="border-hard rounded-xl"
+              onClick={() => handleResponse("hard")}
+            >
+              <CircleAlert className="mr-2 text-hard" />
+              hard
+            </Button>
+            <Button
+              variant="outline"
+              className="border-good rounded-xl"
+              onClick={() => handleResponse("good")}
+            >
+              <Check className="mr-2 text-good" />
+              good
+            </Button>
+            <Button
+              variant="outline"
+              className="border-easy rounded-xl"
+              onClick={() => handleResponse("easy")}
+            >
+              <CheckCheck className="mr-2 text-easy" />
+              easy
+            </Button>
+          </>
+        )}
       </div>
     </div>
   )

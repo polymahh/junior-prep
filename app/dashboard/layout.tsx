@@ -8,10 +8,10 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
-  const data = await queryClient.prefetchQuery({
-    queryKey: ["profile"],
-    queryFn: async () => await authApi.getProfile(),
-  })
+  // const data = await queryClient.prefetchQuery({
+  //   queryKey: ["profile"],
+  //   queryFn: async () => await authApi.getProfile(),
+  // })
   // console.log("🚀 ~ data:", data)
 
   // await queryClient.prefetchQuery({
@@ -55,7 +55,7 @@ export default async function DashboardLayout({
     <section>
       <div className=" flex h-screen ">
         <SidebarWrapper />
-        <div className="w-full md:w-[calc(100%-296px)] ">{children}</div>
+        <div className="w-full md:w-[calc(100vw-196px)] ">{children}</div>
       </div>
     </section>
   )
