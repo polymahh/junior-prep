@@ -24,8 +24,10 @@ import { Button } from "../ui/button"
 
 function QuestionCard({
   handleResponse,
+  activeFlashcard,
 }: {
   handleResponse: (response: FlashcardResponse) => void
+  activeFlashcard: any
 }) {
   const [api, setApi] = React.useState<CarouselApi>()
   const [current, setCurrent] = React.useState(0)
@@ -42,6 +44,10 @@ function QuestionCard({
     })
   }, [api])
 
+  useEffect(() => {
+    api?.scrollPrev()
+  }, [activeFlashcard])
+
   return (
     <div className="grow relative z-10 rounded-xl  p-2 group flex flex-col  justify-center items-center  ">
       <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-12 pb-4 px-4 lg:px-12 gap-6 overflow-hidden">
@@ -52,22 +58,19 @@ function QuestionCard({
         </div>
 
         <Carousel
-          className="flex h-full w-fit"
+          className="flex h-full"
           setApi={setApi}
           opts={{ align: "end" }}
         >
           <CarouselContent className="h-full">
-            <CarouselItem className="h-full flex gap-4   ">
+            <CarouselItem className="h-full flex basis-[95%] gap-4 ">
               {/* <div className="rounded-3xl bg-secondary border h-full w-[90vw] md:w-[60vw] max-w-[660px] flex  justify-center items-center"> */}
-              <div className="rounded-3xl bg-secondary border h-full flex  justify-center items-center">
-                <div className="max-w-[80%]">
-                  <h2 className="text-3xl text-muted-foreground pb-4">
+              <div className="rounded-3xl bg-secondary border w-full h-full flex justify-center items-center">
+                <div className="w-full max-w-[80%]">
+                  <h2 className="text-sm text-muted-foreground pb-4">
                     Question:
                   </h2>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </p>
+                  <p>{activeFlashcard.question}</p>
                 </div>
               </div>
               <div className="hidden sm:flex items-center">
@@ -81,15 +84,12 @@ function QuestionCard({
             </CarouselItem>
 
             <CarouselItem className=" h-full basis-[90%]">
-              <div className="rounded-3xl bg-secondary border h-full flex  justify-center items-center">
-                <div className="max-w-[80%]">
-                  <h2 className="text-3xl text-muted-foreground pb-4">
+              <div className="rounded-3xl bg-secondary border h-full flex grow justify-center items-center">
+                <div className="w-full max-w-[80%]">
+                  <h2 className="text-sm text-muted-foreground  pb-4">
                     Answer:
                   </h2>
-                  <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  </p>
+                  <p>{activeFlashcard.answer}</p>
                 </div>
               </div>
             </CarouselItem>

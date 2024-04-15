@@ -1,29 +1,38 @@
 import React from "react"
 import { Info } from "lucide-react"
+import { object } from "zod"
 
-const Numbercard = ({ number }: { number: string }) => {
-  return <div className="h-8 w-8 rounded-md bg-secondary">0</div>
+import { FlashcardResponse } from "@/types/flashcard"
+import { cn } from "@/lib/utils"
+
+const Numbercard = ({ name, number }: { name: string; number: number }) => {
+  return (
+    <div
+      className={cn(
+        "h-6 w-6 rounded-md flex justify-center items-center text-white",
+        name === "again" && "bg-again",
+        name === "hard" && "bg-hard",
+        name === "good" && "bg-good",
+        name === "easy" && "bg-easy"
+      )}
+    >
+      {number}
+    </div>
+  )
 }
 
-const cats = ["12", "32", "3", "0"]
-
-function PageInfo() {
+function PageInfo({
+  cardsByResponse,
+}: {
+  cardsByResponse: Record<FlashcardResponse, number>
+}) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-2 text-sm">
         <span>All cards:</span>
-        <div className="h-6 w-6 rounded-md bg-again flex justify-center items-center text-white">
-          12
-        </div>
-        <div className="h-6 w-6 rounded-md bg-hard flex justify-center items-center text-white">
-          32
-        </div>
-        <div className="h-6 w-6 rounded-md bg-good flex justify-center items-center text-white">
-          3
-        </div>
-        <div className="h-6 w-6 rounded-md bg-easy flex justify-center items-center text-white">
-          0
-        </div>
+        {Object.entries(cardsByResponse).map(([key, value]) => (
+          <Numbercard key={key} number={value} name={key} />
+        ))}
       </div>
       <div className="flex gap-1 items-center text-muted-foreground text-sm">
         {/* TODO: add tooltip or popup */}

@@ -3,40 +3,54 @@
 import React, { useEffect, useState } from "react"
 
 import { Flashcard, FlashcardResponse } from "@/types/flashcard"
+import { shuffleArray } from "@/lib/utils"
 
 import PageInfo from "./page-info"
 import QuestionCard from "./question-card"
 
 function Questions({ language_questions, user_answers }: any) {
-  const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(0)
   const [flashcards, setFlashcards] = useState<Flashcard[]>(
-    language_questions.map((question) => {
+    language_questions.map((question: any, index: number) => {
       let answer = user_answers.find((a: any) => a.id === question.id)
       if (answer) {
         return {
           ...question,
           ...answer,
+          index,
         }
       } else {
         return {
           ...question,
+          index,
           response: "again",
-          easeFactor: 2.5,
+          easeFactor: 1.3,
           interval: 1,
           lastReviewed: new Date(),
         }
       }
     })
   )
-
+  const [renderNextFlashcard, setRenderNextFlashcard] = useState(false)
+  const [currentFlashcardIndex, setCurrentFlashcardIndex] = useState(
+    findNextIndex()
+  )
   const [activeFlashcard, setAcrtiveFlashcard] = useState<Flashcard>(
     flashcards[currentFlashcardIndex]
   )
+
+  const [cardsByResponse, setCardsByResponse] = useState<
+    Record<FlashcardResponse, number>
+  >(trackcards())
 
   // Function to handle user response and update flashcard
   const handleResponse = (response: FlashcardResponse) => {
     const currentFlashcard = activeFlashcard
     const now = new Date().getTime()
+    console.log(
+      "🚀 ~ handleResponse ~ now:",
+      now,
+      new Date(currentFlashcard.lastReviewed)
+    )
     const intervalInDays = Math.ceil(
       (now - new Date(currentFlashcard.lastReviewed).getTime()) /
         (1000 * 60 * 60 * 24)
@@ -76,12 +90,13 @@ function Questions({ language_questions, user_answers }: any) {
     setFlashcards((prevFlashcards) => {
       const newFlashcards = [...prevFlashcards]
       newFlashcards[currentFlashcardIndex] = { ...currentFlashcard, response }
+      shuffleArray(newFlashcards)
       return newFlashcards
     })
-    setAcrtiveFlashcard({ ...currentFlashcard, response })
+    setRenderNextFlashcard(true)
   }
 
-  useEffect(() => {
+  function findNextIndex() {
     // Find the next flashcard with the earliest next review date
     let earliestNextReviewDate = Infinity
     let nextIndex = 0
@@ -95,17 +110,48 @@ function Questions({ language_questions, user_answers }: any) {
         nextIndex = i
       }
     }
+    return nextIndex
+  }
 
-    console.log("🚀 ~ useEffect ~ flashcards:", flashcards)
-    console.log(activeFlashcard)
+  useEffect(() => {
+    if (renderNextFlashcard) {
+      const nextIndex = findNextIndex()
+      console.log("🚀 ~ useEffect ~ flashcards:", flashcards)
+      console.log(activeFlashcard)
 
-    setCurrentFlashcardIndex(nextIndex)
-  }, [activeFlashcard])
+      console.log(
+        "🚀 ~ useEffect ~ CurrentFlashcardIndex:",
+        currentFlashcardIndex
+      )
+      console.log("🚀 ~ useEffect ~ nextIndex:", nextIndex)
+      setCardsByResponse(trackcards())
+      setCurrentFlashcardIndex(nextIndex)
+      setAcrtiveFlashcard(flashcards[nextIndex])
+      setRenderNextFlashcard(false)
+    }
+  }, [renderNextFlashcard])
+
+  function trackcards() {
+    const track = {
+      again: 0,
+      hard: 0,
+      good: 0,
+      easy: 0,
+    }
+    flashcards.map((card) => {
+      track[card.response!] += 1
+    })
+
+    return track
+  }
 
   return (
     <>
-      <PageInfo />
-      <QuestionCard handleResponse={handleResponse} />
+      <PageInfo cardsByResponse={cardsByResponse} />
+      <QuestionCard
+        handleResponse={handleResponse}
+        activeFlashcard={activeFlashcard}
+      />
     </>
   )
 }

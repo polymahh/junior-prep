@@ -77,165 +77,165 @@ const language_questions = [
       "In JavaScript, this refers to the context in which a function is executed. Its value is determined by how a function is called.",
   },
 
-  {
-    id: 11,
-    question: "How do you handle asynchronous operations in JavaScript?",
-    answer:
-      "Asynchronous operations in JavaScript can be handled using callbacks, promises, or async/await syntax.",
-  },
+  // {
+  //   id: 11,
+  //   question: "How do you handle asynchronous operations in JavaScript?",
+  //   answer:
+  //     "Asynchronous operations in JavaScript can be handled using callbacks, promises, or async/await syntax.",
+  // },
 
-  {
-    id: 12,
-    question: "What are promises in JavaScript?",
-    answer:
-      "Promises are objects representing the eventual completion or failure of an asynchronous operation, allowing for better handling of asynchronous code.",
-  },
+  // {
+  //   id: 12,
+  //   question: "What are promises in JavaScript?",
+  //   answer:
+  //     "Promises are objects representing the eventual completion or failure of an asynchronous operation, allowing for better handling of asynchronous code.",
+  // },
 
-  {
-    id: 13,
-    question: "What is the purpose of async and await in JavaScript?",
-    answer:
-      "async functions enable asynchronous, promise-based behavior, while await is used to pause execution within an async function until a promise is settled.",
-  },
+  // {
+  //   id: 13,
+  //   question: "What is the purpose of async and await in JavaScript?",
+  //   answer:
+  //     "async functions enable asynchronous, promise-based behavior, while await is used to pause execution within an async function until a promise is settled.",
+  // },
 
-  {
-    id: 14,
-    question:
-      "Explain the difference between == and === operators in JavaScript.",
-    answer:
-      "== checks for equality after type coercion, while === checks for equality without type coercion, also known as strict equality.",
-  },
+  // {
+  //   id: 14,
+  //   question:
+  //     "Explain the difference between == and === operators in JavaScript.",
+  //   answer:
+  //     "== checks for equality after type coercion, while === checks for equality without type coercion, also known as strict equality.",
+  // },
 
-  {
-    id: 15,
-    question: "What are the different ways to create objects in JavaScript?",
-    answer:
-      "Objects in JavaScript can be created using object literals, constructor functions, the Object.create() method, or class syntax (introduced in ES6).",
-  },
+  // {
+  //   id: 15,
+  //   question: "What are the different ways to create objects in JavaScript?",
+  //   answer:
+  //     "Objects in JavaScript can be created using object literals, constructor functions, the Object.create() method, or class syntax (introduced in ES6).",
+  // },
 
-  {
-    id: 16,
-    question: "What is the purpose of the bind() method in JavaScript?",
-    answer:
-      "The bind() method in JavaScript is used to create a new function with a specified this value and initial arguments provided to bind().",
-  },
+  // {
+  //   id: 16,
+  //   question: "What is the purpose of the bind() method in JavaScript?",
+  //   answer:
+  //     "The bind() method in JavaScript is used to create a new function with a specified this value and initial arguments provided to bind().",
+  // },
 
-  {
-    id: 17,
-    question:
-      "What is the purpose of the call() and apply() methods in JavaScript?",
-    answer:
-      "Both call() and apply() are methods used to invoke functions with a specified this value, but call() accepts arguments individually, while apply() accepts arguments as an array.",
-  },
+  // {
+  //   id: 17,
+  //   question:
+  //     "What is the purpose of the call() and apply() methods in JavaScript?",
+  //   answer:
+  //     "Both call() and apply() are methods used to invoke functions with a specified this value, but call() accepts arguments individually, while apply() accepts arguments as an array.",
+  // },
 
-  {
-    id: 18,
-    question: "Explain the concept of prototypal inheritance in JavaScript.",
-    answer:
-      "In JavaScript, objects inherit properties and methods from a prototype object, forming a prototype chain.",
-  },
+  // {
+  //   id: 18,
+  //   question: "Explain the concept of prototypal inheritance in JavaScript.",
+  //   answer:
+  //     "In JavaScript, objects inherit properties and methods from a prototype object, forming a prototype chain.",
+  // },
 
-  {
-    id: 19,
-    question:
-      "What is the difference between null and undefined in JavaScript?",
-    answer:
-      "null represents the intentional absence of any object value, while undefined represents the lack of an assigned value.",
-  },
+  // {
+  //   id: 19,
+  //   question:
+  //     "What is the difference between null and undefined in JavaScript?",
+  //   answer:
+  //     "null represents the intentional absence of any object value, while undefined represents the lack of an assigned value.",
+  // },
 
-  {
-    id: 20,
-    question: "How do you handle errors in JavaScript?",
-    answer:
-      "Errors in JavaScript can be handled using try-catch blocks, where code that might throw an exception is placed in the try block and handled in the catch block.",
-  },
+  // {
+  //   id: 20,
+  //   question: "How do you handle errors in JavaScript?",
+  //   answer:
+  //     "Errors in JavaScript can be handled using try-catch blocks, where code that might throw an exception is placed in the try block and handled in the catch block.",
+  // },
 
-  {
-    id: 21,
-    question: "Explain the concept of lexical scoping in JavaScript.",
-    answer:
-      "Lexical scoping means that the accessibility of variables is determined by their physical location within the source code, based on the placement of variable declarations within nested functions.",
-  },
+  // {
+  //   id: 21,
+  //   question: "Explain the concept of lexical scoping in JavaScript.",
+  //   answer:
+  //     "Lexical scoping means that the accessibility of variables is determined by their physical location within the source code, based on the placement of variable declarations within nested functions.",
+  // },
 
-  {
-    id: 22,
-    question: "What is a closure? Can you provide an example?",
-    answer:
-      "A closure is a function that retains access to variables from its containing lexical scope even after that scope has closed.",
-  },
+  // {
+  //   id: 22,
+  //   question: "What is a closure? Can you provide an example?",
+  //   answer:
+  //     "A closure is a function that retains access to variables from its containing lexical scope even after that scope has closed.",
+  // },
 
-  {
-    id: 23,
-    question: "How does JavaScript handle asynchronous programming?",
-    answer:
-      "JavaScript uses asynchronous programming techniques such as callbacks, promises, and async/await to manage asynchronous operations without blocking the main execution thread.",
-  },
+  // {
+  //   id: 23,
+  //   question: "How does JavaScript handle asynchronous programming?",
+  //   answer:
+  //     "JavaScript uses asynchronous programming techniques such as callbacks, promises, and async/await to manage asynchronous operations without blocking the main execution thread.",
+  // },
 
-  {
-    id: 24,
-    question: "What is the event loop in JavaScript?",
-    answer:
-      "The event loop is a mechanism in JavaScript that allows asynchronous operations to be performed without blocking the main execution thread, ensuring that the program remains responsive.",
-  },
+  // {
+  //   id: 24,
+  //   question: "What is the event loop in JavaScript?",
+  //   answer:
+  //     "The event loop is a mechanism in JavaScript that allows asynchronous operations to be performed without blocking the main execution thread, ensuring that the program remains responsive.",
+  // },
 
-  {
-    id: 25,
-    question: "What is a generator function in JavaScript?",
-    answer:
-      "A generator function is a special type of function in JavaScript that can be paused and resumed at arbitrary points using the yield keyword.",
-  },
+  // {
+  //   id: 25,
+  //   question: "What is a generator function in JavaScript?",
+  //   answer:
+  //     "A generator function is a special type of function in JavaScript that can be paused and resumed at arbitrary points using the yield keyword.",
+  // },
 
-  {
-    id: 26,
-    question: "How do you handle errors in asynchronous code?",
-    answer:
-      "Errors in asynchronous code can be handled using try-catch blocks inside async functions or by attaching a .catch() method to promises.",
-  },
+  // {
+  //   id: 26,
+  //   question: "How do you handle errors in asynchronous code?",
+  //   answer:
+  //     "Errors in asynchronous code can be handled using try-catch blocks inside async functions or by attaching a .catch() method to promises.",
+  // },
 
-  {
-    id: 27,
-    question: "What are the differences between var, let, and const?",
-    answer:
-      "var is function-scoped, while let and const are block-scoped. var allows variable hoisting, while let and const do not. const variables cannot be reassigned after declaration, while let variables can.",
-  },
+  // {
+  //   id: 27,
+  //   question: "What are the differences between var, let, and const?",
+  //   answer:
+  //     "var is function-scoped, while let and const are block-scoped. var allows variable hoisting, while let and const do not. const variables cannot be reassigned after declaration, while let variables can.",
+  // },
 
-  {
-    id: 28,
-    question:
-      "Explain the difference between function declarations and function expressions.",
-    answer:
-      "Function declarations are hoisted and can be called before they are defined, while function expressions are not hoisted and must be defined before they are called.",
-  },
+  // {
+  //   id: 28,
+  //   question:
+  //     "Explain the difference between function declarations and function expressions.",
+  //   answer:
+  //     "Function declarations are hoisted and can be called before they are defined, while function expressions are not hoisted and must be defined before they are called.",
+  // },
 
-  {
-    id: 29,
-    question: "How do you create a promise in JavaScript?",
-    answer:
-      "Promises in JavaScript can be created using the Promise constructor, passing a function with resolve and reject parameters.",
-  },
+  // {
+  //   id: 29,
+  //   question: "How do you create a promise in JavaScript?",
+  //   answer:
+  //     "Promises in JavaScript can be created using the Promise constructor, passing a function with resolve and reject parameters.",
+  // },
 
-  {
-    id: 30,
-    question: "What are the advantages of using arrow functions in JavaScript?",
-    answer:
-      "Arrow functions have a more concise syntax, lexical scoping of this, and implicitly return values when there is no block body. They are particularly useful for writing short, one-liner functions and for preserving the value of this in callbacks.",
-  },
+  // {
+  //   id: 30,
+  //   question: "What are the advantages of using arrow functions in JavaScript?",
+  //   answer:
+  //     "Arrow functions have a more concise syntax, lexical scoping of this, and implicitly return values when there is no block body. They are particularly useful for writing short, one-liner functions and for preserving the value of this in callbacks.",
+  // },
 ]
 
 const user_answers = [
   {
     id: 1,
-    easeFactor: 2.5,
-    interval: 2.5,
+    easeFactor: 1.3,
+    interval: 1,
     response: "good",
-    lastReviewed: "2023-05-05T12:00:00.000Z",
+    lastReviewed: "2024-04-13T12:00:00.000Z",
   },
   {
     id: 2,
-    easeFactor: 2.5,
-    interval: 2.5,
+    easeFactor: 1.3,
+    interval: 1.3,
     response: "good",
-    lastReviewed: "2023-05-05T12:00:00.000Z",
+    lastReviewed: "2024-04-13T12:00:00.000Z",
   },
 ]
 const Javascript = () => {
