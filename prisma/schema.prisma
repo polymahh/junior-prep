@@ -131,28 +131,32 @@ model UserRole {
 }
 
 model UserAnswer {
-  id          String    @id @default(cuid())
   userId      String
   user        User      @relation(fields: [userId], references: [id])
-  flashcardId String
+  flashcardId Int
   flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
-  answer      String
+  response      String
+  easeFactor Int
+  interval Int
+  lastReviewed    DateTime  @updatedAt
   createdAt   DateTime  @default(now())
-  updateAt    DateTime  @updatedAt
+
+  @@unique([flashcardId,userId])
 }
 
+
 model Flashcard {
-  id         String       @id @default(cuid())
-  languageId String
-  language   Language     @relation(fields: [languageId], references: [id])
+  id         Int     @id @default(autoincrement())
+  languageName String
+  language   Language     @relation(fields: [languageName], references: [languageName])
   answer     String
+  question String
   createdAt  DateTime     @default(now())
   updateAt   DateTime     @updatedAt
   UserAnswer UserAnswer[]
 }
 
 model Language {
-  id             String           @id @default(cuid())
   languageName   String           @unique
   Flashcard      Flashcard[]
   LanguageCourse LanguageCourse[]
@@ -172,8 +176,8 @@ model Course {
 }
 
 model LanguageCourse {
-  languageId String
-  language   Language @relation(fields: [languageId], references: [id])
+  languageName String
+  language   Language @relation(fields: [languageName], references: [languageName])
   courseId   String
   course     Course   @relation(fields: [courseId], references: [id])
 

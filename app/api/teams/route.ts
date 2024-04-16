@@ -79,7 +79,7 @@ export async function GET(req: Request) {
 
     return Response.json(
       { teams, message: "teams list success" },
-      { status: 201 }
+      { status: 200 }
     )
   } catch (error) {
     console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)

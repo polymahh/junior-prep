@@ -8,8 +8,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
 
-    const { username, email, password, confirmPassword } =
-      registerSchema.parse(body)
+    const { email, password, confirmPassword } = registerSchema.parse(body)
 
     // check if the email exist in the db
 
@@ -30,18 +29,18 @@ export async function POST(req: Request) {
         { status: 409 }
       )
     }
-    // check if the email exist in the db
+    // check if the username exist in the db
 
-    const existingUsername = await db.user.findUnique({
-      where: { username: username },
-    })
+    // const existingUsername = await db.user.findUnique({
+    //   where: { username: username },
+    // })
 
-    if (existingUsername) {
-      return NextResponse.json(
-        { user: null, message: "Username already exists" },
-        { status: 409 }
-      )
-    }
+    // if (existingUsername) {
+    //   return NextResponse.json(
+    //     { user: null, message: "Username already exists" },
+    //     { status: 409 }
+    //   )
+    // }
     const hashedPassword = await hash(password, 10)
     const newUser = await db.user.create({
       data: {
