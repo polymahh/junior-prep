@@ -1,6 +1,8 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
+import { UserAnswer } from "@prisma/client"
+import { useMutation } from "@tanstack/react-query"
 import {
   ArrowRightCircle,
   Check,
@@ -11,42 +13,125 @@ import {
   X,
 } from "lucide-react"
 
-import { FlashcardResponse } from "@/types/flashcard"
-import { cn } from "@/lib/utils"
+import { Flashcard, FlashcardResponse } from "@/types/flashcard"
+import { flashcardsApi } from "@/lib/api/flashcardsApi"
+import { cn, findIndex, shuffleArray } from "@/lib/utils"
 import {
   Carousel,
   CarouselApi,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel"
+import { queryClient } from "@/app/layout"
 
 import { Button } from "../ui/button"
 
-function QuestionCard({
-  handleResponse,
-  activeFlashcard,
+function Flashcards({
+  flashcards,
+  initialIndex,
+  language,
 }: {
-  handleResponse: (response: FlashcardResponse) => void
-  activeFlashcard: any
+  flashcards: Flashcard[]
+  initialIndex: number
+  language: string
 }) {
-  const [api, setApi] = React.useState<CarouselApi>()
-  const [current, setCurrent] = React.useState(0)
+  const [activeFlashcard, setActiveFlashcard] = useState<Flashcard>(
+    flashcards[initialIndex]
+  )
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+
+  const { mutate } = useMutation({
+    mutationKey: ["javascript_answers"],
+    mutationFn: async (
+      answer: Omit<UserAnswer, "userId" | "createdAt" | "lastReviewed">
+    ) => {
+      const data = await flashcardsApi.sendAnswer(answer)
+      return data
+    },
+  })
 
   useEffect(() => {
     if (!api) {
       return
     }
-
     setCurrent(api.selectedScrollSnap() + 1)
-
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap() + 1)
     })
   }, [api])
 
-  useEffect(() => {
+  const handleResponse = async (response: FlashcardResponse) => {
+    const currentFlashcard: any = activeFlashcard
+    const now = new Date().getTime()
+
+    const intervalInDays = Math.ceil(
+      (now - new Date(currentFlashcard.UserAnswer[0].lastReviewed).getTime()) /
+        (1000 * 60 * 60 * 24)
+    ) // Calculate interval in days
+
+    // Update the ease factor and interval based on the user's response
+    switch (response) {
+      case "again":
+        currentFlashcard.UserAnswer[0].easeFactor = Math.max(
+          1.3,
+          currentFlashcard.UserAnswer[0].easeFactor - 0.2
+        )
+        currentFlashcard.UserAnswer[0].interval = 1
+        break
+      case "hard":
+        currentFlashcard.UserAnswer[0].easeFactor = Math.max(
+          1.3,
+          currentFlashcard.UserAnswer[0].easeFactor - 0.15
+        )
+        // Keep interval unchanged or slightly decrease it
+        break
+      case "good":
+        // Maintain ease factor
+        currentFlashcard.UserAnswer[0].interval =
+          intervalInDays * currentFlashcard.UserAnswer[0].easeFactor
+        break
+      case "easy":
+        currentFlashcard.UserAnswer[0].easeFactor += 0.15
+        currentFlashcard.UserAnswer[0].interval =
+          intervalInDays * currentFlashcard.UserAnswer[0].easeFactor
+
+        break
+      default:
+        console.error("Invalid user response.")
+        return
+    }
+    currentFlashcard.UserAnswer[0].response = response
+    const next =
+      new Date(currentFlashcard.UserAnswer[0].lastReviewed).getTime() +
+      currentFlashcard.UserAnswer[0].interval * 24 * 60 * 60 * 1000
+    currentFlashcard.UserAnswer[0]["nextReview"] = new Date(next)
+
+    let newFlashcards: Flashcard[] = [...flashcards]
+    newFlashcards = shuffleArray(newFlashcards)
+    const nextIndex = findIndex(newFlashcards)
+    mutate(
+      {
+        flashcardId: currentFlashcard.id,
+        easeFactor: currentFlashcard.UserAnswer[0].easeFactor,
+        interval: currentFlashcard.UserAnswer[0].interval,
+        response: response,
+        languageName: language,
+      },
+      {
+        onSuccess: (data) => {
+          console.log("🚀 ~ handleResponse ~ data:", data)
+          setActiveFlashcard(newFlashcards[nextIndex])
+          queryClient.setQueryData(
+            ["javascript_flashcards"],
+            () => newFlashcards
+          )
+        },
+      }
+    )
+
     api?.scrollPrev()
-  }, [activeFlashcard])
+  }
 
   return (
     <div className="grow relative z-10 rounded-xl  p-2 group flex flex-col  justify-center items-center  ">
@@ -70,7 +155,7 @@ function QuestionCard({
                   <h2 className="text-sm text-muted-foreground pb-4">
                     Question:
                   </h2>
-                  <p>{activeFlashcard.question}</p>
+                  <p>{activeFlashcard?.question}</p>
                 </div>
               </div>
               <div className="hidden sm:flex items-center">
@@ -89,7 +174,7 @@ function QuestionCard({
                   <h2 className="text-sm text-muted-foreground  pb-4">
                     Answer:
                   </h2>
-                  <p>{activeFlashcard.answer}</p>
+                  <p>{activeFlashcard?.answer}</p>
                 </div>
               </div>
             </CarouselItem>
@@ -163,4 +248,4 @@ function QuestionCard({
   )
 }
 
-export default QuestionCard
+export default Flashcards

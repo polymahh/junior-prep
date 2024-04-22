@@ -10,7 +10,7 @@ import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
 import TeamsCard from "@/components/teams/TeamsList"
 
-export const dynamic = "no-cache"
+// export const dynamic = "no-cache"
 const Dashboard = () => {
   const { data, error, isLoading } = useQuery({
     queryKey: ["profile"],

@@ -72,5 +72,10 @@ export default async function isAuthenticated(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/api/users/:path*", "/api/teams/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/api/users/:path*",
+    "/api/teams/:path*",
+    "/api/language/:path*",
+  ],
 }

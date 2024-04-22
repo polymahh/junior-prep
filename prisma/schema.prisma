@@ -1,10 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
@@ -12,12 +11,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 enum roleName {
   FRONTEND
   BACKEND
   DESIGN
   SENIOR
+}
+
+enum languageName {
+  javascript
+  react
+  html_css
 }
 
 enum provider {
@@ -31,7 +35,7 @@ model User {
   username        String?       @unique
   password        String?
   email           String        @unique
-  provider        provider       
+  provider        provider
   emailVerified   DateTime?
   image           String?
   createdAt       DateTime      @default(now())
@@ -79,7 +83,7 @@ model comment {
 }
 
 model Team {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   creatorId   String?
   creatorRole roleName?
 
@@ -89,8 +93,6 @@ model Team {
 
   @@index([id])
 }
-
-
 
 model Role {
   id        String     @id @default(cuid())
@@ -131,33 +133,35 @@ model UserRole {
 }
 
 model UserAnswer {
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
-  flashcardId Int
-  flashcard   Flashcard @relation(fields: [flashcardId], references: [id])
-  response      String
-  easeFactor Int
-  interval Int
-  lastReviewed    DateTime  @updatedAt
-  createdAt   DateTime  @default(now())
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  flashcardId  Int
+  flashcard    Flashcard @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
+  languageName String
+  language     Language  @relation(fields: [languageName], references: [languageName], onDelete: Cascade)
+  response     String
+  easeFactor   Float
+  interval     Float
+  lastReviewed DateTime  @updatedAt
+  createdAt    DateTime  @default(now())
 
-  @@unique([flashcardId,userId])
+  @@unique([flashcardId, userId])
 }
 
-
 model Flashcard {
-  id         Int     @id @default(autoincrement())
+  id           Int          @id @default(autoincrement())
   languageName String
-  language   Language     @relation(fields: [languageName], references: [languageName])
-  answer     String
-  question String
-  createdAt  DateTime     @default(now())
-  updateAt   DateTime     @updatedAt
-  UserAnswer UserAnswer[]
+  language     Language     @relation(fields: [languageName], references: [languageName], onDelete: Cascade)
+  answer       String
+  question     String
+  createdAt    DateTime     @default(now())
+  updateAt     DateTime     @updatedAt
+  UserAnswer   UserAnswer[]
 }
 
 model Language {
   languageName   String           @unique
+  UserAnswer     UserAnswer[]
   Flashcard      Flashcard[]
   LanguageCourse LanguageCourse[]
 }
@@ -177,9 +181,9 @@ model Course {
 
 model LanguageCourse {
   languageName String
-  language   Language @relation(fields: [languageName], references: [languageName])
-  courseId   String
-  course     Course   @relation(fields: [courseId], references: [id])
+  language     Language @relation(fields: [languageName], references: [languageName])
+  courseId     String
+  course       Course   @relation(fields: [courseId], references: [id])
 
   @@unique([courseId])
 }

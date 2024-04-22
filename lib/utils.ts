@@ -1,6 +1,8 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
+import { Flashcard } from "@/types/flashcard"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -17,4 +19,23 @@ export const shuffleArray = <T>(array: T[]) => {
     const j = Math.floor(Math.random() * (i + 1))
     ;[array[i], array[j]] = [array[j], array[i]]
   }
+  return array
+}
+
+export function findIndex(arr: Flashcard[]) {
+  console.log("🚀 ~ findIndex ~ arr:", arr)
+  // Find the next flashcard with the earliest next review date
+  let earliestNextReviewDate = Infinity
+  let nextIndex = 0
+  for (let i = 0; i < arr?.length; i++) {
+    const flashcard = arr[i]
+    const nextReviewDate =
+      new Date(flashcard.UserAnswer[0].lastReviewed).getTime() +
+      flashcard.UserAnswer[0].interval * 24 * 60 * 60 * 1000
+    if (nextReviewDate < earliestNextReviewDate) {
+      earliestNextReviewDate = nextReviewDate
+      nextIndex = i
+    }
+  }
+  return nextIndex
 }

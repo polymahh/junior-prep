@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { Info } from "lucide-react"
 import { object } from "zod"
 
@@ -21,11 +21,25 @@ const Numbercard = ({ name, number }: { name: string; number: number }) => {
   )
 }
 
-function PageInfo({
-  cardsByResponse,
-}: {
-  cardsByResponse: Record<FlashcardResponse, number>
-}) {
+function LanguageInfo({ flashcards }: { flashcards: any }) {
+  const [cardsByResponse, setCardsByResponse] = useState<
+    Record<FlashcardResponse, number>
+  >(trackcards())
+
+  function trackcards() {
+    const track = {
+      again: 0,
+      hard: 0,
+      good: 0,
+      easy: 0,
+    }
+    flashcards.map((card: any) => {
+      track[card.response!] += 1
+    })
+
+    return track
+  }
+
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-2 text-sm">
@@ -43,4 +57,4 @@ function PageInfo({
   )
 }
 
-export default PageInfo
+export default LanguageInfo
