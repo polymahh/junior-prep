@@ -1,4 +1,5 @@
 import { cookies, headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
 import { errors, jwtVerify } from "jose"
 
@@ -8,66 +9,87 @@ export default async function isAuthenticated(req: NextRequest) {
   const cookieStore = cookies()
   const accessToken = cookieStore.get("_acc__token")?.value
   const refreshToken = cookieStore.get("_ref__token")?.value
-  let invalidAccessToken = false
-  let invalidRefreshToken = false
 
-  if (accessToken) {
+  async function isValidAccessToken() {
     try {
-      const { payload } = await jwtVerify(
+      if (!accessToken) {
+        return false
+      }
+      await jwtVerify(
         accessToken,
         new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
       )
       console.log("valid access token")
-      return NextResponse.next()
+      return true
     } catch (err) {
       console.log("invalid access token")
-      invalidAccessToken = true
+      return false
     }
-  } else {
-    console.log("no access token")
-    invalidAccessToken = true
+  }
+  async function isValidRefreshToken() {
+    try {
+      if (!refreshToken) {
+        return null
+      }
+      const { payload } = await jwtVerify(
+        refreshToken,
+        new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+      )
+      console.log("valid refresh token")
+      return payload
+    } catch (err) {
+      console.log("invalid refresh token")
+      return null
+    }
   }
 
-  if (invalidAccessToken) {
-    if (refreshToken) {
-      console.log("🚀 ~ isAuthenticated ~ refreshToken:", refreshToken)
-      try {
-        const { payload } = await jwtVerify(
-          refreshToken,
-          new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+  try {
+    if (await isValidAccessToken()) {
+      return NextResponse.next()
+    } else {
+      const payload = await isValidRefreshToken()
+
+      if (!payload) {
+        console.log(
+          "🚀 ~ isAuthenticated ~ !refreshToken || invalidRefreshToken:"
         )
-        const accessToken = await generateAccessToken(
-          payload.id as string,
-          payload.email as string
-        )
+        // return NextResponse.redirect(new URL("/login", req.url))
 
-        console.log("valid refresh token and generated new access token")
+        return NextResponse.redirect(new URL("/login", req.url))
 
-        const response = NextResponse.next()
-        response.cookies.set({
-          name: "_acc__token",
-          value: accessToken,
-          secure: true,
-          httpOnly: true,
-          sameSite: "strict",
-          expires: new Date(
-            Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
-          ),
-        })
+        // response.cookies.delete("_ref__token")
+        // response.cookies.delete("_acc__token")
 
-        return response
-      } catch (err) {
-        console.log("invalid refresh token", err)
-        invalidRefreshToken = true
+        // return response.json({ message: "invalid refresh token" },{ status: 202 })
+
+        // return NextResponse.rewrite(new URL("/login", req.url))
+        // return NextResponse.rewrite(new URL("/login", req.url))
       }
-    }
-
-    if (!refreshToken || invalidRefreshToken) {
-      console.log(
-        "🚀 ~ isAuthenticated ~ !refreshToken || invalidRefreshToken:"
+      const newAccessToken = await generateAccessToken(
+        payload.id as string,
+        payload.email as string
       )
-      return NextResponse.redirect(new URL("/login", req.url))
+      console.log("valid refresh token and generated new access token")
+      const response = NextResponse.next()
+      response.cookies.set({
+        name: "_acc__token",
+        value: newAccessToken,
+        secure: true,
+        httpOnly: true,
+        sameSite: "strict",
+        expires: new Date(
+          Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
+        ),
+      })
+
+      return response
     }
+  } catch (error) {
+    console.log("err", error)
+    return NextResponse.json(
+      { message: "something went wrong" },
+      { status: 500 }
+    )
   }
 }
 

@@ -10,20 +10,19 @@ export async function GET(
   { params }: { params: { languageName: string } }
 ) {
   try {
-    // const cookieStore = cookies()
-    // const accessToken = cookieStore.get("_acc__token")?.value
-    // console.log("🚀 ~ accessToken:", accessToken)
-    // if (!accessToken) {
-    //   return NextResponse.json({ message: "no access" }, { status: 401 })
-    // }
-    // const { payload } = await jwtVerify(
-    //   accessToken,
-    //   new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
-    // )
+    const cookieStore = cookies()
+    const accessToken = cookieStore.get("_acc__token")?.value
+    if (!accessToken) {
+      return NextResponse.json({ message: "no access" }, { status: 401 })
+    }
+    const { payload } = await jwtVerify(
+      accessToken,
+      new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+    )
 
     const { languageName } = params
+    console.log("🚀 ~ languageName:", languageName)
 
-    // console.log("🚀 ~ payload:", payload)
     const flashcards = await db.language.findUnique({
       where: {
         languageName: languageName,
@@ -36,7 +35,7 @@ export async function GET(
             question: true,
             UserAnswer: {
               where: {
-                userId: "clv7yesdu0000ujrwnfgcr1n9", //TODO: user id will come from cookie
+                userId: payload.id as string, //TODO: user id will come from cookie
               },
               select: {
                 response: true,
@@ -65,8 +64,8 @@ export async function POST(
   { params }: { params: { languageName: string } }
 ) {
   const { languageName } = params
+  console.log("🚀 ~ languageName:", languageName)
   const body = await req.json()
-  console.log("🚀 ~ POST ~ body:", body)
   const data = userAnswerSchema.parse(body)
 
   const cookieStore = cookies()
@@ -85,8 +84,6 @@ export async function POST(
     if (!payload) {
       return NextResponse.json({ message: "no access" }, { status: 401 })
     }
-
-    console.log("🚀 ~ POST ~ payload:", payload.id)
     const answers = await db.userAnswer.upsert({
       where: {
         flashcardId_userId: {

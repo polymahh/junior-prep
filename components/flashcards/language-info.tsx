@@ -1,30 +1,65 @@
-import React, { useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
+import { useIsMutating, useQuery } from "@tanstack/react-query"
 import { Info } from "lucide-react"
 import { object } from "zod"
 
-import { FlashcardResponse } from "@/types/flashcard"
+import { Flashcard, FlashcardResponse } from "@/types/flashcard"
+import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { cn } from "@/lib/utils"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { queryClient } from "@/app/layout"
 
 const Numbercard = ({ name, number }: { name: string; number: number }) => {
   return (
-    <div
-      className={cn(
-        "h-6 w-6 rounded-md flex justify-center items-center text-white",
-        name === "again" && "bg-again",
-        name === "hard" && "bg-hard",
-        name === "good" && "bg-good",
-        name === "easy" && "bg-easy"
-      )}
-    >
-      {number}
-    </div>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          {/* <Button variant="outline"> */}
+          <div
+            className={cn(
+              "h-6 w-6 rounded-md flex justify-center items-center text-white cursor-pointer",
+              name === "again" && "bg-again",
+              name === "hard" && "bg-hard",
+              name === "good" && "bg-good",
+              name === "easy" && "bg-easy"
+            )}
+          >
+            {number}
+          </div>
+          {/* </Button> */}
+        </TooltipTrigger>
+        <TooltipContent>{"Taged " + name}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
 }
 
-function LanguageInfo({ flashcards }: { flashcards: any }) {
+function LanguageInfo({ flashcards }: { flashcards: Flashcard[] }) {
   const [cardsByResponse, setCardsByResponse] = useState<
     Record<FlashcardResponse, number>
   >(trackcards())
+
+  const isMutatingPosts = useIsMutating({
+    mutationKey: ["javascript_flashcards"],
+  })
+
+  // const cardsByResponse = useMemo(() => trackcards(), [isMutatingPosts])
+
+  useEffect(() => {
+    console.log("🚀 ~ LanguageInfo ~ isMutatingPosts:", isMutatingPosts)
+
+    setCardsByResponse(trackcards())
+  }, [isMutatingPosts])
 
   function trackcards() {
     const track = {
@@ -33,8 +68,8 @@ function LanguageInfo({ flashcards }: { flashcards: any }) {
       good: 0,
       easy: 0,
     }
-    flashcards.map((card: any) => {
-      track[card.response!] += 1
+    flashcards.map((card) => {
+      track[card.UserAnswer[0].response!] += 1
     })
 
     return track
@@ -48,11 +83,29 @@ function LanguageInfo({ flashcards }: { flashcards: any }) {
           <Numbercard key={key} number={value} name={key} />
         ))}
       </div>
-      <div className="flex gap-1 items-center text-muted-foreground text-sm">
-        {/* TODO: add tooltip or popup */}
-        <span>How it work</span>
-        <Info className="h-4 w-4" />
-      </div>
+
+      <HoverCard>
+        <HoverCardTrigger>
+          <div className="flex gap-1 items-center text-muted-foreground text-sm cursor-pointer">
+            <span>How it work</span>
+            <Info className="h-4 w-4" />
+          </div>
+        </HoverCardTrigger>
+        <HoverCardContent className="w-[250px]">
+          <div className="text-xs">
+            <div className="pb-4">
+              <p>
+                Your responses are based on how easy or hard you recall the
+                answer
+              </p>
+            </div>
+            <p>- Again: I couldn&apos;t recall</p>
+            <p>- Hard: I struggled to recall</p>
+            <p>- Good: I recalled with some effort</p>
+            <p>- Easy: I easily recalled</p>
+          </div>
+        </HoverCardContent>
+      </HoverCard>
     </div>
   )
 }

@@ -42,7 +42,7 @@ function Flashcards({
   const [current, setCurrent] = useState(0)
 
   const { mutate } = useMutation({
-    mutationKey: ["javascript_answers"],
+    mutationKey: ["javascript_flashcards"],
     mutationFn: async (
       answer: Omit<UserAnswer, "userId" | "createdAt" | "lastReviewed">
     ) => {
@@ -102,14 +102,15 @@ function Flashcards({
         return
     }
     currentFlashcard.UserAnswer[0].response = response
-    const next =
-      new Date(currentFlashcard.UserAnswer[0].lastReviewed).getTime() +
-      currentFlashcard.UserAnswer[0].interval * 24 * 60 * 60 * 1000
-    currentFlashcard.UserAnswer[0]["nextReview"] = new Date(next)
+    // const next =
+    //   new Date(currentFlashcard.UserAnswer[0].lastReviewed).getTime() +
+    //   currentFlashcard.UserAnswer[0].interval * 24 * 60 * 60 * 1000
+    // currentFlashcard.UserAnswer[0]["nextReview"] = new Date(next)
 
     let newFlashcards: Flashcard[] = [...flashcards]
-    newFlashcards = shuffleArray(newFlashcards)
-    const nextIndex = findIndex(newFlashcards)
+    let shuffledFlashcards = shuffleArray(newFlashcards)
+    let nextIndex = findIndex(shuffledFlashcards)
+
     mutate(
       {
         flashcardId: currentFlashcard.id,
@@ -120,8 +121,12 @@ function Flashcards({
       },
       {
         onSuccess: (data) => {
-          console.log("🚀 ~ handleResponse ~ data:", data)
-          setActiveFlashcard(newFlashcards[nextIndex])
+          console.log("🚀 ~ handleResponse ~ nextIndex:", nextIndex)
+          console.log(
+            "🚀 ~ handleResponse ~ newFlashcards[nextIndex]:",
+            shuffledFlashcards[nextIndex]
+          )
+          setActiveFlashcard(shuffledFlashcards[nextIndex])
           queryClient.setQueryData(
             ["javascript_flashcards"],
             () => newFlashcards
@@ -138,8 +143,18 @@ function Flashcards({
       <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-12 pb-4 px-4 lg:px-12 gap-6 overflow-hidden">
         <div className="text-sm text-muted-foreground absolute top-4 right-4 flex gap-1 items-center self-end ">
           <span>current - </span>
-          <span className="h-2 w-2 bg-again rounded-full"></span>
-          <span className="">12/43</span>
+          <span
+            className={cn(
+              "h-2 w-2  rounded-full",
+              activeFlashcard.UserAnswer[0].response === "again" && "bg-again",
+              activeFlashcard.UserAnswer[0].response === "hard" && "bg-hard",
+              activeFlashcard.UserAnswer[0].response === "good" && "bg-good",
+              activeFlashcard.UserAnswer[0].response === "easy" && "bg-easy"
+            )}
+          ></span>
+          <span className="">
+            {activeFlashcard.id}/{flashcards.length}
+          </span>
         </div>
 
         <Carousel
@@ -158,10 +173,15 @@ function Flashcards({
                   <p>{activeFlashcard?.question}</p>
                 </div>
               </div>
-              <div className="hidden sm:flex items-center">
+              <div
+                className="hidden sm:flex items-center text-border cursor-pointer hover:text-muted-foreground m-auto "
+                onClick={() =>
+                  current === 1 ? api?.scrollNext() : api?.scrollPrev()
+                }
+              >
                 <ArrowRightCircle
                   className={cn(
-                    "h-8 w-8 my-auto text-border",
+                    "h-8 w-8 my-auto ",
                     current === 2 ? "rotate-180" : ""
                   )}
                 />

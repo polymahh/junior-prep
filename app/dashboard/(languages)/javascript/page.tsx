@@ -6,11 +6,11 @@ import { queryClient } from "@/app/layout"
 // language_questions is an array of interview questions related to javascript
 
 const Javascript = async () => {
-  await queryClient.prefetchQuery({
-    queryKey: ["javascript_questions"],
-    queryFn: async () => await flashcardsApi.getFlashcards("javascript"),
-    staleTime: 0,
-  })
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["javascript_flashcards"],
+  //   queryFn: async () => await flashcardsApi.getFlashcards("javascript"),
+  //   staleTime: 0,
+  // })
   return (
     <div className=" m-auto w-full  md:px-4 h-full flex flex-col gap-4 md:py-4 py-2 ">
       <div className="flex  w-full items-center justify-center md:justify-start gap-2 rounded-md bg-secondary px-4 py-2 ">
