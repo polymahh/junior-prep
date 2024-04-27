@@ -8,6 +8,7 @@ import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { findIndex } from "@/lib/utils"
 
 import Flashcards from "./flashcards"
+import HowItWorks from "./how_it_works"
 import LanguageInfo from "./language-info"
 
 function LanguageFlashcards({ language }: { language: string }) {
@@ -43,7 +44,8 @@ function LanguageFlashcards({ language }: { language: string }) {
   const initialIndex = findIndex(data)
   return (
     <>
-      <LanguageInfo flashcards={data} />
+      {/* <LanguageInfo flashcards={data} /> */}
+      <HowItWorks />
       <Flashcards
         flashcards={data}
         initialIndex={initialIndex}

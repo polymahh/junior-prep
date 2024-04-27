@@ -1,16 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { useIsMutating, useQuery } from "@tanstack/react-query"
-import { Info } from "lucide-react"
+import { Info, SquareMousePointer } from "lucide-react"
 import { object } from "zod"
 
 import { Flashcard, FlashcardResponse } from "@/types/flashcard"
 import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { cn } from "@/lib/utils"
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
 import {
   Tooltip,
   TooltipContent,
@@ -44,23 +39,18 @@ const Numbercard = ({ name, number }: { name: string; number: number }) => {
   )
 }
 
-function LanguageInfo({ flashcards }: { flashcards: Flashcard[] }) {
-  const [cardsByResponse, setCardsByResponse] = useState<
-    Record<FlashcardResponse, number>
-  >(trackcards())
-
+function LanguageInfo({
+  flashcards,
+  activeFlashcard,
+}: {
+  flashcards: Flashcard[]
+  activeFlashcard: Flashcard
+}) {
   const isMutatingPosts = useIsMutating({
     mutationKey: ["javascript_flashcards"],
   })
 
-  // const cardsByResponse = useMemo(() => trackcards(), [isMutatingPosts])
-
-  useEffect(() => {
-    console.log("🚀 ~ LanguageInfo ~ isMutatingPosts:", isMutatingPosts)
-
-    setCardsByResponse(trackcards())
-  }, [isMutatingPosts])
-
+  const cardsByResponse = useMemo(() => trackcards(), [isMutatingPosts])
   function trackcards() {
     const track = {
       again: 0,
@@ -78,34 +68,35 @@ function LanguageInfo({ flashcards }: { flashcards: Flashcard[] }) {
   return (
     <div className="flex justify-between">
       <div className="flex items-center gap-2 text-sm">
-        <span>All cards:</span>
+        {/* <span>All cards:</span> */}
         {Object.entries(cardsByResponse).map(([key, value]) => (
           <Numbercard key={key} number={value} name={key} />
         ))}
-      </div>
+        <span>current:</span>
 
-      {/* <HoverCard>
-        <HoverCardTrigger>
-          <div className="flex gap-1 items-center text-muted-foreground text-sm cursor-pointer">
-            <span>How it work</span>
-            <Info className="h-4 w-4" />
-          </div>
-        </HoverCardTrigger>
-        <HoverCardContent className="w-[250px]">
-          <div className="text-xs">
-            <div className="pb-4">
-              <p>
-                Your responses are based on how easy or hard you recall the
-                answer
-              </p>
-            </div>
-            <p>- Again: I couldn&apos;t recall</p>
-            <p>- Hard: I struggled to recall</p>
-            <p>- Good: I recalled with some effort</p>
-            <p>- Easy: I easily recalled</p>
-          </div>
-        </HoverCardContent>
-      </HoverCard> */}
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              {/* <Button variant="outline"> */}
+              <span
+                className={cn(
+                  "h-6 w-6 rounded-md text-white cursor-pointer ",
+                  activeFlashcard.UserAnswer[0].response === "again" &&
+                    "bg-again",
+                  activeFlashcard.UserAnswer[0].response === "hard" &&
+                    "bg-hard",
+                  activeFlashcard.UserAnswer[0].response === "good" &&
+                    "bg-good",
+                  activeFlashcard.UserAnswer[0].response === "easy" && "bg-easy"
+                )}
+              >
+                <SquareMousePointer className=" p-1" />
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>Current Card</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </div>
   )
 }

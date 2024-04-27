@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 
 const SECOND = 1000
 const MINUTE = SECOND * 60
@@ -23,7 +23,7 @@ export const Timer = () => {
   const seconds = time % 60
 
   return (
-    <div className="flex">
+    <div className="flex min-w-[106px]">
       <p>
         Time: {hours < 10 ? "0" + hours : hours}:
         {minutes < 10 ? "0" + minutes : minutes}:

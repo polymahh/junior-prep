@@ -25,8 +25,8 @@ import {
 import { queryClient } from "@/app/layout"
 
 import { Button } from "../ui/button"
-import { Timer } from "./Timer"
 import LanguageInfo from "./language-info"
+import { Timer } from "./timer"
 
 function Flashcards({
   flashcards,
@@ -133,32 +133,21 @@ function Flashcards({
             ["javascript_flashcards"],
             () => newFlashcards
           )
+          api?.scrollPrev()
         },
       }
     )
-
-    api?.scrollPrev()
   }
 
   return (
     <div className="grow relative z-10 rounded-xl  p-2 group flex flex-col  justify-center items-center  ">
       <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-4 pb-4 px-4 lg:px-12 gap-6 overflow-hidden">
         <div className="text-sm text-muted-foreground top-4 right-4 flex justify-between gap-1 items-center w-full ">
-          {/* <span>current - </span>
-          <span
-            className={cn(
-              "h-2 w-2  rounded-full",
-              activeFlashcard.UserAnswer[0].response === "again" && "bg-again",
-              activeFlashcard.UserAnswer[0].response === "hard" && "bg-hard",
-              activeFlashcard.UserAnswer[0].response === "good" && "bg-good",
-              activeFlashcard.UserAnswer[0].response === "easy" && "bg-easy"
-            )}
-          ></span>
-          <span className="">
-            {activeFlashcard.id}/{flashcards.length}
-          </span> */}
           <div>
-            <LanguageInfo flashcards={flashcards} />
+            <LanguageInfo
+              flashcards={flashcards}
+              activeFlashcard={activeFlashcard}
+            />
           </div>
           <Timer />
         </div>
