@@ -4,7 +4,7 @@ async function generateAccessToken(id: string, email: string): Promise<string> {
   return new SignJWT({ id, email })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1m")
+    .setExpirationTime("15m")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 
@@ -15,7 +15,7 @@ async function generateRefreshToken(
   return new SignJWT({ id, email })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("1m")
+    .setExpirationTime("4w")
     .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 

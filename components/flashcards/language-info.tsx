@@ -84,7 +84,7 @@ function LanguageInfo({ flashcards }: { flashcards: Flashcard[] }) {
         ))}
       </div>
 
-      <HoverCard>
+      {/* <HoverCard>
         <HoverCardTrigger>
           <div className="flex gap-1 items-center text-muted-foreground text-sm cursor-pointer">
             <span>How it work</span>
@@ -105,7 +105,7 @@ function LanguageInfo({ flashcards }: { flashcards: Flashcard[] }) {
             <p>- Easy: I easily recalled</p>
           </div>
         </HoverCardContent>
-      </HoverCard>
+      </HoverCard> */}
     </div>
   )
 }
