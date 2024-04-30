@@ -13,9 +13,14 @@ import {
   X,
 } from "lucide-react"
 
-import { Flashcard, FlashcardResponse } from "@/types/flashcard"
+import {
+  Flashcard,
+  FlashcardResponse,
+  UserAnswerWithTime,
+} from "@/types/flashcard"
 import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { cn, findIndex, shuffleArray } from "@/lib/utils"
+import { userAnswerType } from "@/lib/validators/user_answer"
 import {
   Carousel,
   CarouselApi,
@@ -45,9 +50,7 @@ function Flashcards({
 
   const { mutate } = useMutation({
     mutationKey: ["javascript_flashcards"],
-    mutationFn: async (
-      answer: Omit<UserAnswer, "userId" | "createdAt" | "lastReviewed">
-    ) => {
+    mutationFn: async (answer: userAnswerType) => {
       const data = await flashcardsApi.sendAnswer(answer)
       return data
     },
@@ -115,11 +118,14 @@ function Flashcards({
 
     mutate(
       {
-        flashcardId: currentFlashcard.id,
-        easeFactor: currentFlashcard.UserAnswer[0].easeFactor,
-        interval: currentFlashcard.UserAnswer[0].interval,
-        response: response,
-        languageName: language,
+        time: localStorage.getItem("time")?.split(",")[1] || "",
+        answer: {
+          flashcardId: currentFlashcard.id,
+          easeFactor: currentFlashcard.UserAnswer[0].easeFactor,
+          interval: currentFlashcard.UserAnswer[0].interval,
+          response: response,
+          languageName: language,
+        },
       },
       {
         onSuccess: (data) => {

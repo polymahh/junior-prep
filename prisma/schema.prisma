@@ -139,7 +139,7 @@ model TimeSpent {
   user      User     @relation(fields: [userId], references: [id])
   time      String
   updatedAt DateTime @updatedAt
-  createdAt DateTime @default(now())
+  createdAt DateTime
 
   @@unique([createdAt, userId])
 }

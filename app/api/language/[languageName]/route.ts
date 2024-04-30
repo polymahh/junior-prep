@@ -23,6 +23,16 @@ export async function GET(
     const { languageName } = params
     console.log("🚀 ~ languageName:", languageName)
 
+    const formattedDate = new Date().toISOString().split("T")[0]
+    const timeSpent = await db.timeSpent.findUnique({
+      where: {
+        createdAt_userId: {
+          createdAt: new Date(formattedDate),
+          userId: payload.id as string,
+        },
+      },
+    })
+
     const flashcards = await db.language.findUnique({
       where: {
         languageName: languageName,
@@ -50,7 +60,7 @@ export async function GET(
     })
 
     return NextResponse.json(
-      { flashcards: flashcards, message: "flashcards found" },
+      { flashcards, timeSpent, message: "flashcards found" },
       { status: 200 }
     )
   } catch (error) {
@@ -87,22 +97,44 @@ export async function POST(
     const answers = await db.userAnswer.upsert({
       where: {
         flashcardId_userId: {
-          flashcardId: data.flashcardId as number,
+          flashcardId: data.answer.flashcardId as number,
           userId: payload.id as string,
         },
       },
       update: {
-        response: data?.response as string,
-        easeFactor: data?.easeFactor as number,
-        interval: data?.interval as number,
+        response: data?.answer.response as string,
+        easeFactor: data?.answer.easeFactor as number,
+        interval: data?.answer.interval as number,
       },
       create: {
-        ...data,
+        ...data.answer,
         userId: payload.id as string,
       },
     })
 
-    return NextResponse.json({ message: "answer created" }, { status: 201 })
+    const formattedDate = new Date().toISOString().split("T")[0]
+
+    const timespent = await db.timeSpent.upsert({
+      where: {
+        createdAt_userId: {
+          createdAt: new Date(formattedDate),
+          userId: payload.id as string,
+        },
+      },
+      update: {
+        time: data?.time,
+      },
+      create: {
+        time: data?.time,
+        userId: payload.id as string,
+        createdAt: new Date(formattedDate),
+      },
+    })
+
+    return NextResponse.json(
+      { timespent, answers, message: "answer created" },
+      { status: 201 }
+    )
   } catch (error) {
     console.log("🚀 ~ POST ~ error:", error)
     return Response.json({ message: "something went wrong" }, { status: 500 })

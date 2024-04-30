@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { AlarmClock } from "lucide-react"
 
+import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import {
   Tooltip,
   TooltipContent,
@@ -8,29 +10,54 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-const SECOND = 1000
-const MINUTE = SECOND * 60
-const HOUR = MINUTE * 60
-
 export const Timer = () => {
   const [time, setTime] = useState(0)
-  const [today, setToday] = useState(new Date().toISOString().slice(0, 10))
+  const [today, setToday] = useState(new Date().toISOString().split("T")[0])
+
+  const { data, isSuccess, isLoading, isError, error } = useQuery({
+    queryKey: ["javascript_flashcards"],
+    queryFn: async () => {
+      const result = await flashcardsApi.getFlashcards("javascript")
+
+      return result?.timeSpent
+    },
+  })
 
   useEffect(() => {
-    const previousTime = localStorage.getItem("time")
-    if (previousTime && previousTime?.split(",")[0] === today) {
-      setTime(parseInt(previousTime.split(",")[1]))
-    } else {
-      setTime(0)
-      localStorage.setItem("time", today + "," + 0)
+    const storage_Time = localStorage.getItem("timeSpent")
+
+    if (storage_Time && data) {
+      const previousTime = parseInt(storage_Time[1])
+      const previousDate = storage_Time[0]
+      if (previousTime && previousDate === today) {
+        setTime(data?.time > previousTime ? data?.time : previousTime)
+      } else {
+        setTime(data?.time)
+      }
     }
   }, [])
+
+  useEffect(() => {
+    console.log("setting time in localStorage")
+    if (isSuccess && data) {
+      const time_date = localStorage.getItem("timeSpent")?.split(",")
+      const createdAt = data?.createdAt.split("T")[0]
+      console.log("🚀 ~ useEffect ~ time_date:", time_date, createdAt)
+      if (time_date && time_date[0] === createdAt) {
+        if (time_date[1] < data?.time) {
+          localStorage.setItem("timeSpent", createdAt + "," + data?.time)
+        }
+      } else {
+        localStorage.setItem("timeSpent", createdAt + "," + data?.time)
+      }
+    }
+  }, [isSuccess])
 
   useEffect(() => {
     const interval = setInterval(() => {
       setTime((prev) => {
         const newTime = prev + 1
-        localStorage.setItem("time", today + "," + newTime.toString())
+        localStorage.setItem("timeSpent", today + "," + newTime.toString())
         return newTime
       })
     }, 1000)
