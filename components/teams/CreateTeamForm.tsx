@@ -1,15 +1,13 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { roleName } from "@prisma/client"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { teamsApi } from "@/lib/api/teamsApi"
-import { postItems, putItems } from "@/lib/resquest"
 import { cn } from "@/lib/utils"
-import { teamType } from "@/lib/validators/teams"
+import { teamSchema, teamType } from "@/lib/validators/teams"
 import {
   Form,
   FormControl,
@@ -28,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { queryClient } from "@/app/layout"
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
@@ -57,18 +56,23 @@ const defaultRoles = [
 
 function CreateTeamForm({ team, setOpen }: any) {
   //TODO: needs team response type
-  const [values, setValues] = useState<any>()
   const router = useRouter()
 
   const form = useForm<teamType>({
+    resolver: zodResolver(teamSchema),
     mode: "onChange",
     defaultValues: !!team
       ? {
           name: team?.project?.name,
           description: team?.project?.description,
           repo: team?.project?.githubRepo,
-          roles: team?.roles?.map((role: any) => {
-            return { stack: role.stack, name: role.roleName, active: true }
+          roles: defaultRoles.map((role) => {
+            let temp_role = team?.roles.find(
+              (r) => role.roleName === r.roleName
+            )
+            if (temp_role) {
+              return { ...temp_role, active: true }
+            } else return role
           }),
           creatorRole: team?.creatorRole,
         }
@@ -83,13 +87,20 @@ function CreateTeamForm({ team, setOpen }: any) {
 
   form.watch("roles")
 
-  const queryClient = useQueryClient()
-
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (values: teamType) => {
+      const teamData = {
+        name: values.name,
+        description: values.description,
+        roles: values.roles
+          .filter((role) => role.active)
+          .map((role) => ({ stack: role.stack, roleName: role.roleName })),
+        repo: values.repo,
+        creatorRole: values.creatorRole,
+      }
       const data = !team
-        ? await teamsApi.newTeam(values)
-        : await putItems(values, `/api/teams/${team.id}`)
+        ? await teamsApi.newTeam(teamData)
+        : await teamsApi.updateTeam(teamData, team.id)
       return data
     },
     onSuccess: async (data) => {
@@ -97,7 +108,7 @@ function CreateTeamForm({ team, setOpen }: any) {
       await queryClient.invalidateQueries({ queryKey: ["teams"] })
       if (!team) {
         console.log("new team created")
-        router.push(`/dashboard/teams/12`)
+        router.push(`/dashboard/teams/${data.team.id}`)
       } else {
         console.log("edit team")
         await queryClient.invalidateQueries({
@@ -109,20 +120,9 @@ function CreateTeamForm({ team, setOpen }: any) {
   })
 
   const onSubmit = async (values: teamType) => {
-    setValues({
-      name: values.name,
-      description: values.description,
-      roles: values.roles.filter((role) => role.active),
-      repo: values.repo,
-      creatorRole: values.creatorRole,
-    })
-
-    mutateAsync()
+    console.log("🚀 ~ onSubmit ~ values:", values)
+    mutateAsync(values)
   }
-
-  useEffect(() => {
-    console.log(values)
-  }, [values])
 
   return (
     <Form {...form}>
@@ -190,6 +190,11 @@ function CreateTeamForm({ team, setOpen }: any) {
           </div>
         )}
         {defaultRoles.map((role, idx) => {
+          console.log(
+            "🚀 ~ {defaultRoles.map ~ form.getValues(roles):",
+            form.getValues("roles")
+          )
+
           return (
             <div key={role.roleName} className="space-y-3">
               <FormField

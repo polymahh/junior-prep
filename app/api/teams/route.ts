@@ -1,21 +1,35 @@
+import { cookies } from "next/headers"
 import { db } from "@/db"
 import { roleName } from "@prisma/client"
+import { jwtVerify } from "jose"
 
 import { teamSchema } from "@/lib/validators/teams"
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    console.log("🚀 ~ file: route.ts:13 ~ POST ~ body:", body)
-
     const { name, description, repo, roles, creatorRole } =
       teamSchema.parse(body)
 
+    const cookieStore = cookies()
+    const _acc__token = cookieStore.get("_acc__token")
+
+    if (!_acc__token) {
+      return Response.json({ message: "no access" }, { status: 401 })
+    }
+
+    const { payload } = await jwtVerify(
+      _acc__token.value,
+      new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
+    )
+
+    if (!payload) {
+      return Response.json({ message: "no access" }, { status: 401 })
+    }
+
     const user = await db.user.findUnique({
-      // TODO: take email from jwt token
       where: {
-        email: "admin@admin.com",
-        // email: session.user?.email as string
+        email: payload.email as string,
       },
     })
 
@@ -32,7 +46,7 @@ export async function POST(req: Request) {
         },
         Role: {
           createMany: {
-            data: roles,
+            data: roles as { stack: string; roleName: roleName }[],
           },
         },
       },

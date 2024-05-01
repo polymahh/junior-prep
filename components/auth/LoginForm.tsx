@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import Link from "next/link"
 import { redirect, useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { authApi } from "@/lib/api/authApi"
@@ -25,7 +25,14 @@ import OAuthButtons from "./OAuthButton"
 import ResetPassword from "./ResetPassword"
 
 function LoginForm() {
-  const router = useRouter()
+  const { isSuccess: logedin } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => authApi.getProfile(),
+  })
+
+  if (logedin) {
+    redirect("/dashboard")
+  }
 
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),

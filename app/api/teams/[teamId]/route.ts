@@ -85,6 +85,7 @@ export async function PUT(
         githubRepo: repo,
         isCompleted,
       },
+
       include: {
         team: true,
       },

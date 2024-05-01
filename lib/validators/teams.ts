@@ -12,11 +12,26 @@ export const teamSchema = z.object({
   creatorRole: RoleName.optional(),
   roles: z
     .array(
-      z.object({
-        active: z.boolean(),
-        roleName: RoleName,
-        stack: z.string(),
-      })
+      z
+        .object({
+          active: z.boolean().optional(),
+          roleName: RoleName,
+          stack: z.string().optional(),
+        })
+        .refine(
+          (role) => {
+            if (role.active) {
+              if (role.stack) {
+                return true
+              } else return false
+            }
+            return true
+          },
+          {
+            message: "stack can't be empty ",
+            path: ["stack"],
+          }
+        )
     )
     .nonempty({
       message: "You have to select at least one role.",

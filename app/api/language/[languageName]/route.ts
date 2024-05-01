@@ -1,5 +1,4 @@
 import { cookies } from "next/headers"
-import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/db"
 import { jwtVerify } from "jose"
 
@@ -13,7 +12,7 @@ export async function GET(
     const cookieStore = cookies()
     const accessToken = cookieStore.get("_acc__token")?.value
     if (!accessToken) {
-      return NextResponse.json({ message: "no access" }, { status: 401 })
+      return Response.json({ message: "no access" }, { status: 401 })
     }
     const { payload } = await jwtVerify(
       accessToken,
@@ -59,7 +58,7 @@ export async function GET(
       },
     })
 
-    return NextResponse.json(
+    return Response.json(
       { flashcards, timeSpent, message: "flashcards found" },
       { status: 200 }
     )
@@ -69,30 +68,25 @@ export async function GET(
   }
 }
 
-export async function POST(
-  req: Request,
-  { params }: { params: { languageName: string } }
-) {
-  const { languageName } = params
-  console.log("🚀 ~ languageName:", languageName)
-  const body = await req.json()
-  const data = userAnswerSchema.parse(body)
-
-  const cookieStore = cookies()
-  const _acc__token = cookieStore.get("_acc__token")
-
-  if (!_acc__token) {
-    return NextResponse.json({ message: "no access" }, { status: 401 })
-  }
-
+export async function POST(req: Request) {
   try {
+    const body = await req.json()
+    const data = userAnswerSchema.parse(body)
+
+    const cookieStore = cookies()
+    const _acc__token = cookieStore.get("_acc__token")
+
+    if (!_acc__token) {
+      return Response.json({ message: "no access" }, { status: 401 })
+    }
+
     const { payload } = await jwtVerify(
       _acc__token.value,
       new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
     )
 
     if (!payload) {
-      return NextResponse.json({ message: "no access" }, { status: 401 })
+      return Response.json({ message: "no access" }, { status: 401 })
     }
     const answers = await db.userAnswer.upsert({
       where: {
@@ -131,7 +125,7 @@ export async function POST(
       },
     })
 
-    return NextResponse.json(
+    return Response.json(
       { timespent, answers, message: "answer created" },
       { status: 201 }
     )

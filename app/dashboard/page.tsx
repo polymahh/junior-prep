@@ -11,20 +11,7 @@ import ProfileCard from "@/components/profileCard"
 import TeamsCard from "@/components/teams/TeamsList"
 
 // export const dynamic = "no-cache"
-export const dynamic = "force-dynamic"
 const Dashboard = () => {
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["profile"],
-  //   queryFn: () => authApi.getProfile(),
-  // })
-
-  // if (isLoading) {
-  //   console.log("loading...")
-  // }
-
-  // if (error) {
-  //   redirect("/login")
-  // }
   return (
     <div className="container m-auto flex flex-col gap-4 py-4">
       <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">

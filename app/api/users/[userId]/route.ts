@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
-import { getServerSession } from "next-auth"
 
 import { userSchema } from "@/lib/validators/users"
 
@@ -22,11 +21,6 @@ export async function GET(
         }
       )
     }
-
-    const session = await getServerSession()
-    //  if(!session){
-    //     return {messge:"not authenticated"}
-    //  }
 
     const user = await db.user.findUnique({
       where: {
@@ -65,12 +59,6 @@ export async function PUT(
     const { name, username, email, image, githubId, discordId } =
       userSchema.parse(body)
 
-    // check if user is authenticaed
-    const session = await getServerSession()
-    //  if(!session){
-    //     return {messge:"not authenticated"}
-    //  }
-
     const user = await db.user.findUnique({
       where: {
         id: userId,
@@ -81,12 +69,12 @@ export async function PUT(
       return NextResponse.json({ message: "Missing user" }, { status: 400 })
     }
 
-    if (session?.user?.email !== user.email) {
-      return NextResponse.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user.email) {
+    //   return NextResponse.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const updateUser = await db.user.update({
       where: {

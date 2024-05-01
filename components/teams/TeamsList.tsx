@@ -6,26 +6,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useQuery } from "@tanstack/react-query"
 import { ChevronRight, ExternalLink, Ghost } from "lucide-react"
 
-import { siteConfig } from "@/config/site"
-import { getItems } from "@/lib/resquest"
+import { teamsApi } from "@/lib/api/teamsApi"
 
-import { Icons } from "../icons"
-import { Button, buttonVariants } from "../ui/button"
+import { buttonVariants } from "../ui/button"
 import Card from "./Card"
 
 function TeamList() {
   const { data, isSuccess } = useQuery({
     queryKey: ["teams"],
-    queryFn: () => getItems("/api/teams"),
+    queryFn: () => teamsApi.getTeams(),
   })
 
-  //TODO: create defirent teams list for teams page
-
-  useEffect(() => {
-    if (isSuccess) {
-      console.log("🚀 ~ TeamList ~ data:", data.teams)
-    }
-  }, [isSuccess])
   return (
     <div className="flex h-full flex-col gap-6 rounded-lg border p-4">
       <div className=" flex justify-between border-b pb-1">

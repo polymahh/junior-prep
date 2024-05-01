@@ -14,41 +14,34 @@ export const Timer = () => {
   const [time, setTime] = useState(0)
   const [today, setToday] = useState(new Date().toISOString().split("T")[0])
 
-  const { data, isSuccess, isLoading, isError, error } = useQuery({
-    queryKey: ["javascript_flashcards"],
+  const { data, isSuccess } = useQuery({
+    queryKey: ["javascript_flashcards", "timespent"],
     queryFn: async () => {
       const result = await flashcardsApi.getFlashcards("javascript")
-
       return result?.timeSpent
     },
   })
 
   useEffect(() => {
-    const storage_Time = localStorage.getItem("timeSpent")
-
-    if (storage_Time && data) {
-      const previousTime = parseInt(storage_Time[1])
-      const previousDate = storage_Time[0]
-      if (previousTime && previousDate === today) {
-        setTime(data?.time > previousTime ? data?.time : previousTime)
-      } else {
-        setTime(data?.time)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    console.log("setting time in localStorage")
-    if (isSuccess && data) {
-      const time_date = localStorage.getItem("timeSpent")?.split(",")
-      const createdAt = data?.createdAt.split("T")[0]
-      console.log("🚀 ~ useEffect ~ time_date:", time_date, createdAt)
-      if (time_date && time_date[0] === createdAt) {
-        if (time_date[1] < data?.time) {
-          localStorage.setItem("timeSpent", createdAt + "," + data?.time)
+    const storage_Time = localStorage.getItem("timeSpent")?.split(",")
+    if (isSuccess) {
+      if (storage_Time && data?.time) {
+        console.log("🚀 ~ useEffect ~ data:", data)
+        const previousTime = parseInt(storage_Time[1])
+        const previousDate = storage_Time[0]
+        if (previousTime && previousDate === today) {
+          setTime(data?.time > previousTime ? data?.time : previousTime)
+        } else {
+          setTime(data?.time)
         }
+      }
+    } else if (storage_Time) {
+      console.log("🚀 ~ useEffect ~ storage_Time:", storage_Time, today)
+      if (storage_Time[0] === today) {
+        setTime(parseInt(storage_Time[1]))
       } else {
-        localStorage.setItem("timeSpent", createdAt + "," + data?.time)
+        console.log("no time detected")
+        setTime(0)
       }
     }
   }, [isSuccess])

@@ -33,21 +33,17 @@ interface RootLayoutProps {
 export const queryClient = new QueryClient()
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  // await queryClient.prefetchQuery({
-  //   queryKey: ["profile"],
-  //   queryFn: async () => await authApi.getProfile(),
-  // })
   return (
     <>
       <html lang="en" suppressHydrationWarning>
-        <Providers>
-          <body
-            className={cn(
-              "min-h-screen bg-background font-sans antialiased",
-              fontSans.variable,
-              fontMono.variable
-            )}
-          >
+        <body
+          className={cn(
+            "min-h-screen bg-background font-sans antialiased",
+            fontSans.variable,
+            fontMono.variable
+          )}
+        >
+          <Providers>
             <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
               <div className="relative flex min-h-screen flex-col ">
                 <HydrationBoundary state={dehydrate(queryClient)}>
@@ -55,8 +51,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 </HydrationBoundary>
               </div>
             </ThemeProvider>
-          </body>
-        </Providers>
+          </Providers>
+        </body>
       </html>
     </>
   )

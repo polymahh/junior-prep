@@ -57,7 +57,7 @@ function ChartCard() {
           <p className="text-muted-foreground text-sm">{`${label}`}</p>
           <div>
             {payload.map((pld: any) => (
-              <div className="flex gap-1">
+              <div className="flex gap-1" key={pld.dataKey}>
                 <span className="text-sm">{`${pld.dataKey}:`}</span>
                 <span className="text-sm" style={{ color: pld.fill }}>
                   {pld.value}
