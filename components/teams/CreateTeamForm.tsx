@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Role } from "@prisma/client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
@@ -26,7 +27,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { queryClient } from "@/app/layout"
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
@@ -54,8 +54,13 @@ const defaultRoles = [
   },
 ] as const
 
-function CreateTeamForm({ team, setOpen }: any) {
-  //TODO: needs team response type
+function CreateTeamForm({
+  team,
+  setOpen,
+}: {
+  team: any
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) {
   const router = useRouter()
 
   const form = useForm<teamType>({
@@ -68,7 +73,7 @@ function CreateTeamForm({ team, setOpen }: any) {
           repo: team?.project?.githubRepo,
           roles: defaultRoles.map((role) => {
             let temp_role = team?.roles.find(
-              (r) => role.roleName === r.roleName
+              (r: Role) => role.roleName === r.roleName
             )
             if (temp_role) {
               return { ...temp_role, active: true }
@@ -89,39 +94,58 @@ function CreateTeamForm({ team, setOpen }: any) {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (values: teamType) => {
-      const teamData = {
-        name: values.name,
-        description: values.description,
-        roles: values.roles
-          .filter((role) => role.active)
-          .map((role) => ({ stack: role.stack, roleName: role.roleName })),
-        repo: values.repo,
-        creatorRole: values.creatorRole,
-      }
       const data = !team
-        ? await teamsApi.newTeam(teamData)
-        : await teamsApi.updateTeam(teamData, team.id)
+        ? await teamsApi.newTeam(values)
+        : await teamsApi.updateTeam(values, team.id)
       return data
-    },
-    onSuccess: async (data) => {
-      console.log("🚀 ~ onSuccess: ~ data:", data)
-      await queryClient.invalidateQueries({ queryKey: ["teams"] })
-      if (!team) {
-        console.log("new team created")
-        router.push(`/dashboard/teams/${data.team.id}`)
-      } else {
-        console.log("edit team")
-        await queryClient.invalidateQueries({
-          queryKey: ["teams", team.id],
-        })
-        setOpen(false)
-      }
     },
   })
 
+  const queryClient = useQueryClient()
+
   const onSubmit = async (values: teamType) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
-    mutateAsync(values)
+    const teamData = {
+      name: values.name,
+      description: values.description,
+      roles: values.roles
+        .filter((role) => role.active)
+        .map((role) => ({ stack: role.stack, roleName: role.roleName })),
+      repo: values.repo,
+      creatorRole: values.creatorRole,
+    }
+    mutateAsync(teamData, {
+      onSuccess: async (data) => {
+        console.log("🚀 ~ mutateAsync ~ data:", data)
+        if (!team) {
+          router.push(`/dashboard/teams/${data.team.id}`)
+        } else {
+          console.log("🚀 ~ mutateAsync ~ teamData:", teamData)
+          console.log("🚀 ~ mutateAsync ~ team.id:", team.id, data.team.id)
+          await queryClient.setQueryData(
+            ["teams", data.team.id],
+            (oldData: any) => {
+              console.log(
+                "🚀 ~ queryClient.setQueryData ~ oldData:",
+                oldData,
+                teamData
+              )
+              return {
+                ...oldData,
+                creatorRole: teamData.creatorRole,
+                project: {
+                  ...oldData.project,
+                  description: teamData.description,
+                  githubRepo: teamData.repo,
+                  name: teamData.name,
+                },
+              }
+            }
+          )
+          // queryClient.invalidateQueries({ queryKey: ["teams", `${team.id}`] })
+          setOpen(false)
+        }
+      },
+    })
   }
 
   return (
@@ -190,11 +214,6 @@ function CreateTeamForm({ team, setOpen }: any) {
           </div>
         )}
         {defaultRoles.map((role, idx) => {
-          console.log(
-            "🚀 ~ {defaultRoles.map ~ form.getValues(roles):",
-            form.getValues("roles")
-          )
-
           return (
             <div key={role.roleName} className="space-y-3">
               <FormField

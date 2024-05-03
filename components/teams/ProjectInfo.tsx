@@ -1,23 +1,35 @@
 import React from "react"
 import Link from "next/link"
-import { ExternalLink, Pencil } from "lucide-react"
+import { Project, Role, User } from "@prisma/client"
+import { ExternalLink } from "lucide-react"
 
-import { getDate } from "@/lib/helpers"
+import { userRoleType } from "@/lib/validators/userRole"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 import { Icons } from "../icons"
-import { Badge, badgeVariants } from "../ui/badge"
-import { Button, buttonVariants } from "../ui/button"
+import { RoleBadge, roleBadgeVariants } from "../ui/role-badge"
 import EditTeam from "./EditTeam"
 
-function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
+function ProjectInfo({
+  creator,
+  project,
+  roles,
+  creatorRole,
+  id,
+}: {
+  creator: User
+  project: Project
+  roles: Role[]
+  creatorRole: userRoleType
+  id: string
+}) {
   return (
     <div className=" flex h-full flex-col  rounded-lg border p-4">
       {/* creator info */}
       <div className="flex items-center justify-between rounded-lg border p-4">
         <div className="flex grow items-center gap-4">
           <Avatar className="h-28 w-28">
-            <AvatarImage src={creator?.image} alt="creator image" />
+            <AvatarImage src={creator?.image || ""} alt="creator image" />
             <AvatarFallback className="text-4xl">PM</AvatarFallback>
           </Avatar>
           <div>
@@ -33,7 +45,7 @@ function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
         </div>
         <div className="flex grow flex-col gap-1">
           <span className=" text-sm text-muted-foreground">
-            Project: {getDate(project?.createdAt)}
+            Project: {new Date(project?.createdAt).toISOString().split("T")[0]}
           </span>
           <Link
             href={project?.githubRepo ?? ""}
@@ -53,17 +65,15 @@ function ProjectInfo({ creator, project, roles, creatorRole, id }: any) {
         <div className="flex flex-col gap-4 ">
           <span className="border-b text-lg font-semibold ">Roles:</span>
           <div className="flex gap-4">
-            {roles?.map((role: any) => {
+            {roles?.map((role) => {
               return (
-                <Badge
+                <RoleBadge
                   key={role.roleName}
-                  className={badgeVariants({
-                    variant: role.roleName.toLowerCase(),
-                  })}
+                  variant={role.roleName}
                   tooltip={`Stack: ${role.stack}`}
                 >
-                  {role.roleName.toLowerCase()}
-                </Badge>
+                  {role.roleName}
+                </RoleBadge>
               )
             })}
           </div>

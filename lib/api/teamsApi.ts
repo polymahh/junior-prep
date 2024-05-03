@@ -21,7 +21,7 @@ export const teamsApi = {
     return result
   },
   updateTeam: async (teamsDetails: teamType, teamId: string) => {
-    const response = await axios.post(`api/teams/${teamId}`, teamsDetails)
+    const response = await axios.put(`api/teams/${teamId}`, teamsDetails)
     const result = await response.data
     return result
   },
