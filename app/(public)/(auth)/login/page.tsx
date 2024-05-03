@@ -5,19 +5,6 @@ import LoginForm from "@/components/auth/LoginForm"
 import { Icons } from "@/components/icons"
 
 async function Login() {
-  // const { data, error, isLoading } = useQuery({
-  //   queryKey: ["profile"],
-  //   queryFn: () => authApi.getProfile(),
-  // })
-
-  // if (isLoading) {
-  //   console.log("loading...")
-  // }
-
-  // if (error) {
-  //   redirect("/login")
-  // }
-
   return (
     <div className="flex h-full flex-col items-center justify-center gap-10 pt-12">
       <div className=" flex flex-col items-center">

@@ -19,7 +19,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider"
 //     template: `%s - ${siteConfig.name}`,
 //   },
 //   description: siteConfig.description,
-
 //   icons: {
 //     icon: "/favicon.ico",
 //     shortcut: "/favicon-16x16.png",
@@ -30,7 +29,15 @@ import { ThemeProvider } from "@/components/providers/theme-provider"
 interface RootLayoutProps {
   children: React.ReactNode
 }
-export const queryClient = new QueryClient()
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: false,
+      staleTime: Infinity,
+    },
+  },
+})
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   return (
