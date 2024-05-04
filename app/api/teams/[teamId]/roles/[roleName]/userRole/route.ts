@@ -3,7 +3,10 @@ import { db } from "@/db"
 
 import { userRoleSchema } from "@/lib/validators/userRole"
 
-export async function GET({ params }: { params: { teamId: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { teamId: string } }
+) {
   try {
     const { teamId } = params
 
