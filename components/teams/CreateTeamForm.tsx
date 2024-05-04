@@ -58,8 +58,8 @@ function CreateTeamForm({
   team,
   setOpen,
 }: {
-  team: any
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+  team?: any
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>
 }) {
   const router = useRouter()
 
