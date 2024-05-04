@@ -12,18 +12,18 @@ import { cn } from "@/lib/utils"
 import Providers from "@/components/providers"
 import { ThemeProvider } from "@/components/providers/theme-provider"
 
-export const metadata: Metadata = {
-  title: {
-    default: siteConfig.name,
-    template: `%s - ${siteConfig.name}`,
-  },
-  description: siteConfig.description,
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
-  },
-}
+// export const metadata: Metadata = {
+//   title: {
+//     default: siteConfig.name,
+//     template: `%s - ${siteConfig.name}`,
+//   },
+//   description: siteConfig.description,
+//   icons: {
+//     icon: "/favicon.ico",
+//     shortcut: "/favicon-16x16.png",
+//     apple: "/apple-touch-icon.png",
+//   },
+// }
 
 interface RootLayoutProps {
   children: React.ReactNode
