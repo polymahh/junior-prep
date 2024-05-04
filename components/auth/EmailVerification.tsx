@@ -11,7 +11,7 @@ function EmailVerification({ email }: { email?: string | null }) {
   return (
     <div className="flex flex-col gap-4  items-center text-center">
       <div className="rounded-full bg-highlight text-slate-50 p-4">
-        <MailCheck class="h-8 w-8" />
+        <MailCheck className="h-8 w-8" />
       </div>
       <h2 className="text-3xl pt-4">Please verify your email</h2>
       <div>
