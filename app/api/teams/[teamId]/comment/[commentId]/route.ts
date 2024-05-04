@@ -50,11 +50,10 @@ export async function PUT(
   }
 }
 
-export async function DELETE({
-  params,
-}: {
-  params: { teamId: string; commentId: string }
-}) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { teamId: string; commentId: string } }
+) {
   try {
     const { teamId, commentId } = params
     if (!commentId || !teamId) {
