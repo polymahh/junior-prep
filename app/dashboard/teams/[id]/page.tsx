@@ -7,9 +7,7 @@ const page = ({ params }: { params: { id: string } }) => {
 
   return (
     <div className="container m-auto flex flex-col gap-4 py-4">
-      <Suspense fallback={"loading ..."}>
-        <TeamPreview teamid={id} />
-      </Suspense>
+      <TeamPreview teamid={id} />
     </div>
   )
 }
