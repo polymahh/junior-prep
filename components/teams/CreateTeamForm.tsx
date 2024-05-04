@@ -93,7 +93,7 @@ function CreateTeamForm({
   form.watch("roles")
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (values: teamType) => {
+    mutationFn: async (values: any) => {
       const data = !team
         ? await teamsApi.newTeam(values)
         : await teamsApi.updateTeam(values, team.id)
@@ -115,20 +115,12 @@ function CreateTeamForm({
     }
     mutateAsync(teamData, {
       onSuccess: async (data) => {
-        console.log("🚀 ~ mutateAsync ~ data:", data)
         if (!team) {
           router.push(`/dashboard/teams/${data.team.id}`)
         } else {
-          console.log("🚀 ~ mutateAsync ~ teamData:", teamData)
-          console.log("🚀 ~ mutateAsync ~ team.id:", team.id, data.team.id)
           await queryClient.setQueryData(
             ["teams", data.team.id],
             (oldData: any) => {
-              console.log(
-                "🚀 ~ queryClient.setQueryData ~ oldData:",
-                oldData,
-                teamData
-              )
               return {
                 ...oldData,
                 creatorRole: teamData.creatorRole,
