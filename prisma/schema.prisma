@@ -78,8 +78,12 @@ model comment {
   updateAt  DateTime @updatedAt
   userId    String
   ProjectId String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project   Project  @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
+  parentId  String?
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project  Project   @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
+  parent   comment?  @relation("comment_children", fields: [parentId], references: [id])
+  children comment[] @relation("comment_children")
 
   @@index([ProjectId])
 }

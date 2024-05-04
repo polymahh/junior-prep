@@ -34,7 +34,7 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
     try {
         const body = await req.json()
 
-        const { comment } = commentSchema.parse(body)
+        const { comment, parent } = commentSchema.parse(body)
 
         const project = await db.project.findFirst({
             where: { teamId },
@@ -46,8 +46,9 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
         const newComment = await db.comment.create({
             data: {
                 content: comment,
+                parentId: parent,
                 userId: id,
-                ProjectId: project?.id!,
+                ProjectId: project.id,
             },
         })
 
