@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { roleName } from "@prisma/client"
-import { getServerSession } from "next-auth"
 
 import { roleSchema } from "@/lib/validators/roles"
 
@@ -16,8 +15,6 @@ export async function GET(
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -31,13 +28,16 @@ export async function GET(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { role: team, message: "role created successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: rolename route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -55,8 +55,6 @@ export async function PUT(
 
     const { name, stack } = roleSchema.parse(body)
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -69,16 +67,16 @@ export async function PUT(
 
     const user = await db.user.findUnique({
       where: {
-        id: team?.creatorId,
+        id: team?.creatorId as string,
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return NextResponse.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const role = await db.role.update({
       where: {
@@ -91,13 +89,16 @@ export async function PUT(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { role: role, message: "role created successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: rolename route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -111,8 +112,6 @@ export async function DELETE(
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -125,16 +124,16 @@ export async function DELETE(
 
     const user = await db.user.findUnique({
       where: {
-        id: team?.creatorId,
+        id: team?.creatorId as string,
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return NextResponse.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const role = await db.role.delete({
       where: {
@@ -142,12 +141,15 @@ export async function DELETE(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { role: role, message: "role deleted successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: rolename route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

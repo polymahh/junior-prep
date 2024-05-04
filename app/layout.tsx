@@ -1,5 +1,5 @@
 import "@/styles/globals.css"
-import { Metadata } from "next"
+import type { Metadata } from "next"
 import {
   HydrationBoundary,
   QueryClient,
@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-query"
 
 import { siteConfig } from "@/config/site"
-import { authApi } from "@/lib/api/authApi"
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import Providers from "@/components/providers"

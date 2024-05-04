@@ -15,25 +15,23 @@ function TeamPreview({ teamid }: { teamid: string }) {
     queryFn: () => teamsApi.getTeam(teamid),
   })
 
-  if (isLoading) return <>Loading ...</>
+  if (isLoading) return <div>Loading ...</div>
 
-  return (
-    isSuccess && (
-      <>
-        <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
-          <Users className="h-10 rounded-sm" />
-          <h1 className="text-lg font-semibold">{data?.project?.name}</h1>
+  return isSuccess ? (
+    <>
+      <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
+        <Users className="h-10 rounded-sm" />
+        <h1 className="text-lg font-semibold">{data?.project?.name}</h1>
+      </div>
+      <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
+        <div className="col-span-2 row-span-2 ">
+          <ProjectInfo {...data} />
         </div>
-        <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
-          <div className="col-span-2 row-span-2 ">
-            <ProjectInfo {...data} />
-          </div>
-          <Comments />
-          {/* <MemberSection /> */}
-        </div>
-      </>
-    )
-  )
+        <Comments />
+        {/* <MemberSection /> */}
+      </div>
+    </>
+  ) : null
 }
 
 export default TeamPreview
