@@ -1,103 +1,68 @@
-import { cookies, headers } from "next/headers"
-import { redirect } from "next/navigation"
+import { extractPayload, generateAccessToken } from "./lib/jwt-tokens"
+import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
-import { errors, jwtVerify } from "jose"
 
-import { generateAccessToken } from "./lib/jwt-tokens"
+export default async function middleware(req: NextRequest) {
+    const cookieStore = cookies()
+    const accessToken = cookieStore.get("_acc__token")?.value
+    const refreshToken = cookieStore.get("_ref__token")?.value
+    const pathname = req.nextUrl.pathname
 
-export default async function isAuthenticated(req: NextRequest) {
-  const cookieStore = cookies()
-  const accessToken = cookieStore.get("_acc__token")?.value
-  const refreshToken = cookieStore.get("_ref__token")?.value
+    if (!pathname.startsWith("/api/auth") && !pathname.startsWith("/register") && !pathname.startsWith("/login")) {
+        const unauthorizedReturn = pathname.startsWith("/api")
+            ? NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+            : NextResponse.redirect(new URL("/login", req.url))
 
-  async function isValidAccessToken() {
-    try {
-      if (!accessToken) {
-        return false
-      }
-      await jwtVerify(
-        accessToken,
-        new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
-      )
-      console.log("valid access token")
-      return true
-    } catch (err) {
-      console.log("invalid access token")
-      return false
-    }
-  }
-  async function isValidRefreshToken() {
-    try {
-      if (!refreshToken) {
-        return null
-      }
-      const { payload } = await jwtVerify(
-        refreshToken,
-        new TextEncoder().encode(process.env.JWT_REFRESH_SECRET)
-      )
-      console.log("valid refresh token")
-      return payload
-    } catch (err) {
-      console.log("invalid refresh token")
-      return null
-    }
-  }
+        if (!accessToken) return unauthorizedReturn
 
-  try {
-    if (await isValidAccessToken()) {
-      return NextResponse.next()
+        try {
+            const payload = await extractPayload(accessToken, process.env.JWT_ACCESS_SECRET as string, false)
+
+            if (typeof payload === "boolean") {
+                if (!refreshToken) return unauthorizedReturn
+
+                const refreshPayload = await extractPayload(
+                    refreshToken,
+                    process.env.JWT_REFRESH_SECRET as string,
+                    false,
+                )
+
+                if (typeof refreshPayload === "boolean") return unauthorizedReturn
+
+                const newAccessToken = await generateAccessToken(
+                    refreshPayload.id as string,
+                    refreshPayload.email as string,
+                )
+
+                const headers = new Headers(req.headers)
+                headers.set("x-user-data", JSON.stringify({ id: refreshPayload.id, email: refreshPayload.email }))
+
+                const response = NextResponse.next({ request: { headers } })
+
+                response.cookies.set({
+                    name: "_acc__token",
+                    value: newAccessToken,
+                    secure: true,
+                    httpOnly: true,
+                    sameSite: "lax",
+                    expires: new Date(Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)),
+                })
+
+                return response
+            }
+
+            const headers = new Headers(req.headers)
+            headers.set("x-user-data", JSON.stringify({ id: payload.id, email: payload.email }))
+
+            return NextResponse.next({ request: { headers } })
+        } catch (error) {
+            return unauthorizedReturn
+        }
     } else {
-      const payload = await isValidRefreshToken()
-
-      if (!payload) {
-        console.log(
-          "🚀 ~ isAuthenticated ~ !refreshToken || invalidRefreshToken:"
-        )
-        // return NextResponse.redirect(new URL("/login", req.url))
-
-        return NextResponse.redirect(new URL("/login", req.url))
-
-        // response.cookies.delete("_ref__token")
-        // response.cookies.delete("_acc__token")
-
-        // return response.json({ message: "invalid refresh token" },{ status: 202 })
-
-        // return NextResponse.rewrite(new URL("/login", req.url))
-        // return NextResponse.rewrite(new URL("/login", req.url))
-      }
-      const newAccessToken = await generateAccessToken(
-        payload.id as string,
-        payload.email as string
-      )
-      console.log("valid refresh token and generated new access token")
-      const response = NextResponse.next()
-      response.cookies.set({
-        name: "_acc__token",
-        value: newAccessToken,
-        secure: true,
-        httpOnly: true,
-        sameSite: "strict",
-        expires: new Date(
-          Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
-        ),
-      })
-
-      return response
+        return NextResponse.next()
     }
-  } catch (error) {
-    console.log("err", error)
-    return NextResponse.json(
-      { message: "something went wrong" },
-      { status: 500 }
-    )
-  }
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/api/users/:path*",
-    "/api/teams/:path*",
-    "/api/language/:path*",
-  ],
+    matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 }

@@ -1,75 +1,59 @@
-import { db } from "@/db";
-import { commentSchema } from "@/lib/validators/comment";
-import { NextResponse } from "next/server";
+import { db } from "@/db"
+import { commentSchema } from "@/lib/validators/comment"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET ({params} : {params:{teamId:string}}) {
-
+export async function GET(request: NextRequest, { params }: { params: { teamId: string } }) {
     try {
+        const { teamId } = params
 
-        const {teamId} = params
+        if (!teamId) return NextResponse.json({ message: "Team identifier is missing!" }, { status: 400 })
 
-        if(!teamId){
-            return NextResponse.json({message:"missing team Id"}, {status:400})
-        }
-
-        const project = await db.project.findUnique({
-            where: {
-                teamId: teamId
-            },
-            include:{
-                comment:true
-            }
+        const project = await db.project.findFirst({
+            where: { teamId },
+            select: { comments: true },
         })
 
-        return NextResponse.json({comments : project, message:"comments found"},{status:201})
+        if (!project) return NextResponse.json({ message: `There is no team with the id: ${teamId}` }, { status: 404 })
 
-        
+        return NextResponse.json(project.comments, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: route.ts:8 ~ GET ~ error:", error)
-        return NextResponse.json({message:"something went wrong"}, {status:500})
+        console.log("GET: teams/[teamId]/comment", error)
+        return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
-
 }
 
-export async function POST(req:Request, {params}:{params:{teamId:string}}) {
+export async function POST(req: Request, { params }: { params: { teamId: string } }) {
+    const { teamId } = params
+    const user = req.headers.get("x-user-data")
+
+    if (!teamId) return NextResponse.json({ message: "missing team Id" }, { status: 400 })
+    if (!user) return NextResponse.json({ message: "missing user" }, { status: 400 })
+
+    const { id } = JSON.parse(user)
 
     try {
-        const {teamId} = params
+        const body = await req.json()
 
-        if(!teamId){
-            return NextResponse.json({message:"missing team Id"}, {status:400})
-        }
+        const { comment } = commentSchema.parse(body)
 
-        const body = req.body
-        const {comment, email} = commentSchema.parse(body)
-
-        
-
-        const newComment = await db.comment.create({
-            data:{
-                content:comment,
-                user:{
-                    connect:{
-                        email
-                    }
-                },
-                project:{
-                    connect:{
-                        teamId: teamId
-                    }
-                }
-
-            }
+        const project = await db.project.findFirst({
+            where: { teamId },
+            select: { id: true },
         })
 
-        return NextResponse.json({comment:newComment , message: "comment sent"},{status: 201})
+        if (!project) return NextResponse.json({ message: `There is no team with the id: ${teamId}` }, { status: 404 })
 
-        
+        const newComment = await db.comment.create({
+            data: {
+                content: comment,
+                userId: id,
+                ProjectId: project?.id!,
+            },
+        })
+
+        return NextResponse.json(newComment, { status: 201 })
     } catch (error) {
-
-        console.log("🚀 ~ file: route.ts:8 ~ GET ~ error:", error)
-        return NextResponse.json({message:"something went wrong"}, {status:500})
-        
+        console.log("POST: teams/[teamId]/comment", error)
+        return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
-    
 }
