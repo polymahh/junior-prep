@@ -1,6 +1,7 @@
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 import { db } from "@/db"
+import { userResponse } from "@prisma/client"
 import { jwtVerify } from "jose"
 
 import { userAnswerSchema } from "@/lib/validators/user_answer"
@@ -100,12 +101,13 @@ export async function POST(req: Request) {
         },
       },
       update: {
-        response: data?.answer.response as string,
+        response: data?.answer.response as userResponse,
         easeFactor: data?.answer.easeFactor as number,
         interval: data?.answer.interval as number,
       },
       create: {
         ...data.answer,
+        response: data?.answer.response as userResponse,
         userId: payload.id as string,
       },
     })
