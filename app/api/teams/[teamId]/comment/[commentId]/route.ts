@@ -24,7 +24,7 @@ export async function PUT(
     })
 
     // if (session?.user?.email !== oldComment?.userEmail) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -40,13 +40,16 @@ export async function PUT(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { role: newComment, message: "comment updated successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: teams route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -71,7 +74,7 @@ export async function DELETE(
     })
 
     // if (session?.user?.email !== oldComment?.userEmail) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -83,12 +86,15 @@ export async function DELETE(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { message: "comment deleted successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: team id route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

@@ -60,7 +60,7 @@ export default async function isAuthenticated(req: NextRequest) {
         // response.cookies.delete("_ref__token")
         // response.cookies.delete("_acc__token")
 
-        // return response.json({ message: "invalid refresh token" },{ status: 202 })
+        // return NextResponse.json({ message: "invalid refresh token" },{ status: 202 })
 
         // return NextResponse.rewrite(new URL("/login", req.url))
         // return NextResponse.rewrite(new URL("/login", req.url))

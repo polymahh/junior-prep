@@ -1,4 +1,5 @@
 import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { roleName } from "@prisma/client"
 import { jwtVerify } from "jose"
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
     const _acc__token = cookieStore.get("_acc__token")
 
     if (!_acc__token) {
-      return Response.json({ message: "no access" }, { status: 401 })
+      return NextResponse.json({ message: "no access" }, { status: 401 })
     }
 
     const { payload } = await jwtVerify(
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
     )
 
     if (!payload) {
-      return Response.json({ message: "no access" }, { status: 401 })
+      return NextResponse.json({ message: "no access" }, { status: 401 })
     }
 
     const user = await db.user.findUnique({
@@ -51,13 +52,16 @@ export async function POST(req: Request) {
         },
       },
     })
-    return Response.json(
+    return NextResponse.json(
       { team: team, message: "team created successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: teams route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -91,12 +95,15 @@ export async function GET(req: Request) {
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { teams, message: "teams list success" },
       { status: 200 }
     )
   } catch (error) {
     console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

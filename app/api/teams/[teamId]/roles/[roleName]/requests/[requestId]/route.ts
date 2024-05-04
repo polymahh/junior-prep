@@ -30,7 +30,7 @@ export async function PUT(
     })
 
     // if (session?.user?.email !== user?.email) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -43,7 +43,7 @@ export async function PUT(
     })
 
     // if (team?.adminId !== user?.id) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -58,13 +58,16 @@ export async function PUT(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { role: request, message: "request updated successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: requestid route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -93,7 +96,7 @@ export async function DELETE(
     })
 
     // if (session?.user?.email !== request?.userEmail) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -105,12 +108,15 @@ export async function DELETE(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { message: "request deleted successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: requestid route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

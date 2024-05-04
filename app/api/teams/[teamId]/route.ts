@@ -49,7 +49,7 @@ export async function GET(
 
     const { Project, Role: roles, ...rest } = team!
 
-    return Response.json(
+    return NextResponse.json(
       {
         team: { project: Project[0], roles, ...rest },
         message: "team with ID found",
@@ -58,7 +58,10 @@ export async function GET(
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -118,16 +121,19 @@ export async function PUT(
     //TODO: get the user from token
 
     // if(project?.team.creatorId !== session?.user?.email){
-    //     return Response.json({message:"You are not authorized"},{status:401})
+    //     return NextResponse.json({message:"You are not authorized"},{status:401})
     // }
 
-    return Response.json(
+    return NextResponse.json(
       { team: project, message: "Team found" },
       { status: 201 }
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -161,12 +167,15 @@ export async function DELETE(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { team: team, message: "team with ID found" },
       { status: 201 }
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

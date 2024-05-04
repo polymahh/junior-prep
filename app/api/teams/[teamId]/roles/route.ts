@@ -34,7 +34,7 @@ export async function POST(
     })
 
     // if (session?.user?.email !== user?.email) {
-    //   return Response.json(
+    //   return NextResponse.json(
     //     { message: "You are not authorized" },
     //     { status: 401 }
     //   )
@@ -51,12 +51,15 @@ export async function POST(
         },
       },
     })
-    return Response.json(
+    return NextResponse.json(
       { role: role, message: "role created successfully" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: roles route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
