@@ -11,7 +11,7 @@ const CreateTeam = async () => {
         <h1 className="text-lg font-semibold flex-1">Create Team</h1>
       </div>
       <div>
-        <CreateTeamForm setOpen={() => {}} />
+        <CreateTeamForm />
       </div>
     </div>
   )
