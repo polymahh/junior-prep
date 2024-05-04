@@ -7,7 +7,7 @@ export async function GET() {
   const token = cookieStore.get("_acc__token")
 
   if (!token) {
-    return Response.json({ message: "not loged in!" }, { status: 401 })
+    return NextResponse.json({ message: "not loged in!" }, { status: 401 })
   }
 
   const { payload } = await jwtVerify(
