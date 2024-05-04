@@ -68,11 +68,14 @@ export async function PUT(
   }
 }
 
-export async function DELETE({
-  params,
-}: {
-  params: { teamId: string; roleName: string; requestId: string }
-}) {
+export async function DELETE(
+  req: Request,
+  {
+    params,
+  }: {
+    params: { teamId: string; roleName: string; requestId: string }
+  }
+) {
   try {
     const { teamId, roleName, requestId } = params
     if (!roleName || !teamId || !requestId) {
