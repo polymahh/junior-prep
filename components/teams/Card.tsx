@@ -6,8 +6,8 @@ import { ChevronRight, ExternalLink, Ghost } from "lucide-react"
 import { siteConfig } from "@/config/site"
 
 import { Icons } from "../icons"
-import { Badge, badgeVariants } from "../ui/badge"
 import { buttonVariants } from "../ui/button"
+import { RoleBadge, roleBadgeVariants } from "../ui/role-badge"
 
 export default function Card({ project, creatorRole, Role, creator, id }: any) {
   return (
@@ -24,25 +24,25 @@ export default function Card({ project, creatorRole, Role, creator, id }: any) {
             By:
             <Link
               className={buttonVariants({
-                variant: "link",
+                variant: "outline",
                 size: "link",
-                className: "justify-start",
+                className: "justify-start px-2 rounded-sm",
               })}
               href={"/"}
             >
-              <Icons.gitHub className="mr-1 h-5" />
+              {/* <Icons.gitHub className="mr-1 h-5" /> */}
               <span>{creator?.username}</span>
             </Link>
           </div>
           <div className="flex gap-2">
-            <Badge
-              className={badgeVariants({ variant: creatorRole.toLowerCase() })}
+            <RoleBadge
+              variant={creatorRole}
               tooltip={`Stack: ${
                 Role?.find((r: any) => r.roleName === creatorRole)?.stack
               }`}
             >
-              {creatorRole.toLowerCase()}
-            </Badge>
+              {creatorRole}
+            </RoleBadge>
           </div>
         </div>
       </div>
@@ -51,7 +51,7 @@ export default function Card({ project, creatorRole, Role, creator, id }: any) {
         <Link
           href={`${project?.githubRepo}`}
           target="_blank"
-          className="flex items-center justify-center gap-1 self-start rounded-sm bg-secondary-foreground px-2 py-1 text-secondary"
+          className="flex items-center justify-center gap-1 self-start rounded-sm bg-muted px-2 py-1 text-primary"
         >
           <Icons.gitHub className="h-5" />
           <span>{project?.name}</span> <ExternalLink className="h-4" />
@@ -64,13 +64,13 @@ export default function Card({ project, creatorRole, Role, creator, id }: any) {
           <div className="flex flex-wrap gap-2">
             {Role?.map((role: any) => {
               return (
-                <Badge
+                <RoleBadge
                   key={role.roleName}
-                  variant={role.roleName.toLowerCase()}
+                  variant={role.roleName}
                   tooltip={`Stack: ${role.stack}`}
                 >
-                  {role.roleName.toLowerCase()}
-                </Badge>
+                  {role.roleName}
+                </RoleBadge>
               )
             })}
           </div>

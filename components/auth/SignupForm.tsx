@@ -7,7 +7,6 @@ import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useForm } from "react-hook-form"
 
 import { authApi } from "@/lib/api/authApi"
-import { postItems } from "@/lib/resquest"
 import { RegiterType, registerSchema } from "@/lib/validators/auth"
 import { Button } from "@/components/ui/button"
 import {

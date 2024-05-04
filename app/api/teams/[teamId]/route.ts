@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
+import { roleName } from "@prisma/client"
 
 import { teamSchema, updateTeam } from "@/lib/validators/teams"
 
@@ -48,7 +49,7 @@ export async function GET(
 
     const { Project, Role: roles, ...rest } = team!
 
-    return Response.json(
+    return NextResponse.json(
       {
         team: { project: Project[0], roles, ...rest },
         message: "team with ID found",
@@ -57,17 +58,21 @@ export async function GET(
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
+
 export async function PUT(
   req: Request,
   { params }: { params: { teamId: string } }
 ) {
   try {
     const body = await req.json()
-
-    const { name, description, repo, isCompleted } = updateTeam.parse(body)
+    const { name, description, repo, isCompleted, roles } =
+      updateTeam.parse(body)
 
     const { teamId } = params
 
@@ -75,21 +80,39 @@ export async function PUT(
       return NextResponse.json({ message: "Missing Team Id" }, { status: 400 })
     }
 
-    const project = await db.project.update({
+    const project = await db.team.update({
       where: {
-        teamId: teamId,
+        id: teamId,
       },
       data: {
-        description,
-        name,
-        githubRepo: repo,
-        isCompleted,
-      },
-
-      include: {
-        team: true,
+        Project: {
+          update: {
+            where: { teamId },
+            data: { name, description, githubRepo: repo, isCompleted },
+          },
+        },
+        Role: {
+          upsert: roles.map((role: any) => ({
+            where: { roleName_teamId: { teamId, roleName: role.roleName } },
+            update: {
+              stack: role.stack,
+            },
+            create: {
+              stack: role.stack,
+              roleName: role.roleName,
+            },
+          })),
+          deleteMany: {
+            NOT: {
+              roleName: {
+                in: roles.map((role) => role.roleName),
+              },
+            },
+          },
+        },
       },
     })
+    console.log("🚀 ~ project test with upset and delete many:", project)
 
     if (!project) {
       return NextResponse.json({ message: "Team not found" }, { status: 400 })
@@ -98,16 +121,19 @@ export async function PUT(
     //TODO: get the user from token
 
     // if(project?.team.creatorId !== session?.user?.email){
-    //     return Response.json({message:"You are not authorized"},{status:401})
+    //     return NextResponse.json({message:"You are not authorized"},{status:401})
     // }
 
-    return Response.json(
+    return NextResponse.json(
       { team: project, message: "Team found" },
       { status: 201 }
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -141,12 +167,15 @@ export async function DELETE(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { team: team, message: "team with ID found" },
       { status: 201 }
     )
   } catch (error) {
     console.log(error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

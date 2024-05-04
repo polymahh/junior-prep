@@ -31,7 +31,7 @@ import { queryClient } from "@/app/layout"
 
 import { Button } from "../ui/button"
 import LanguageInfo from "./language-info"
-import { Timer } from "./timer"
+import { Timer } from "./time_tracker"
 
 function Flashcards({
   flashcards,

@@ -37,10 +37,16 @@ export async function GET(
       return NextResponse.json({ message: "Missing user" }, { status: 400 })
     }
 
-    return Response.json({ user: user, message: "user found" }, { status: 201 })
+    return NextResponse.json(
+      { user: user, message: "user found" },
+      { status: 201 }
+    )
   } catch (error) {
     console.log("🚀 ~ file: userid route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }
 
@@ -90,12 +96,15 @@ export async function PUT(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { team: updateUser, message: "user updated" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ file: userid route.ts:45 ~ POST ~ error:", error)
-    return Response.json({ message: "Something went wrong!" }, { status: 500 })
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    )
   }
 }

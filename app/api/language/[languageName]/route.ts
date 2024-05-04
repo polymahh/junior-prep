@@ -1,5 +1,7 @@
 import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 import { db } from "@/db"
+import { userResponse } from "@prisma/client"
 import { jwtVerify } from "jose"
 
 import { userAnswerSchema } from "@/lib/validators/user_answer"
@@ -12,7 +14,7 @@ export async function GET(
     const cookieStore = cookies()
     const accessToken = cookieStore.get("_acc__token")?.value
     if (!accessToken) {
-      return Response.json({ message: "no access" }, { status: 401 })
+      return NextResponse.json({ message: "no access" }, { status: 401 })
     }
     const { payload } = await jwtVerify(
       accessToken,
@@ -58,13 +60,16 @@ export async function GET(
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { flashcards, timeSpent, message: "flashcards found" },
       { status: 200 }
     )
   } catch (error) {
     console.log("🚀 ~ GET ~ error:", error)
-    return Response.json({ message: "something went wrong" }, { status: 500 })
+    return NextResponse.json(
+      { message: "something went wrong" },
+      { status: 500 }
+    )
   }
 }
 
@@ -77,7 +82,7 @@ export async function POST(req: Request) {
     const _acc__token = cookieStore.get("_acc__token")
 
     if (!_acc__token) {
-      return Response.json({ message: "no access" }, { status: 401 })
+      return NextResponse.json({ message: "no access" }, { status: 401 })
     }
 
     const { payload } = await jwtVerify(
@@ -86,7 +91,7 @@ export async function POST(req: Request) {
     )
 
     if (!payload) {
-      return Response.json({ message: "no access" }, { status: 401 })
+      return NextResponse.json({ message: "no access" }, { status: 401 })
     }
     const answers = await db.userAnswer.upsert({
       where: {
@@ -96,12 +101,13 @@ export async function POST(req: Request) {
         },
       },
       update: {
-        response: data?.answer.response as string,
+        response: data?.answer.response as userResponse,
         easeFactor: data?.answer.easeFactor as number,
         interval: data?.answer.interval as number,
       },
       create: {
         ...data.answer,
+        response: data?.answer.response as userResponse,
         userId: payload.id as string,
       },
     })
@@ -125,12 +131,15 @@ export async function POST(req: Request) {
       },
     })
 
-    return Response.json(
+    return NextResponse.json(
       { timespent, answers, message: "answer created" },
       { status: 201 }
     )
   } catch (error) {
     console.log("🚀 ~ POST ~ error:", error)
-    return Response.json({ message: "something went wrong" }, { status: 500 })
+    return NextResponse.json(
+      { message: "something went wrong" },
+      { status: 500 }
+    )
   }
 }

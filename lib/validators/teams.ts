@@ -80,6 +80,32 @@ export const updateTeam = z.object({
   description: z.string(),
   repo: z.string().url({ message: "Invalid Url" }),
   isCompleted: z.boolean().optional(),
+  roles: z
+    .array(
+      z
+        .object({
+          active: z.boolean().optional(),
+          roleName: RoleName,
+          stack: z.string().optional(),
+        })
+        .refine(
+          (role) => {
+            if (role.active) {
+              if (role.stack) {
+                return true
+              } else return false
+            }
+            return true
+          },
+          {
+            message: "stack can't be empty",
+            path: ["stack"],
+          }
+        )
+    )
+    .nonempty({
+      message: "You have to select at least one role.",
+    }),
 })
 
 export type teamType = z.infer<typeof teamSchema>
