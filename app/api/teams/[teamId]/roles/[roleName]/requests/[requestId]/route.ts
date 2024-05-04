@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
-import { getServerSession } from "next-auth"
 
 import { requestSchema } from "@/lib/validators/request"
 
@@ -20,8 +19,6 @@ export async function PUT(
 
     const { email, isAccepted } = requestSchema.parse(body)
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -32,12 +29,12 @@ export async function PUT(
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const team = await db.team.findUnique({
       where: {
@@ -45,12 +42,12 @@ export async function PUT(
       },
     })
 
-    if (team?.adminId !== user?.id) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (team?.adminId !== user?.id) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const request = await db.request.update({
       where: {
@@ -82,8 +79,6 @@ export async function DELETE({
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -94,12 +89,12 @@ export async function DELETE({
       },
     })
 
-    if (session?.user?.email !== request?.userEmail) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== request?.userEmail) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     await db.request.delete({
       where: {

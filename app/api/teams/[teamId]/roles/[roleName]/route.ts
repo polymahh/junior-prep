@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { roleName } from "@prisma/client"
-import { getServerSession } from "next-auth"
 
 import { roleSchema } from "@/lib/validators/roles"
 
@@ -15,8 +14,6 @@ export async function GET(
     if (!roleName || !teamId) {
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
-
-    const session = await getServerSession()
 
     //  if(!session){
     //     return {messge:"not authenticated"}
@@ -55,8 +52,6 @@ export async function PUT(
 
     const { name, stack } = roleSchema.parse(body)
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -69,16 +64,16 @@ export async function PUT(
 
     const user = await db.user.findUnique({
       where: {
-        id: team?.creatorId,
+        id: team?.creatorId as string,
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const role = await db.role.update({
       where: {
@@ -111,8 +106,6 @@ export async function DELETE(
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -125,16 +118,16 @@ export async function DELETE(
 
     const user = await db.user.findUnique({
       where: {
-        id: team?.creatorId,
+        id: team?.creatorId as string,
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const role = await db.role.delete({
       where: {

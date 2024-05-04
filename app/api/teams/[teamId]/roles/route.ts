@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { db } from "@/db"
 import { roleName } from "@prisma/client"
-import { getServerSession } from "next-auth"
 
 import { roleSchema } from "@/lib/validators/roles"
 
@@ -17,7 +16,6 @@ export async function POST(
 
     const body = await req.json()
     const { name, stack } = roleSchema.parse(body)
-    const session = await getServerSession()
 
     //  if(!session){
     //     return {messge:"not authenticated"}
@@ -35,12 +33,12 @@ export async function POST(
       },
     })
 
-    if (session?.user?.email !== user?.email) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== user?.email) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const role = await db.role.create({
       data: {

@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { db } from "@/db"
 
 import { commentSchema } from "@/lib/validators/comment"
-import { roleSchema } from "@/lib/validators/roles"
 
 export async function PUT(
   req: Request,
@@ -24,12 +23,12 @@ export async function PUT(
       },
     })
 
-    if (session?.user?.email !== oldComment?.userEmail) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== oldComment?.userEmail) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     const newComment = await db.comment.update({
       where: {
@@ -62,8 +61,6 @@ export async function DELETE({
       return NextResponse.json({ message: "Missing param" }, { status: 400 })
     }
 
-    const session = await getServerSession()
-
     //  if(!session){
     //     return {messge:"not authenticated"}
     //  }
@@ -74,12 +71,12 @@ export async function DELETE({
       },
     })
 
-    if (session?.user?.email !== oldComment?.userEmail) {
-      return Response.json(
-        { message: "You are not authorized" },
-        { status: 401 }
-      )
-    }
+    // if (session?.user?.email !== oldComment?.userEmail) {
+    //   return Response.json(
+    //     { message: "You are not authorized" },
+    //     { status: 401 }
+    //   )
+    // }
 
     await db.comment.delete({
       where: {
