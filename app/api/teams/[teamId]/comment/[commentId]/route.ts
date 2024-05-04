@@ -36,7 +36,7 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
         return NextResponse.json(newComment, { status: 201 })
     } catch (error) {
         console.log("PUT: teams/[teamId]/comment/[commentId]", error)
-        return Response.json({ message: "Something went wrong!" }, { status: 500 })
+        return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }
 
