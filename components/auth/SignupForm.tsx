@@ -28,8 +28,6 @@ const initalValues = {
   confirmPassword: "",
 }
 
-const queryClient = new QueryClient()
-
 const SignupForm = () => {
   const form = useForm<RegiterType>({
     resolver: zodResolver(registerSchema),
@@ -39,10 +37,17 @@ const SignupForm = () => {
   const { mutateAsync, data, isPending, isSuccess } = useMutation({
     mutationFn: async (userDetails: RegiterType) => {
       const data = await authApi.signup(userDetails)
-      return data
+      console.log("🚀 ~ mutationFn: ~ data:", data)
+      return data.user
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(["user"], () => data)
+      mutate(data.email)
+    },
+  })
+
+  const { mutate, isPending: isVerifying } = useMutation({
+    mutationFn: async (email: string) => {
+      await authApi.verify(email)
     },
   })
 
@@ -51,7 +56,11 @@ const SignupForm = () => {
   }
 
   return isSuccess ? (
-    <EmailVerification email={data?.email} />
+    <EmailVerification
+      email={data?.email}
+      verify={mutate}
+      isVerifying={isVerifying}
+    />
   ) : (
     <Form {...form}>
       <form

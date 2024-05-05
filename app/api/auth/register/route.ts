@@ -35,31 +35,10 @@ export async function POST(req: Request) {
         password: hashedPassword,
         provider: "LOCAL" as provider,
       },
-    })
-
-    const accessToken = await generateAccessToken(user.id, user.email)
-    const refreshToken = await generateRefreshToken(user.id, user.email)
-
-    cookies().set({
-      name: "_acc__token",
-      value: accessToken,
-      secure: true,
-      httpOnly: true,
-      sameSite: "strict",
-      expires: new Date(
-        Date.now() + Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
-      ), //expires in (15 min)
-    })
-
-    cookies().set({
-      name: "_ref__token",
-      value: refreshToken,
-      secure: true,
-      httpOnly: true,
-      sameSite: "strict",
-      expires: new Date(
-        Date.now() + Number(process.env.REFRESH_TOKEN_EXPIRES_IN)
-      ), //expires in (30 days)
+      select: {
+        email: true,
+        username: true,
+      },
     })
 
     return NextResponse.json({ user: user }, { status: 200 })

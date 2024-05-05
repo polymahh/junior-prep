@@ -1,5 +1,4 @@
 import React from "react"
-import { redirect } from "next/navigation"
 
 import LoginForm from "@/components/auth/LoginForm"
 import { Icons } from "@/components/icons"

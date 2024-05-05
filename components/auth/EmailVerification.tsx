@@ -1,17 +1,35 @@
-import React from "react"
+"use client"
+
+import React, { useEffect } from "react"
 import Link from "next/link"
-import { ArrowRight, MailCheck } from "lucide-react"
+import { UseMutateFunction, useMutation } from "@tanstack/react-query"
+import { ArrowRight, Loader2, MailCheck } from "lucide-react"
+
+import { authApi } from "@/lib/api/authApi"
 
 import { Button, buttonVariants } from "../ui/button"
 
-function EmailVerification({ email }: { email?: string | null }) {
+function EmailVerification({
+  email,
+  isVerifying,
+  verify,
+}: {
+  email: string
+  isVerifying: boolean
+  verify: UseMutateFunction<void, Error, string, unknown>
+}) {
   const handleResend = () => {
-    console.log("not working")
+    verify(email)
   }
+
   return (
     <div className="flex flex-col gap-4  items-center text-center">
       <div className="rounded-full bg-highlight text-slate-50 p-4">
-        <MailCheck className="h-8 w-8" />
+        {isVerifying ? (
+          <Loader2 className="spin" />
+        ) : (
+          <MailCheck className="h-8 w-8" />
+        )}
       </div>
       <h2 className="text-3xl pt-4">Please verify your email</h2>
       <div>
@@ -24,7 +42,12 @@ function EmailVerification({ email }: { email?: string | null }) {
         Click on the link to complete the verification process.
         <br />
         You might need to check your spam folder or
-        <Button className=" ml-2 p-0" variant="link" onClick={handleResend}>
+        <Button
+          className=" ml-2 p-0"
+          variant="link"
+          onClick={handleResend}
+          disabled={isVerifying}
+        >
           resend email.
         </Button>
       </p>

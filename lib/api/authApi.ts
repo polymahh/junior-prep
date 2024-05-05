@@ -12,15 +12,16 @@ export const authApi = {
     return response.data
   },
 
-  //   googleAuth: async () => {
-  //     const response = await axios.post("api/auth/google")
-  //     return response.data
-  //   },
+  verify: async (email: string) => {
+    // console.log("verfiyyy")
+    const response = await axios.post("api/auth/verify", email)
+    return response.data
+  },
 
-  //   logout: async () => {
-  //     const response = await axios.post("api/auth/logout")
-  //     return response.data
-  //   },
+  logout: async () => {
+    const response = await axios.post("api/auth/logout")
+    return response.data
+  },
 
   getProfile: async () => {
     const response = await axios.get("api/auth/profile")
