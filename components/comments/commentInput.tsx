@@ -20,7 +20,7 @@ function CommentInput() {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="mb-12">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="mb-2">
                 <FormField
                     control={form.control}
                     name="comment"
@@ -33,7 +33,7 @@ function CommentInput() {
                         </FormItem>
                     )}
                 />
-                <Button className={buttonVariants({ size: "sm", className: "mt-2" })}>Post comment</Button>
+                <Button className={buttonVariants({ size: "sm", className: "mt-2 ml-auto" })}>Post comment</Button>
             </form>
         </Form>
     )
