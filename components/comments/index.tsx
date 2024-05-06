@@ -1,16 +1,13 @@
 import Comment from "./comment"
 import CommentInput from "./commentInput"
+import { CommentType } from "@/types/global"
 import { Prisma } from "@prisma/client"
 import React, { useEffect, useState } from "react"
 
-export type Comment = Prisma.commentGetPayload<{
-    include: { user: { select: { username: true; image: true; name: true } }; _count: { select: { children: true } } }
-}>
+function Comments({ comments, teamId }: { comments: CommentType[]; teamId: string }) {
+    const [displayComments, setDisplayComments] = useState<(CommentType & { level: number })[]>([])
 
-function Comments({ comments }: { comments: Comment[] }) {
-    const [displayComments, setDisplayComments] = useState<(Comment & { level: number })[]>([])
-
-    const readyComments = (comments: Comment[], parentId: string | null, level: number) => {
+    const readyComments = (comments: CommentType[], parentId: string | null, level: number) => {
         const filteredComments = comments.filter(comment => comment.parentId === parentId)
 
         filteredComments.forEach(comment => {
@@ -29,15 +26,17 @@ function Comments({ comments }: { comments: Comment[] }) {
             <div className=" border-b pb-1 flex justify-between">
                 <span className="text-lg font-semibold">Discussion </span>
             </div>
-            {/* <div>
-                <CommentInput />
-            </div> */}
+            <div className="space-y-2">
+                <div className="text-lg">Add comment</div>
+                <CommentInput type="comment" teamId={teamId} />
+            </div>
             <div className="space-y-2">
                 {displayComments.map(comment => (
                     <Comment
                         key={comment.id}
                         comment={comment}
                         style={{ paddingLeft: comment.parentId ? `${comment.level * 48}px` : undefined }}
+                        teamId={teamId}
                     />
                 ))}
             </div>

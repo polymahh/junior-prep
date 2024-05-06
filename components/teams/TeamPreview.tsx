@@ -21,7 +21,7 @@ function TeamPreview({ teamId }: { teamId: string }) {
         queryFn: () => teamsApi.getTeamComments(teamId),
     })
 
-    if (isTeamLoading || isCommentsLoading) return <div>Loading ...</div>
+    if (isTeamLoading) return <div>Loading ...</div>
 
     return isTeamSuccess ? (
         <>
@@ -29,11 +29,12 @@ function TeamPreview({ teamId }: { teamId: string }) {
                 <Users className="h-10 rounded-sm" />
                 <h1 className="text-lg font-semibold">{data?.project?.name}</h1>
             </div>
-            <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
+            {/* let this here we may need it in the div below "auto-rows-fr" */}
+            <div className="grid grid-cols-[auto_300px] grid-rows-[160px] gap-4">
                 <div className="col-span-2 row-span-2 ">
                     <ProjectInfo {...data} />
                 </div>
-                <Comments comments={comments} />
+                {!isCommentsLoading && <Comments comments={comments} teamId={teamId} />}
                 {/* <MemberSection /> */}
             </div>
         </>

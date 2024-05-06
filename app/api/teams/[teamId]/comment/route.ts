@@ -54,6 +54,10 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
                 userId: id,
                 ProjectId: project.id,
             },
+            include: {
+                user: { select: { image: true, name: true, username: true } },
+                _count: { select: { children: true } },
+            },
         })
 
         return NextResponse.json(newComment, { status: 201 })

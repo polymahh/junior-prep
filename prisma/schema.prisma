@@ -82,7 +82,7 @@ model comment {
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   project  Project   @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
-  parent   comment?  @relation("comment_children", fields: [parentId], references: [id])
+  parent   comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: Cascade)
   children comment[] @relation("comment_children")
 
   @@index([ProjectId])
