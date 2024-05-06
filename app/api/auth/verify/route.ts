@@ -1,51 +1,59 @@
-import { NextResponse } from "next/server"
 import { db } from "@/db"
-import nodemailer from "nodemailer"
-
-import { generateVerifyToken } from "@/lib/jwt-tokens"
-import { emailSchema } from "@/lib/validators/auth"
+import { extractPayload, generateVerifyToken } from "@/lib/jwt-tokens"
+import { sendverificationEmail } from "@/lib/mailer"
+import { emailSchema, verifyRequestSchema } from "@/lib/validators/auth"
+import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  console.log("🚀 ~ POST ~ body:", body)
-  const { email } = emailSchema.parse(body)
+    const body = await req.json()
+    console.log("🚀 ~ POST ~ body:", body)
+    const { email } = emailSchema.parse(body)
 
-  const token = await generateVerifyToken(email)
+    const token = await generateVerifyToken(email)
 
-  const transporter: nodemailer.Transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 0,
-    auth: {
-      user: process.env.SMTP_AUTH_USER,
-      pass: process.env.SMTP_AUTH_PASS,
-    },
-  })
+    try {
+        // store token
+        await db.verificationToken.upsert({
+            where: { email },
+            update: { token },
+            create: {
+                email,
+                token,
+            },
+        })
+        // send the email
+        await sendverificationEmail(email, token)
+        return NextResponse.json({ message: "Email sent" }, { status: 200 })
+    } catch (error) {
+        console.log("🚀 ~ file: login route.ts:80 ~ POST ~ error:", error)
+        return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
+    }
+}
 
-  // the content of the email
-  const emailData = {
-    from: '"Blog Nextjs Auth" <verification@test.com>',
-    to: email,
-    subject: "Email Verification",
-    html: `
-        <p>Click the link below to verify your email:</p>
-        <a href="http://localhost:3000/verify?email=${email}&token=${token}">Verify Email</a>
-        `,
-  }
+export async function PUT(req: NextRequest) {
+    const body = await req.json()
 
-  try {
-    // store token
-    await db.verificationToken.create({
-      data: {
-        email,
-        token,
-      },
-    })
-    // send the email
-    await transporter.sendMail(emailData)
-  } catch (error) {
-    console.error("Failed to send email:", error)
-    throw error
-  }
+    const { email, token } = verifyRequestSchema.parse(body)
 
-  return NextResponse.json({ message: "Email sent" }, { status: 200 })
+    if (!email || !token) return NextResponse.json({ message: "Missing params!" }, { status: 404 })
+    try {
+        const payload = await extractPayload(token, process.env.JWT_VERIFY_SECRET as string, false)
+        if (!payload) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+
+        const userEmail = await db.user.update({
+            where: { email, emailVerified: null },
+            data: {
+                emailVerified: new Date(),
+            },
+        })
+        if (!userEmail)
+            return NextResponse.json(
+                { message: "Email already verified or not existing , please Login" },
+                { status: 200 },
+            )
+
+        return NextResponse.json({ message: "Email verified" }, { status: 200 })
+    } catch (error) {
+        return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
+    }
 }

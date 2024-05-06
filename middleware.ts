@@ -8,7 +8,12 @@ export default async function middleware(req: NextRequest) {
     const refreshToken = cookieStore.get("_ref__token")?.value
     const pathname = req.nextUrl.pathname
 
-    if (!pathname.startsWith("/api/auth") && !pathname.startsWith("/register") && !pathname.startsWith("/login")) {
+    if (
+        !pathname.startsWith("/api/auth") &&
+        !pathname.startsWith("/register") &&
+        !pathname.startsWith("/login") &&
+        !pathname.startsWith("/verify")
+    ) {
         const unauthorizedReturn = pathname.startsWith("/api")
             ? NextResponse.json({ message: "Unauthorized" }, { status: 401 })
             : NextResponse.redirect(new URL("/login", req.url))

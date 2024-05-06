@@ -21,7 +21,7 @@ async function generateVerifyToken(email: string): Promise<string> {
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("1h")
-        .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
+        .sign(new TextEncoder().encode(process.env.JWT_VERIFY_SECRET as string))
 }
 
 async function extractPayload(
@@ -37,23 +37,5 @@ async function extractPayload(
         return false
     }
 }
-
-// async function isValidToken(token: string, type: string) {
-//   try {
-//     const { payload } = await jwtVerify(
-//       token,
-//       new TextEncoder().encode(
-//         type === "access"
-//           ? process.env.JWT_ACCESS_SECRET
-//           : process.env.JWT_REFRESH_SECRET
-//       )
-//     )
-
-//     return payload
-//   } catch (error) {
-//     console.log("invalid token", error)
-//     return null
-//   }
-// }
 
 export { generateAccessToken, generateRefreshToken, extractPayload, generateVerifyToken }
