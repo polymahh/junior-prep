@@ -1,100 +1,72 @@
-import { NextResponse } from "next/server"
 import { db } from "@/db"
-
 import { commentSchema } from "@/lib/validators/comment"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function PUT(
-  req: Request,
-  { params }: { params: { teamId: string; commentId: string } }
-) {
-  try {
+export async function PUT(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
     const { teamId, commentId } = params
-    if (!commentId || !teamId) {
-      return NextResponse.json({ message: "Missing param" }, { status: 400 })
+    const user = req.headers.get("x-user-data")
+
+    if (!commentId || !teamId) return NextResponse.json({ message: "Missing params" }, { status: 400 })
+    if (!user) return NextResponse.json({ message: "Missing user" }, { status: 400 })
+
+    const { id } = JSON.parse(user)
+
+    try {
+        const body = await req.json()
+
+        const { comment } = commentSchema.parse(body)
+
+        const oldComment = await db.comment.findUnique({
+            where: { id: commentId, project: { teamId }, userId: id },
+        })
+
+        if (!oldComment)
+            return NextResponse.json(
+                {
+                    message: `Can't edit the comment with the id ${commentId}!`,
+                },
+                { status: 400 },
+            )
+
+        const newComment = await db.comment.update({
+            where: { id: commentId },
+            data: { content: comment },
+        })
+
+        return NextResponse.json(newComment, { status: 201 })
+    } catch (error) {
+        console.log("PUT: teams/[teamId]/comment/[commentId]", error)
+        return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
-
-    const body = req.body
-
-    const { comment, email } = commentSchema.parse(body)
-
-    const oldComment = await db.comment.findUnique({
-      where: {
-        id: commentId,
-      },
-    })
-
-    // if (session?.user?.email !== oldComment?.userEmail) {
-    //   return NextResponse.json(
-    //     { message: "You are not authorized" },
-    //     { status: 401 }
-    //   )
-    // }
-
-    const newComment = await db.comment.update({
-      where: {
-        id: commentId,
-      },
-
-      data: {
-        content: comment,
-      },
-    })
-
-    return NextResponse.json(
-      { role: newComment, message: "comment updated successfully" },
-      { status: 201 }
-    )
-  } catch (error) {
-    console.log("🚀 ~ file: teams route.ts:45 ~ POST ~ error:", error)
-    return NextResponse.json(
-      { message: "Something went wrong!" },
-      { status: 500 }
-    )
-  }
 }
 
-export async function DELETE(
-  req: Request,
-  { params }: { params: { teamId: string; commentId: string } }
-) {
-  try {
+export async function DELETE(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
     const { teamId, commentId } = params
-    if (!commentId || !teamId) {
-      return NextResponse.json({ message: "Missing param" }, { status: 400 })
+    const user = req.headers.get("x-user-data")
+
+    if (!commentId || !teamId) return NextResponse.json({ message: "Missing param" }, { status: 400 })
+    if (!user) return NextResponse.json({ message: "Missing user" }, { status: 400 })
+
+    const { id } = JSON.parse(user)
+
+    try {
+        const oldComment = await db.comment.findFirst({
+            where: { id: commentId, project: { teamId }, userId: id },
+        })
+
+        if (!oldComment)
+            return NextResponse.json(
+                {
+                    message: `Can't delete the comment with the id ${commentId}!`,
+                },
+                { status: 400 },
+            )
+
+        await db.comment.delete({ where: { id: commentId } })
+
+        return NextResponse.json({ message: "comment deleted successfully" }, { status: 200 })
+    } catch (error) {
+        console.log("DELETE: teams/[teamId]/comment/[commentId]", error)
+        return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
-
-    //  if(!session){
-    //     return {messge:"not authenticated"}
-    //  }
-
-    const oldComment = await db.comment.findUnique({
-      where: {
-        id: commentId,
-      },
-    })
-
-    // if (session?.user?.email !== oldComment?.userEmail) {
-    //   return NextResponse.json(
-    //     { message: "You are not authorized" },
-    //     { status: 401 }
-    //   )
-    // }
-
-    await db.comment.delete({
-      where: {
-        id: commentId,
-      },
-    })
-
-    return NextResponse.json(
-      { message: "comment deleted successfully" },
-      { status: 201 }
-    )
-  } catch (error) {
-    console.log("🚀 ~ file: team id route.ts:45 ~ POST ~ error:", error)
-    return NextResponse.json(
-      { message: "Something went wrong!" },
-      { status: 500 }
-    )
-  }
 }
