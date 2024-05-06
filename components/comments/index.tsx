@@ -8,17 +8,19 @@ function Comments({ comments, teamId }: { comments: CommentType[]; teamId: strin
     const [displayComments, setDisplayComments] = useState<(CommentType & { level: number })[]>([])
 
     const readyComments = (comments: CommentType[], parentId: string | null, level: number) => {
+        let results: (CommentType & { level: number })[] = []
         const filteredComments = comments.filter(comment => comment.parentId === parentId)
 
         filteredComments.forEach(comment => {
-            setDisplayComments(prevComments => [...prevComments, { ...comment, level }])
-            readyComments(comments, comment.id, level + 1)
+            results.push({ ...comment, level })
+            results = results.concat(readyComments(comments, comment.id, level + 1))
         })
+        return results
     }
 
     useEffect(() => {
-        setDisplayComments([])
-        readyComments(comments, null, 0)
+        const preparedComments = readyComments(comments, null, 0)
+        setDisplayComments(preparedComments)
     }, [comments])
 
     return (
