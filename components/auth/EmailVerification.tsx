@@ -8,8 +8,9 @@ import Link from "next/link"
 import React, { useEffect } from "react"
 
 function EmailVerification({ email }: { email: string }) {
-    const { mutate, isPending: isVerifying } = useMutation({
+    const { mutate, isPending } = useMutation({
         mutationFn: async (email: string) => {
+            console.log("this mutation is running")
             await authApi.reSendEmail(email)
         },
     })
@@ -21,7 +22,7 @@ function EmailVerification({ email }: { email: string }) {
     return (
         <div className="flex flex-col gap-4  items-center text-center">
             <div className="rounded-full bg-highlight text-slate-50 p-4">
-                {isVerifying ? <Loader2 className="spin" /> : <MailCheck className="h-8 w-8" />}
+                {isPending ? <Loader2 className="spin" /> : <MailCheck className="h-8 w-8" />}
             </div>
             <h2 className="text-3xl pt-4">Please verify your email</h2>
             <div>
@@ -32,7 +33,7 @@ function EmailVerification({ email }: { email: string }) {
                 Click on the link to complete the verification process.
                 <br />
                 You might need to check your spam folder or
-                <Button className=" ml-2 p-0" variant="link" onClick={handleResend} disabled={isVerifying}>
+                <Button className=" ml-2 p-0" variant="link" onClick={handleResend} disabled={isPending}>
                     resend email.
                 </Button>
             </p>

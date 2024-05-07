@@ -9,6 +9,8 @@ export default async function middleware(req: NextRequest) {
     const pathname = req.nextUrl.pathname
 
     if (
+        !pathname.startsWith("/home") &&
+        !pathname.startsWith("/reset_password") &&
         !pathname.startsWith("/api/auth") &&
         !pathname.startsWith("/register") &&
         !pathname.startsWith("/login") &&

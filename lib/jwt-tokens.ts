@@ -16,12 +16,12 @@ async function generateRefreshToken(id: string, email: string): Promise<string> 
         .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 
-async function generateVerifyToken(email: string): Promise<string> {
+async function generateVerifyToken(email: string, secret: string): Promise<string> {
     return new SignJWT({ email })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .setExpirationTime("1h")
-        .sign(new TextEncoder().encode(process.env.JWT_VERIFY_SECRET as string))
+        .setExpirationTime("15m")
+        .sign(new TextEncoder().encode(secret as string))
 }
 
 async function extractPayload(

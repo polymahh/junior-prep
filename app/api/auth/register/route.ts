@@ -40,15 +40,6 @@ export async function POST(req: Request) {
             },
         })
 
-        await db.verificationToken.create({
-            data: {
-                email,
-                token,
-            },
-        })
-
-        await sendverificationEmail(email, token)
-
         return NextResponse.json({ user: user }, { status: 200 })
     } catch (error) {
         console.log("🚀 ~ file: route.ts:65 ~ POST ~ error:", error)

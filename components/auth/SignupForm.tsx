@@ -2,6 +2,7 @@
 
 import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
+import WelcomeNote from "./WelcomeNote"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -38,7 +39,7 @@ const SignupForm = () => {
     }
 
     return isSuccess ? (
-        <EmailVerification email={data?.email} />
+        <WelcomeNote username={data?.username} />
     ) : (
         <Form {...form}>
             <form
