@@ -42,7 +42,6 @@ export const authApi = {
         return response.data
     },
     change_password: async (email: string, token: string, password: string) => {
-        console.log("🚀 ~ change_password: ~ password:", password)
         const response = await axios.put("api/auth/reset_password", { email, token, password })
         return response.data
     },
