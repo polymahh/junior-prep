@@ -13,8 +13,7 @@ function LogoutBtn() {
             return authApi.logout()
         },
         onSuccess() {
-            // router.push(`/home`)
-            redirect(`/home`)
+            router.push(`/home`)
         },
     })
 

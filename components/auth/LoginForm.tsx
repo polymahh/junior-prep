@@ -42,8 +42,6 @@ function LoginForm() {
             return data
         },
         onSuccess: () => {
-            console.log("signin success")
-            // window.location.href = "/dashboard"
             router.push(callback ?? "/dashboard")
         },
     })

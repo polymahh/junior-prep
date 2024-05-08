@@ -11,10 +11,12 @@ import { useMutation } from "@tanstack/react-query"
 import { ArrowRight, CircleAlert, LockOpen, MailCheck, MessageCircleWarning } from "lucide-react"
 import Link from "next/link"
 import { redirect, useSearchParams } from "next/navigation"
+import { useRouter } from "next/router"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 function NewPassword() {
+    const router = useRouter()
     const params = useSearchParams()
     const email = params.get("email") as string
     const token = params.get("token") as string
@@ -24,7 +26,7 @@ function NewPassword() {
         },
         onSuccess: () => {
             toast({ title: "Password changed successfully" })
-            redirect(`/login`)
+            router.push(`/login`)
         },
     })
 
