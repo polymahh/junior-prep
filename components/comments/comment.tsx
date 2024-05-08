@@ -22,7 +22,7 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
                 <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="flex-1 space-y-2">
-                <Collapsible onOpenChange={open => setIsUpdateInputOpen(open)} open={isUpdateInputOpen}>
+                <Collapsible onOpenChange={(open: boolean) => setIsUpdateInputOpen(open)} open={isUpdateInputOpen}>
                     <div className="flex items-center gap-x-4 pt-2">
                         <div className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-foreground">
                             @{comment.user.username}
@@ -51,7 +51,7 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
                         </span>
                     </p>
                 )}
-                <Collapsible onOpenChange={open => setIsReplyInputOpen(open)} open={isReplyInputOpen}>
+                <Collapsible onOpenChange={(open: boolean) => setIsReplyInputOpen(open)} open={isReplyInputOpen}>
                     <CollapsibleTrigger asChild>
                         <span className="!bg-transparent text-sm hover:underline cursor-pointer">Reply</span>
                     </CollapsibleTrigger>

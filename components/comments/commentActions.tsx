@@ -1,3 +1,4 @@
+import { queryClient } from "../providers"
 import { Button } from "../ui/button"
 import {
     Dialog,
@@ -10,7 +11,6 @@ import {
     DialogTrigger,
 } from "../ui/dialog"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu"
-import { queryClient } from "@/app/layout"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { CommentType } from "@/types/global"
 import { CollapsibleTrigger } from "@radix-ui/react-collapsible"
