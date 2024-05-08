@@ -10,7 +10,6 @@ import { NextResponse } from "next/server"
 export async function POST(req: Request) {
     try {
         const body = await req.json()
-        //validation
         const { email, password } = registerSchema.parse(body)
 
         const existingEmail = await db.user.findUnique({
@@ -40,7 +39,6 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ user: user }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: route.ts:65 ~ POST ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }

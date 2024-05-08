@@ -6,7 +6,6 @@ import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: Request) {
     const body = await req.json()
-    console.log("🚀 ~ POST ~ body:", body)
     const { email } = emailSchema.parse(body)
 
     const token = await generateVerifyToken(email, process.env.JWT_VERIFY_SECRET as string)
@@ -25,7 +24,6 @@ export async function POST(req: Request) {
         await sendverificationEmail(email, token)
         return NextResponse.json({ message: "Email sent" }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: login route.ts:80 ~ POST ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }

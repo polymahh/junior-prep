@@ -1,14 +1,13 @@
 import { db } from "@/db"
 import { extractPayload, generateVerifyToken } from "@/lib/jwt-tokens"
-import { newPasswordEmail, sendverificationEmail } from "@/lib/mailer"
-import { changePasswordSchema, emailSchema, verifyRequestSchema } from "@/lib/validators/auth"
+import { newPasswordEmail } from "@/lib/mailer"
+import { changePasswordSchema, emailSchema } from "@/lib/validators/auth"
 import { genSalt, hash } from "bcrypt"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: Request) {
     const body = await req.json()
-    console.log("🚀 ~ POST ~ body:", body)
     const { email } = emailSchema.parse(body)
 
     const user = await db.user.findUnique({ where: { email } })
@@ -23,7 +22,6 @@ export async function POST(req: Request) {
         await newPasswordEmail(email, token)
         return NextResponse.json({ message: "Email sent" }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: login route.ts:80 ~ POST ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }

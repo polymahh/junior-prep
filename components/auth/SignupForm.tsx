@@ -1,6 +1,5 @@
 "use client"
 
-import EmailVerification from "./EmailVerification"
 import OAuthButtons from "./OAuthButton"
 import WelcomeNote from "./WelcomeNote"
 import { Button } from "@/components/ui/button"
@@ -9,9 +8,9 @@ import { Input } from "@/components/ui/input"
 import { authApi } from "@/lib/api/authApi"
 import { RegiterType, registerSchema } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { QueryClient, useMutation, useQueryClient } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import Link from "next/link"
-import React, { useEffect, useState } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 
 const initalValues = {
@@ -29,7 +28,6 @@ const SignupForm = () => {
     const { mutateAsync, data, isPending, isSuccess } = useMutation({
         mutationFn: async (userDetails: RegiterType) => {
             const data = await authApi.signup(userDetails)
-            console.log("🚀 ~ mutationFn: ~ data:", data)
             return data.user
         },
     })

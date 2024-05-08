@@ -8,7 +8,7 @@ import { authApi } from "@/lib/api/authApi"
 import { emailSchema } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { LockOpen, MailCheck } from "lucide-react"
+import { LockOpen } from "lucide-react"
 import React from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -42,7 +42,6 @@ function ResetPassword() {
     })
 
     const onSubmit = (values: { email: string }) => {
-        console.log("🚀 ~ onSubmit ~ values:", values)
         mutate(values.email)
     }
 

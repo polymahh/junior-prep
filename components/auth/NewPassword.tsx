@@ -1,19 +1,16 @@
 "use client"
 
-import { toast, useToast } from "../ui/use-toast"
+import { toast } from "../ui/use-toast"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authApi } from "@/lib/api/authApi"
-import { emailSchema, newPasswordSchema, newPasswordType } from "@/lib/validators/auth"
+import { newPasswordSchema, newPasswordType } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { ArrowRight, CircleAlert, LockOpen, MailCheck, MessageCircleWarning } from "lucide-react"
-import Link from "next/link"
-import { redirect, useSearchParams } from "next/navigation"
-import { useRouter } from "next/router"
+import { LockOpen } from "lucide-react"
+import { useSearchParams, useRouter } from "next/navigation"
 import { useForm } from "react-hook-form"
-import * as z from "zod"
 
 function NewPassword() {
     const router = useRouter()
@@ -39,7 +36,6 @@ function NewPassword() {
     })
 
     const onSubmit = (values: newPasswordType) => {
-        console.log("🚀 ~ onSubmit ~ values:", values)
         mutate(values.newPassword)
     }
 
