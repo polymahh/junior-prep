@@ -1,37 +1,44 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import ProjectInfo from "./ProjectInfo"
+import Comments from "@/components/comments"
+import { teamsApi } from "@/lib/api/teamsApi"
+import { useQuery } from "@tanstack/react-query"
 import { Users } from "lucide-react"
 
-import { teamsApi } from "@/lib/api/teamsApi"
-import Comments from "@/components/comments"
+function TeamPreview({ teamId }: { teamId: string }) {
+    const {
+        data,
+        isLoading: isTeamLoading,
+        isSuccess: isTeamSuccess,
+    } = useQuery({
+        queryKey: ["teams", teamId],
+        queryFn: () => teamsApi.getTeam(teamId),
+    })
 
-import ProjectInfo from "./ProjectInfo"
+    const { data: comments, isLoading: isCommentsLoading } = useQuery({
+        queryKey: ["comments", teamId],
+        queryFn: () => teamsApi.getTeamComments(teamId),
+    })
 
-function TeamPreview({ teamid }: { teamid: string }) {
-  const { data, isLoading, isSuccess } = useQuery({
-    queryKey: ["teams", teamid],
-    queryFn: () => teamsApi.getTeam(teamid),
-  })
+    if (isTeamLoading) return <div>Loading ...</div>
 
-  if (isLoading) return <div>Loading ...</div>
-
-  return isSuccess ? (
-    <>
-      <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
-        <Users className="h-10 rounded-sm" />
-        <h1 className="text-lg font-semibold">{data?.project?.name}</h1>
-      </div>
-      <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
-        <div className="col-span-2 row-span-2 ">
-          <ProjectInfo {...data} />
-        </div>
-        <Comments />
-        {/* <MemberSection /> */}
-      </div>
-    </>
-  ) : null
+    return isTeamSuccess ? (
+        <>
+            <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
+                <Users className="h-10 rounded-sm" />
+                <h1 className="text-lg font-semibold">{data?.project?.name}</h1>
+            </div>
+            {/* let this here we may need it in the div below "auto-rows-fr" */}
+            <div className="grid grid-cols-[auto_300px] grid-rows-[160px] gap-4">
+                <div className="col-span-2 row-span-2 ">
+                    <ProjectInfo {...data} />
+                </div>
+                {!isCommentsLoading && <Comments comments={comments} teamId={teamId} />}
+                {/* <MemberSection /> */}
+            </div>
+        </>
+    ) : null
 }
 
 export default TeamPreview

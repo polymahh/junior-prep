@@ -8,14 +8,18 @@ export async function GET(request: NextRequest, { params }: { params: { teamId: 
 
         if (!teamId) return NextResponse.json({ message: "Team identifier is missing!" }, { status: 400 })
 
-        const project = await db.project.findFirst({
-            where: { teamId },
-            select: { comments: true },
+        const comments = await db.comment.findMany({
+            where: { project: { teamId } },
+            include: {
+                user: { select: { image: true, name: true, username: true } },
+                _count: { select: { children: true } },
+            },
+            orderBy: [{ updateAt: "desc" }, { parentId: "desc" }],
         })
 
-        if (!project) return NextResponse.json({ message: `There is no team with the id: ${teamId}` }, { status: 404 })
+        // if (!project) return NextResponse.json({ message: `There is no team with the id: ${teamId}` }, { status: 404 })
 
-        return NextResponse.json(project.comments, { status: 200 })
+        return NextResponse.json(comments, { status: 200 })
     } catch (error) {
         console.log("GET: teams/[teamId]/comment", error)
         return NextResponse.json({ message: "something went wrong" }, { status: 500 })
@@ -49,6 +53,10 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
                 parentId: parent,
                 userId: id,
                 ProjectId: project.id,
+            },
+            include: {
+                user: { select: { image: true, name: true, username: true } },
+                _count: { select: { children: true } },
             },
         })
 

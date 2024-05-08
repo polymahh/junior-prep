@@ -31,6 +31,10 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
         const newComment = await db.comment.update({
             where: { id: commentId },
             data: { content: comment },
+            include: {
+                user: { select: { username: true, image: true, name: true } },
+                _count: { select: { children: true } },
+            },
         })
 
         return NextResponse.json(newComment, { status: 201 })
