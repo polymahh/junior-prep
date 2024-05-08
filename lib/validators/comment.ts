@@ -5,4 +5,4 @@ export const commentSchema = z.object({
     parent: z.string().cuid().trim().optional(),
 })
 
-export type commentType = z.infer<typeof commentSchema>
+export type newCommentType = z.infer<typeof commentSchema>
