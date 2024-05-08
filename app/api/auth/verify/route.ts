@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     console.log("🚀 ~ POST ~ body:", body)
     const { email } = emailSchema.parse(body)
 
-    const token = await generateVerifyToken(email)
+    const token = await generateVerifyToken(email, process.env.JWT_VERIFY_SECRET as string)
 
     try {
         // store token

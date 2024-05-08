@@ -24,8 +24,6 @@ export async function POST(req: Request) {
         const salt = await genSalt(10)
         const hashedPassword = await hash(password, salt)
 
-        const token = await generateVerifyToken(email)
-
         const username = `Junior-${Math.random().toString(36).slice(2)}`
         const user = await db.user.create({
             data: {

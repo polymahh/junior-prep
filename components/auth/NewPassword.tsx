@@ -1,49 +1,44 @@
 "use client"
 
-import { useToast } from "../ui/use-toast"
+import { toast, useToast } from "../ui/use-toast"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authApi } from "@/lib/api/authApi"
-import { emailSchema } from "@/lib/validators/auth"
+import { emailSchema, newPasswordSchema, newPasswordType } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { LockOpen, MailCheck } from "lucide-react"
-import React from "react"
+import { ArrowRight, CircleAlert, LockOpen, MailCheck, MessageCircleWarning } from "lucide-react"
+import Link from "next/link"
+import { redirect, useSearchParams } from "next/navigation"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
-const resetSchema = z.object({
-    email: z.string().email("Invalid email address"),
-})
-
-type resetType = z.infer<typeof resetSchema>
-
-function ResetPassword() {
-    const { toast } = useToast()
-    const form = useForm<resetType>({
-        resolver: zodResolver(emailSchema),
-        defaultValues: {
-            email: "",
-        },
-    })
-
+function NewPassword() {
+    const params = useSearchParams()
+    const email = params.get("email") as string
+    const token = params.get("token") as string
     const { mutate, isPending } = useMutation({
-        mutationFn: async (email: string) => {
-            console.log("this mutation is running")
-            await authApi.password_token(email)
+        mutationFn: async (password: string) => {
+            await authApi.change_password(email, token, password)
         },
         onSuccess: () => {
-            toast({
-                title: "Email sent successfully",
-                description: "change password with the link sent to your email",
-            })
+            toast({ title: "Password changed successfully" })
+            redirect(`/login`)
         },
     })
 
-    const onSubmit = (values: { email: string }) => {
+    const form = useForm<newPasswordType>({
+        resolver: zodResolver(newPasswordSchema),
+        defaultValues: {
+            newPassword: "",
+            confirmPassword: "",
+        },
+    })
+
+    const onSubmit = (values: newPasswordType) => {
         console.log("🚀 ~ onSubmit ~ values:", values)
-        mutate(values.email)
+        mutate(values.newPassword)
     }
 
     return (
@@ -59,11 +54,25 @@ function ResetPassword() {
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-6 px-8  ">
                     <FormField
                         control={form.control}
-                        name="email"
+                        name="newPassword"
                         render={({ field }) => (
                             <FormItem className="w-full">
+                                <FormLabel className="text-lg">New Password</FormLabel>
                                 <FormControl>
-                                    <Input type="email" placeholder="email@company.com" {...field} />
+                                    <Input type="password" placeholder="********" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="confirmPassword"
+                        render={({ field }) => (
+                            <FormItem className="w-full ">
+                                <FormLabel className="text-lg">Confirm Password</FormLabel>
+                                <FormControl>
+                                    <Input type="password" placeholder="********" {...field} />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -84,4 +93,4 @@ function ResetPassword() {
     )
 }
 
-export default ResetPassword
+export default NewPassword

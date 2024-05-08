@@ -38,4 +38,14 @@ export const authApi = {
         const response = await axios.post("api/auth/refresh")
         return response.data
     },
+
+    password_token: async (email: string) => {
+        const response = await axios.post("api/auth/reset_password", { email })
+        return response.data
+    },
+    change_password: async (email: string, token: string, password: string) => {
+        console.log("🚀 ~ change_password: ~ password:", password)
+        const response = await axios.put("api/auth/reset_password", { email, token, password })
+        return response.data
+    },
 }
