@@ -37,9 +37,8 @@ function CommentInput({
         onSuccess: newComment => {
             form.reset({ comment: "" })
             queryClient.setQueryData(["comments", teamId], (comments: CommentType[]) => {
-                return [newComment, ...comments]
+                return [newComment, ...comments, { action: "new", id: newComment.parentId || undefined }]
             })
-            console.log(typeof closeInput)
             typeof closeInput !== "undefined" && closeInput()
         },
     })
@@ -49,7 +48,10 @@ function CommentInput({
             await teamsApi.updateTeamComment(teamId, currentCommentId as string, commentDetails),
         onSuccess: updatedComment => {
             queryClient.setQueryData(["comments", teamId], (comments: CommentType[]) => {
-                return comments.map(comment => (comment.id === currentCommentId ? updatedComment : comment))
+                const newComments = comments.map(comment =>
+                    comment.id === currentCommentId ? updatedComment : comment,
+                )
+                return [...newComments, { action: "update", id: updatedComment.id }]
             })
             typeof closeInput !== "undefined" && closeInput()
         },
