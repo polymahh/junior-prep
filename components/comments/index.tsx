@@ -62,16 +62,20 @@ function Comments({ comments, teamId }: { comments: CommentType[]; teamId: strin
                 <div className="text-lg">Add comment</div>
                 <CommentInput type="comment" teamId={teamId} />
             </div>
-            <div className="space-y-2">
-                {displayComments.map(comment => (
-                    <Comment
-                        key={comment.id}
-                        comment={comment}
-                        style={{ paddingLeft: comment.parentId ? `${comment.level! * 48}px` : undefined }}
-                        teamId={teamId}
-                    />
-                ))}
-            </div>
+            {displayComments.length ? (
+                <div className="space-y-2">
+                    {displayComments.map(comment => (
+                        <Comment
+                            key={comment.id}
+                            comment={comment}
+                            style={{ paddingLeft: comment.parentId ? `${comment.level! * 48}px` : undefined }}
+                            teamId={teamId}
+                        />
+                    ))}
+                </div>
+            ) : (
+                <div className="text-gray-300">No comments to display!</div>
+            )}
         </div>
     )
 }
