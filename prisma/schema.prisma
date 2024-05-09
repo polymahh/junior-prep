@@ -219,9 +219,6 @@ model Interaction {
 }
 
 model VerificationToken {
-  email   String
-  token   String   @unique
-  expires DateTime
-
-  @@unique([email, token])
+  email String @unique
+  token String
 }

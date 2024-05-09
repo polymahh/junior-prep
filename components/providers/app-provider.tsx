@@ -1,41 +1,40 @@
 "use client"
 
-import { createContext, useContext, useEffect, useState } from "react"
+import { authApi } from "@/lib/api/authApi"
 import { User } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-
-import { authApi } from "@/lib/api/authApi"
+import { createContext, useContext, useEffect, useState } from "react"
 
 interface AppContextType {
-  user: User | null
+    user: User | null
 }
 
 const initalState = {
-  user: null,
+    user: null,
 }
 
 const AppContext = createContext<AppContextType>(initalState)
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null)
+    const [user, setUser] = useState<User | null>(null)
 
-  const { data } = useQuery({ queryKey: ["user"], queryFn: authApi.getProfile })
-  useEffect(() => {
-    if (data) {
-      setUser(data)
+    const { data } = useQuery({ queryKey: ["user"], queryFn: authApi.getProfile })
+    useEffect(() => {
+        if (data) {
+            setUser(data)
+        }
+    }, [data])
+
+    const value = {
+        user,
     }
-  }, [data])
 
-  const value = {
-    user,
-  }
-
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>
+    return <AppContext.Provider value={value}>{children}</AppContext.Provider>
 }
 
 export const useApp = () => {
-  const context = useContext(AppContext)
-  if (context === undefined) {
-    throw new Error("useApp must be used within a AppProvider")
-  }
-  return context
+    const context = useContext(AppContext)
+    if (context === undefined) {
+        throw new Error("useApp must be used within a AppProvider")
+    }
+    return context
 }
