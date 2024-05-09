@@ -11,7 +11,6 @@ import { usePathname } from "next/navigation"
 
 export function SideBar() {
     const pathname = usePathname()
-    console.log("🚀 ~ SideBar ~ pathname:", pathname)
     return (
         <div className="flex h-screen flex-col border-r p-4 fixed top-0">
             <Link href="/" className="flex pt-4 pb-8">
@@ -38,8 +37,8 @@ export function SideBar() {
                     )
                 })}
                 <div className=" flex flex-col gap-4">
-                    <span className="pl-2 text-muted-foreground">{"</> Flash Cards"}</span>
-                    <div className="relative flex flex-col gap-3 pl-8">
+                    <span className="pl-1 text-muted-foreground">{"</> Flash Cards"}</span>
+                    <div className="relative flex flex-col gap-3 pl-6">
                         <div className="absolute -top-2 left-4 h-full border-l border-dashed" />
                         {siteConfig.languageNav.map(link => {
                             const Icon = Icons[link.title as keyof typeof Icons]
