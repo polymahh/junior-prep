@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         })
 
         if (existingEmail) {
-            return NextResponse.json({ message: "This email is already in use" }, { status: 401 })
+            return NextResponse.json({ message: "This email is already in use" }, { status: 409 })
         }
 
         const salt = await genSalt(10)

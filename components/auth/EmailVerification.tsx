@@ -10,7 +10,6 @@ import React, { useEffect } from "react"
 function EmailVerification({ email }: { email: string }) {
     const { mutate, isPending } = useMutation({
         mutationFn: async (email: string) => {
-            console.log("this mutation is running")
             await authApi.reSendEmail(email)
         },
     })

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const userPass = user.password?.slice(-6)
 
-    const token = await generateVerifyToken(email, userPass as string)
+    const token = await generateVerifyToken(email, (process.env.JWT_VERIFY_SECRET + userPass!) as string)
 
     try {
         // send the email
@@ -31,14 +31,14 @@ export async function PUT(req: NextRequest) {
 
     const { email, token, password } = changePasswordSchema.parse(body)
 
-    if (!email || !token || !password) return NextResponse.json({ message: "Missing params!" }, { status: 404 })
+    if (!email || !token || !password) return NextResponse.json({ message: "Missing params!" }, { status: 400 })
 
     const user = await db.user.findUnique({ where: { email } })
     if (!user) return NextResponse.json({ message: "Email not found" }, { status: 404 })
 
     const userPass = user.password?.slice(-6)
     try {
-        const payload = await extractPayload(token, userPass as string, false)
+        const payload = await extractPayload(token, (process.env.JWT_VERIFY_SECRET + userPass!) as string, false)
         if (!payload) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
 
         const salt = await genSalt(10)
