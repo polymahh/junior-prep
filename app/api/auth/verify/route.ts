@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest) {
 
     const { email, token } = verifyRequestSchema.parse(body)
 
-    if (!email || !token) return NextResponse.json({ message: "Missing params!" }, { status: 404 })
+    if (!email || !token) return NextResponse.json({ message: "Missing params!" }, { status: 400 })
     try {
         const payload = await extractPayload(token, process.env.JWT_VERIFY_SECRET as string, false)
         if (!payload) return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
@@ -47,7 +47,7 @@ export async function PUT(req: NextRequest) {
         if (!userEmail)
             return NextResponse.json(
                 { message: "Email already verified or not existing , please Login" },
-                { status: 200 },
+                { status: 401 },
             )
 
         return NextResponse.json({ message: "Email verified" }, { status: 200 })

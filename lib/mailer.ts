@@ -2,7 +2,7 @@ import nodemailer from "nodemailer"
 
 const transporter: nodemailer.Transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT) || 0,
+    port: Number(process.env.SMTP_PORT) || 465,
     auth: {
         user: process.env.SMTP_AUTH_USER,
         pass: process.env.SMTP_AUTH_PASS,
@@ -11,7 +11,7 @@ const transporter: nodemailer.Transporter = nodemailer.createTransport({
 
 async function sendverificationEmail(email: string, token: string) {
     const emailData = {
-        from: "boombeach449@gmail.com",
+        from: process.env.SMTP_AUTH_USER,
         to: email,
         subject: "Email Verification",
         html: `
@@ -30,7 +30,7 @@ async function sendverificationEmail(email: string, token: string) {
 }
 async function newPasswordEmail(email: string, token: string) {
     const emailData = {
-        from: "boombeach449@gmail.com",
+        from: process.env.SMTP_AUTH_USER,
         to: email,
         subject: "Email Verification",
         html: `

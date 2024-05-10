@@ -46,7 +46,7 @@ function NewPassword() {
                 <LockOpen className="h-8 w-8" />
             </div>
             <div>
-                <span className="text-muted-foreground">Enter the email adress associated with your account. </span>
+                <span className="text-muted-foreground">Enter the email address associated with your account. </span>
             </div>
             <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col space-y-6 px-8  ">
