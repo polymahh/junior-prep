@@ -1,5 +1,16 @@
 import Dashboard from "@/app/dashboard/page"
-import { BookOpenCheck, Layout, LogOut, LucideIcon, LucideProps, Moon, Settings, SunMedium, Users } from "lucide-react"
+import {
+    BookOpenCheck,
+    Layout,
+    LogOut,
+    LucideIcon,
+    LucideProps,
+    Moon,
+    PlusCircle,
+    Settings,
+    SunMedium,
+    Users,
+} from "lucide-react"
 
 export type Icon = LucideIcon
 
@@ -11,6 +22,7 @@ export const Icons = {
     dashboard: Layout,
     courses: BookOpenCheck,
     teams: Users,
+    create: PlusCircle,
 
     profile: (props: LucideProps) => (
         <svg

@@ -29,6 +29,7 @@ export const authApi = {
 
     getProfile: async () => {
         const response = await axios.get("api/auth/profile")
+        console.log("🚀 ~ getProfile: ~ response:", response)
         return response.data
     },
 

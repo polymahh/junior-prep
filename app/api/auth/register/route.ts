@@ -1,6 +1,4 @@
 import { db } from "@/db"
-import { generateAccessToken, generateRefreshToken, generateVerifyToken } from "@/lib/jwt-tokens"
-import { sendverificationEmail } from "@/lib/mailer"
 import { registerSchema } from "@/lib/validators/auth"
 import { provider } from "@prisma/client"
 import { genSalt, hash } from "bcrypt"

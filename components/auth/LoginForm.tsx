@@ -1,18 +1,16 @@
 "use client"
 
 import OAuthButtons from "./OAuthButton"
-import ResetPassword from "./ResetPassword"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { authApi } from "@/lib/api/authApi"
-import { axios } from "@/lib/axios"
 import { LoginType, loginSchema } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import Link from "next/link"
-import { redirect, useRouter, useSearchParams } from "next/navigation"
-import React, { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import React, { useEffect } from "react"
 import { useForm } from "react-hook-form"
 
 function LoginForm() {
@@ -23,10 +21,6 @@ function LoginForm() {
         queryKey: ["profile"],
         queryFn: () => authApi.getProfile(),
     })
-
-    if (logedin) {
-        redirect("/dashboard")
-    }
 
     const form = useForm<LoginType>({
         resolver: zodResolver(loginSchema),
@@ -39,14 +33,24 @@ function LoginForm() {
     const { mutateAsync, isPending, isSuccess, error, isError } = useMutation({
         mutationFn: async (userDetails: LoginType) => {
             const data = await authApi.signin(userDetails)
+            console.log("🚀 ~ mutationFn: ~ data:", data)
             return data
         },
         onSuccess: () => {
             router.push(callback ?? "/dashboard")
+            window.location.href = callback ?? "/dashboard"
         },
     })
 
-    async function onSubmit(values: LoginType) {
+    useEffect(() => {
+        if (logedin) {
+            console.log("🚀 ~ LoginForm ~ logedin:", logedin)
+            // router.push(callback ?? "/dashboard")
+            window.location.href = callback ?? "/dashboard"
+        }
+    }, [logedin])
+
+    function onSubmit(values: LoginType) {
         mutateAsync(values)
     }
     return (
@@ -110,7 +114,7 @@ function LoginForm() {
                         Forgot Password?
                     </Link>
                 </div>
-                <Button type="submit" className="py-4 text-lg w-full" isLoading={isPending}>
+                <Button type="submit" className="py-4 text-lg w-full" isLoading={isPending || isSuccess}>
                     Login
                 </Button>
             </form>

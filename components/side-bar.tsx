@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation"
 export function SideBar() {
     const pathname = usePathname()
     return (
-        <div className="flex h-screen flex-col border-r p-4 fixed top-0">
+        <div className="flex h-screen flex-col border-r p-4 relative md:fixed top-0">
             <Link href="/" className="flex pt-4 pb-8">
                 <Icons.logo className="flex h-8 w-40" />
             </Link>
@@ -22,6 +22,7 @@ export function SideBar() {
 
                     return (
                         <Link
+                            key={link.title}
                             className={buttonVariants({
                                 variant: "ghost",
                                 size: "dashboardbtn",
@@ -74,7 +75,7 @@ export function SideBar() {
 export function MobileSidebar() {
     return (
         <Sheet>
-            <SheetTrigger className="flex md:hidden absolute top-4 left-2 bg-background border rounded-sm">
+            <SheetTrigger className="flex md:hidden left-2 bg-border border z-50 hover:bg-muted">
                 <Menu />
             </SheetTrigger>
             <SheetContent side={"left"} className=" p-0 w-fit flex md:hidden ">
