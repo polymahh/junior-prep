@@ -61,7 +61,7 @@ function ProjectInfo({
 
                 <div className="flex flex-col gap-4 ">
                     <span className="text-lg font-semibold ">Roles:</span>
-                    <div className="flex flex-row sm:flex-col h-full gap-4 border rounded-lg p-4">
+                    <div className="flex flex-row sm:flex-col items-start h-full gap-4 border rounded-lg p-4">
                         {roles?.map(role => {
                             return (
                                 <RoleBadge key={role.roleName} variant={role.roleName} tooltip={`Stack: ${role.stack}`}>

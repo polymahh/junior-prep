@@ -10,7 +10,9 @@ export async function GET() {
         return NextResponse.json({ message: "not loged in!" }, { status: 401 })
     }
 
-    const { payload: user } = await jwtVerify(token.value, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
+    const {
+        payload: { exp, iat, ...user },
+    } = await jwtVerify(token.value, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
 
     return NextResponse.json(
         {

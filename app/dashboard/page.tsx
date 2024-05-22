@@ -1,5 +1,3 @@
-"use client"
-
 import ChartCard from "@/components/chartCard"
 import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
@@ -9,15 +7,14 @@ import { useQuery } from "@tanstack/react-query"
 import { Layout } from "lucide-react"
 import { redirect } from "next/navigation"
 
-// export const dynamic = "no-cache"
 const Dashboard = () => {
     return (
-        <div className="container m-auto flex flex-col gap-4 py-4">
+        <div className="container mx-auto flex flex-col gap-4 py-4">
             <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
                 <div className="col-span-2 ">
                     <ProfileCard />
                 </div>
-                <div className="row-span-2">
+                <div className="row-span-2 ">
                     <ChartCard />
                 </div>
                 <div className="row-start-2 row-span-4 col-start-2">

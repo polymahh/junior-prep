@@ -9,7 +9,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
                     <SideBar />
                 </div>
                 <div className="w-full flex flex-col">
-                    <Navbar />
+                    {/* <Navbar /> */}
                     <div className="w-full p-2 md:p-4 grow flex flex-col gap-4">{children}</div>
                 </div>
             </div>
