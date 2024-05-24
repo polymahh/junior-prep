@@ -27,10 +27,10 @@ function ProfileCard() {
         queryFn: () => authApi.getProfile(),
     })
 
-    console.log("🚀 ~ ProfileCard ~ data:", data)
+    console.log("🚀 ~ ProfileCard ~ data:", profile)
     return (
         <div className="flex justify-between rounded-lg border p-4 h-full items-center">
-            {/* <ProfileAvatar time={data?.time} cards={data?.cards_number} /> */}
+            <ProfileAvatar profile={profile?.user} />
             {/* <ProfileRole /> */}
             <ProfileProgress time={data?.time} cards={data?.cards_number} />
         </div>
