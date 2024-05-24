@@ -12,6 +12,7 @@ export const flashcardsApi = {
         return response.data
     },
     sendAnswer: async (answer: userAnswerType) => {
+        console.log("🚀 ~ sendAnswer: ~ answer:", answer)
         const response = await axios.post(`api/language/${answer.answer.languageName}`, answer)
         return response.data
     },

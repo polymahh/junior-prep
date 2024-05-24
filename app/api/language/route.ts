@@ -15,7 +15,7 @@ export async function GET(req: Request) {
         const { payload } = await jwtVerify(accessToken, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
 
         const today = new Date()
-        const formattedDate = today.toISOString().split("T")[0]
+        const formattedDate = new Date().toISOString().split("T")[0]
         const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000) // Subtract 7 days in milliseconds
 
         const sevenDaysActivity = await db.user.findUnique({
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
                 },
                 TimeSpent: {
                     where: {
-                        updatedAt: new Date(formattedDate),
+                        createdAt: new Date(formattedDate),
                     },
                 },
             },

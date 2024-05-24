@@ -90,7 +90,7 @@ function Flashcards({
 
         mutate(
             {
-                time: localStorage.getItem("time")?.split(",")[1] || "",
+                time: localStorage.getItem("timeSpent")?.split(",")[1] || "",
                 answer: {
                     flashcardId: currentFlashcard.id,
                     easeFactor: currentFlashcard.UserAnswer[0].easeFactor,
@@ -105,6 +105,10 @@ function Flashcards({
                     console.log("🚀 ~ handleResponse ~ newFlashcards[nextIndex]:", shuffledFlashcards[nextIndex])
                     setActiveFlashcard(shuffledFlashcards[nextIndex])
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
+                    queryClient.invalidateQueries({
+                        queryKey: ["answers_timeSpent"],
+                        refetchType: "active",
+                    })
                     api?.scrollPrev()
                 },
             },
