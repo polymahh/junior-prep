@@ -139,12 +139,13 @@ model UserRole {
 }
 
 model TimeSpent {
-  id        Int      @id @default(autoincrement())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  time      String
-  updatedAt DateTime @updatedAt
-  createdAt DateTime
+  id         Int      @id @default(autoincrement())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  time       String
+  totalCards Int
+  updatedAt  DateTime @updatedAt
+  createdAt  DateTime
 
   @@unique([createdAt, userId])
 }
