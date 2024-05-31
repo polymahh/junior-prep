@@ -21,9 +21,7 @@ export async function GET(req: Request) {
             where: {
                 id: payload.id as string,
             },
-
             select: {
-                id: true,
                 TimeSpent: {
                     where: {
                         createdAt: {

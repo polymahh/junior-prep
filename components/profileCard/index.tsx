@@ -9,19 +9,9 @@ import React from "react"
 
 function ProfileCard() {
     const { data } = useQuery({
-        queryKey: ["answers_timeSpent"],
-        queryFn: async () => flashcardsApi.getAnswers(),
+        queryKey: ["seven_days_activity"],
+        queryFn: async () => flashcardsApi.getSevenDaysActivity(),
     })
-
-    console.log("🚀 ~ ProfileCard ~ data:", data)
-    // const result = await flashcardsApi.getAnswers()
-    // // const todayDate = new Date().toISOString().split("T")[0]
-    // return {
-    //     time: result?.sevenDaysActivity?.TimeSpent[0].time,
-    //     cards_number: result?.sevenDaysActivity?.UserAnswer.filter(
-    //         (answer: any) => answer?.lastReviewed?.split("T")[0] === todayDate,
-    //     ).length,
-    // }
 
     const { data: profile } = useQuery({
         queryKey: ["profile"],
@@ -32,7 +22,7 @@ function ProfileCard() {
         <div className="flex justify-between rounded-lg border p-4 h-full items-center">
             <ProfileAvatar profile={profile?.user} />
             {/* <ProfileRole /> */}
-            <ProfileProgress sevenDaysActivity={data?.sevenDaysActivity?.TimeSpent} />
+            <ProfileProgress sevenDaysActivity={data} />
         </div>
     )
 }

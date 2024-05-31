@@ -2,9 +2,9 @@ import { axios } from "../axios"
 import { userAnswerType } from "../validators/user_answer"
 
 export const flashcardsApi = {
-    getAnswers: async () => {
+    getSevenDaysActivity: async () => {
         const result = await axios.get("api/language")
-        return result.data
+        return result.data?.sevenDaysActivity?.TimeSpent
     },
 
     getFlashcards: async (language: string) => {

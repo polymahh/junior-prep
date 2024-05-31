@@ -106,7 +106,7 @@ function Flashcards({
                     setActiveFlashcard(shuffledFlashcards[nextIndex])
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({
-                        queryKey: ["answers_timeSpent"],
+                        queryKey: ["seven_days_activity"],
                         refetchType: "active",
                     })
                     api?.scrollPrev()
