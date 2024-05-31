@@ -19,7 +19,7 @@ function ProfileCard() {
     })
 
     return (
-        <div className="flex justify-between rounded-lg border p-4 h-full items-center">
+        <div className="flex flex-col md:flex-row justify-between rounded-lg border p-4 h-full ">
             <ProfileAvatar profile={profile?.user} />
             {/* <ProfileRole /> */}
             <ProfileProgress sevenDaysActivity={data} />

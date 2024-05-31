@@ -41,10 +41,10 @@ function ChartCard() {
     }, [isSuccess])
 
     return (
-        <div className="h-full flex flex-col border rounded-lg p-4">
+        <div className="h-full  max-h-[450px] flex flex-col border rounded-lg p-4 ">
             <h2 className="text-lg font-semibold">7 Days Summary:</h2>
             <span className="text-muted-foreground text-sm">Cards reviewed in the last 7 days</span>
-            <div className="h-full">
+            <div className="h-fit grow ">
                 <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                         width={500}
