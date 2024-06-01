@@ -10,29 +10,29 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import React, { useEffect, useState } from "react"
 
-function TeamList() {
-    const pathname = usePathname()
+function TeamDashboardList() {
     const { data, isSuccess } = useQuery({
         queryKey: ["teams"],
         queryFn: () => teamsApi.getTeams(),
     })
 
     return (
-        <div className="flex h-full flex-col gap-6 ">
+        <div className="flex h-full flex-col gap-6 border p-4 rounded-lg">
             <div className=" flex justify-between  pb-1">
+                <span className="text-lg font-semibold">Teams:</span>
                 <Link
-                    href={"teams/create"}
                     className={buttonVariants({
-                        variant: "outline",
-                        size: "sm",
-                        className: "rounded-full",
+                        variant: "link",
+                        size: "link",
+                        className: "justify-start",
                     })}
+                    href={"/dashboard/teams"}
                 >
-                    <Plus className="h-5 w-5 mr-1" />
-                    Create Team
+                    <span>See More</span>
+                    <ExternalLink className="h-4" />
                 </Link>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 items-start h-full flex-col gap-6 ">
+            <div className="flex h-full flex-col gap-6 ">
                 {isSuccess &&
                     data?.teams?.map((team: any) => <Card key={team.id} project={team.Project[0]} {...team} />)}
             </div>
@@ -40,4 +40,4 @@ function TeamList() {
     )
 }
 
-export default TeamList
+export default TeamDashboardList
