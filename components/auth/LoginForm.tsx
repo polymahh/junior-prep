@@ -30,10 +30,9 @@ function LoginForm() {
         },
     })
 
-    const { mutateAsync, isPending, isSuccess, error, isError } = useMutation({
+    const { mutateAsync, isPending, isSuccess } = useMutation({
         mutationFn: async (userDetails: LoginType) => {
             const data = await authApi.signin(userDetails)
-            console.log("🚀 ~ mutationFn: ~ data:", data)
             return data
         },
         onSuccess: () => {
@@ -44,7 +43,6 @@ function LoginForm() {
 
     useEffect(() => {
         if (logedin) {
-            console.log("🚀 ~ LoginForm ~ logedin:", logedin)
             // router.push(callback ?? "/dashboard")
             window.location.href = callback ?? "/dashboard"
         }

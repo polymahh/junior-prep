@@ -1,18 +1,14 @@
 "use client"
 
 import { buttonVariants } from "../ui/button"
-import Card from "./Card"
 import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useQuery } from "@tanstack/react-query"
-import { ChevronRight, ExternalLink, Ghost, Plus } from "lucide-react"
+import { Plus } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 function TeamList() {
-    const pathname = usePathname()
     const { data, isSuccess } = useQuery({
         queryKey: ["teams"],
         queryFn: () => teamsApi.getTeams(),

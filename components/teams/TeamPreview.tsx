@@ -4,7 +4,6 @@ import ProjectInfo from "./ProjectInfo"
 import Comments from "@/components/comments"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { useQuery } from "@tanstack/react-query"
-import { Users } from "lucide-react"
 
 function TeamPreview({ teamId }: { teamId: string }) {
     const {

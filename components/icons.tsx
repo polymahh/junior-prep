@@ -1,4 +1,3 @@
-import Dashboard from "@/app/dashboard/page"
 import {
     BookOpenCheck,
     Layout,

@@ -8,8 +8,7 @@ import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/componen
 import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { cn, findIndex, shuffleArray } from "@/lib/utils"
 import { userAnswerType } from "@/lib/validators/user_answer"
-import { Flashcard, FlashcardResponse, UserAnswerWithTime } from "@/types/flashcard"
-import { UserAnswer } from "@prisma/client"
+import { Flashcard, FlashcardResponse } from "@/types/flashcard"
 import { useMutation } from "@tanstack/react-query"
 import { ArrowRightCircle, Check, CheckCheck, CheckCircle, CircleAlert, HelpCircle, X } from "lucide-react"
 import React, { useEffect, useState } from "react"
@@ -101,8 +100,6 @@ function Flashcards({
             },
             {
                 onSuccess: data => {
-                    console.log("🚀 ~ handleResponse ~ nextIndex:", nextIndex)
-                    console.log("🚀 ~ handleResponse ~ newFlashcards[nextIndex]:", shuffledFlashcards[nextIndex])
                     setActiveFlashcard(shuffledFlashcards[nextIndex])
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({

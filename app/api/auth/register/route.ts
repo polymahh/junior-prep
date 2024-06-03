@@ -2,7 +2,6 @@ import { db } from "@/db"
 import { registerSchema } from "@/lib/validators/auth"
 import { provider } from "@prisma/client"
 import { genSalt, hash } from "bcrypt"
-import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
 export async function POST(req: Request) {

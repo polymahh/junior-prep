@@ -11,6 +11,7 @@ export async function GET() {
     }
 
     const {
+        // eslint-disable-next-line
         payload: { exp, iat, ...user },
     } = await jwtVerify(token.value, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
 

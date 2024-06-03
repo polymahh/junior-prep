@@ -1,15 +1,12 @@
 "use client"
 
 import { buttonVariants } from "../ui/button"
-import Card from "./Card"
 import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useQuery } from "@tanstack/react-query"
-import { ChevronRight, ExternalLink, Ghost, Plus } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import React from "react"
 
 function TeamDashboardList() {
     const { data, isSuccess } = useQuery({
@@ -17,7 +14,6 @@ function TeamDashboardList() {
         queryFn: () => teamsApi.getTeams(),
     })
 
-    console.log("🚀 ~ TeamDashboardList ~ data:", data)
     return (
         <div className="flex h-full flex-col gap-6 border p-4 rounded-lg">
             <div className=" flex justify-between  pb-1">

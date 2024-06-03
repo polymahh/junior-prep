@@ -1,7 +1,6 @@
 import { TimeSpent } from "@prisma/client"
 import { AlarmCheck, Layers } from "lucide-react"
-import { space } from "postcss/lib/list"
-import React, { useEffect, useMemo } from "react"
+import React, { useMemo } from "react"
 
 const MINUTE = 1000 * 60
 

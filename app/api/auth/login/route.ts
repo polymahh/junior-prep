@@ -2,16 +2,14 @@ import { db } from "@/db"
 import { generateAccessToken, generateRefreshToken } from "@/lib/jwt-tokens"
 import { loginSchema } from "@/lib/validators/auth"
 import { compare } from "bcrypt"
-import { NextApiResponse } from "next"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: Request) {
     try {
         const body = await req.json()
-        //validation
+        // TODO: validation
         const { email, password } = loginSchema.parse(body)
-        console.log("🚀 ~ POST ~ email:", email)
 
         const existingUser = await db.user.findUnique({
             where: { email },
@@ -23,7 +21,6 @@ export async function POST(req: Request, res: NextApiResponse) {
                 password: true,
             },
         })
-        console.log("🚀 ~ POST ~ existingUser:", existingUser)
 
         if (!existingUser) {
             return NextResponse.json({ message: "Email or password is incorrect!" }, { status: 401 })
@@ -60,7 +57,6 @@ export async function POST(req: Request, res: NextApiResponse) {
 
         return NextResponse.json({ user: user }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: login route.ts:80 ~ POST ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }

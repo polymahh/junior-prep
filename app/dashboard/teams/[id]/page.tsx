@@ -1,5 +1,5 @@
 import TeamPreview from "@/components/teams/TeamPreview"
-import React, { Suspense } from "react"
+import React from "react"
 
 const page = ({ params }: { params: { id: string } }) => {
     const { id } = params

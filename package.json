@@ -43,6 +43,7 @@
     "clsx": "^1.2.1",
     "cmdk": "^0.2.0",
     "embla-carousel-react": "^8.0.2",
+    "eslint-plugin-unused-imports": "^3.2.0",
     "jose": "^5.2.3",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "latest",

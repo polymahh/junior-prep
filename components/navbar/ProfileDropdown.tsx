@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
-    DropdownMenuGroup,
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
@@ -14,7 +13,6 @@ import { authApi } from "@/lib/api/authApi"
 import { useQuery } from "@tanstack/react-query"
 import { User } from "lucide-react"
 import Link from "next/link"
-import { useEffect } from "react"
 
 function ProfileDropdown() {
     const { data } = useQuery({

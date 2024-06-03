@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation"
 export function SideBar() {
     const pathname = usePathname()
     return (
-        <div className="flex h-screen flex-col border-r p-4 relative md:fixed top-0">
+        <div className="flex h-screen flex-col bg-background border-r p-4 relative md:fixed top-0">
             <Link href="/" className="flex pt-4 pb-8">
                 <Icons.logo className="flex h-8 w-40" />
             </Link>
@@ -26,7 +26,7 @@ export function SideBar() {
                             className={buttonVariants({
                                 variant: "ghost",
                                 size: "dashboardbtn",
-                                className: pathname === link.href ? "px-2 bg-accent" : "px-2",
+                                className: pathname === link.href ? "px-2 bg-accent/80 " : "px-2",
                             })}
                             href={link.href}
                         >
@@ -43,14 +43,13 @@ export function SideBar() {
                         <div className="absolute -top-2 left-4 h-full border-l border-dashed" />
                         {siteConfig.languageNav.map(link => {
                             const Icon = Icons[link.title as keyof typeof Icons]
-
                             return (
                                 <Link
                                     key={link.title}
                                     className={buttonVariants({
                                         variant: "ghost",
                                         size: "dashboardbtn",
-                                        className: pathname === link.href ? "px-2 bg-accent" : "px-2",
+                                        className: pathname === link.href ? "px-2  bg-accent/80" : "px-2",
                                     })}
                                     href={link.href}
                                 >

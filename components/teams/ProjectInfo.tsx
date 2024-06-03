@@ -1,5 +1,5 @@
 import { Icons } from "../icons"
-import { RoleBadge, roleBadgeVariants } from "../ui/role-badge"
+import { RoleBadge } from "../ui/role-badge"
 import EditTeam from "./EditTeam"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { userRoleType } from "@/lib/validators/userRole"

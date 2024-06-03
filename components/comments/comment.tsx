@@ -17,7 +17,7 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
 
     return (
         <div className="flex items-start gap-4 group" style={style}>
-            <Avatar className="flex-shrink-0">
+            <Avatar className="shrink-0">
                 <AvatarImage alt="@shadcn" src={comment.user.image || "/user-avatar-placeholder.webp"} />
                 <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
             </Avatar>
@@ -57,7 +57,7 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-4 space-y-4">
                         <div className="flex items-start gap-4">
-                            <Avatar className="flex-shrink-0">
+                            <Avatar className="shrink-0">
                                 <AvatarImage alt="@jaredpalmer" src="/user-avatar-placeholder.webp" />
                                 <AvatarFallback>Y</AvatarFallback>
                             </Avatar>

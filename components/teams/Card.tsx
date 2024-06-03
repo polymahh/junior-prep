@@ -1,13 +1,12 @@
 import { Icons } from "../icons"
 import { buttonVariants } from "../ui/button"
 import { RoleBadge } from "../ui/role-badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import React from "react"
 
-export default function Card({ project, creatorRole, Role, creator, id }: any) {
+export default function Card({ project, Role, creator, id }: any) {
     const router = useRouter()
     return (
         <div

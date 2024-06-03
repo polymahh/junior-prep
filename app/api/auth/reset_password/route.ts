@@ -44,7 +44,7 @@ export async function PUT(req: NextRequest) {
         const salt = await genSalt(10)
         const hashedPassword = await hash(password, salt)
 
-        const user = await db.user.update({
+        await db.user.update({
             where: { email },
             data: {
                 password: hashedPassword,

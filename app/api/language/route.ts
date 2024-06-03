@@ -1,11 +1,9 @@
 import { db } from "@/db"
-import { userAnswerSchema } from "@/lib/validators/user_answer"
-import { userResponse } from "@prisma/client"
 import { jwtVerify } from "jose"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const cookieStore = cookies()
         const accessToken = cookieStore.get("_acc__token")?.value

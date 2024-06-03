@@ -3,8 +3,8 @@
 import { flashcardsApi } from "@/lib/api/flashcardsApi"
 import { TimeSpent } from "@prisma/client"
 import { useQuery } from "@tanstack/react-query"
-import React, { PureComponent, useEffect, useState } from "react"
-import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import React, { useEffect, useState } from "react"
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis } from "recharts"
 
 function ChartCard() {
     const [days, setDays] = useState<{ name: string; totalCards: number; time: string }[]>([])

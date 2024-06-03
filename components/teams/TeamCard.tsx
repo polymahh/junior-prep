@@ -1,10 +1,10 @@
-import { Button, buttonVariants } from "../ui/button"
+import { Button } from "../ui/button"
 import { RoleBadge } from "../ui/role-badge"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
-import { Project, Role, User, roleName } from "@prisma/client"
+import { Project, Role, User } from "@prisma/client"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-import { Bookmark, ClipboardCopy, LinkIcon, MessageSquareText, SquareArrowOutUpRight, Star } from "lucide-react"
+import { Bookmark, LinkIcon, MessageSquareText, SquareArrowOutUpRight } from "lucide-react"
 import { useRouter } from "next/navigation"
 import React from "react"
 

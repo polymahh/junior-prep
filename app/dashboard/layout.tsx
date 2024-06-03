@@ -1,5 +1,5 @@
 import Navbar from "@/components/navbar/Navbar"
-import { MobileSidebar, SideBar } from "@/components/side-bar"
+import { SideBar } from "@/components/side-bar"
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (

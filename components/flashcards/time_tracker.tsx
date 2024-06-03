@@ -20,7 +20,6 @@ export const Timer = () => {
         const storage_Time = localStorage.getItem("timeSpent")?.split(",")
         if (isSuccess) {
             if (storage_Time && data?.time) {
-                console.log("🚀 ~ useEffect ~ data:", data)
                 const previousTime = parseInt(storage_Time[1])
                 const previousDate = storage_Time[0]
                 if (previousTime && previousDate === today) {
@@ -30,11 +29,9 @@ export const Timer = () => {
                 }
             }
         } else if (storage_Time) {
-            console.log("🚀 ~ useEffect ~ storage_Time:", storage_Time, today)
             if (storage_Time[0] === today) {
                 setTime(parseInt(storage_Time[1]))
             } else {
-                console.log("no time detected")
                 setTime(0)
             }
         }

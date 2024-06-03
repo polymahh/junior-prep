@@ -1,8 +1,5 @@
 import VerificationResult from "@/components/auth/VerificationResult"
 import { Icons } from "@/components/icons"
-import { buttonVariants } from "@/components/ui/button"
-import { ArrowRight, MailCheck } from "lucide-react"
-import Link from "next/link"
 import React from "react"
 
 function Verify() {
