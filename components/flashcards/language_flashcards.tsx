@@ -34,37 +34,6 @@ function LanguageFlashcards({ language }: { language: string }) {
         },
     })
 
-    // console.log("setting time in localStorage")
-    // const time_date = localStorage.getItem("timeSpent")?.split(",")[0]
-    // const createdAt = data?.timeSpent.createdAt.split("T")[0]
-    // if (time_date && time_date === createdAt) {
-    //   return
-    // } else {
-    //   localStorage.setItem("timeSpent", createdAt + "," + data?.timeSpent.time)
-    // }
-
-    // useEffect(() => {
-    //   console.log("setting time in localStorage")
-    //   if (isSuccess && data.timeSpent) {
-    //     const time_date = localStorage.getItem("timeSpent")?.split(",")
-    //     const createdAt = data?.timeSpent?.createdAt.split("T")[0]
-    //     console.log("🚀 ~ useEffect ~ time_date:", time_date, createdAt)
-    //     if (time_date && time_date[0] === createdAt) {
-    //       if (time_date[1] < data?.timeSpent.time) {
-    //         localStorage.setItem(
-    //           "timeSpent",
-    //           createdAt + "," + data?.timeSpent.time
-    //         )
-    //       }
-    //     } else {
-    //       localStorage.setItem(
-    //         "timeSpent",
-    //         createdAt + "," + data?.timeSpent.time
-    //       )
-    //     }
-    //   }
-    // }, [isSuccess])
-
     if (isLoading) return <div>Loading...</div>
     if (isError) return <div>Error</div>
     const initialIndex = findIndex(data)
