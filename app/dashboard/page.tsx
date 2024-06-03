@@ -10,7 +10,7 @@ const Dashboard = () => {
                 <div className=" col-span-1  lg:col-span-2 ">
                     <ProfileCard />
                 </div>
-                <div className="lg:row-span-1">
+                <div className="min-h-[300px]">
                     <ChartCard />
                 </div>
                 <div className="lg:row-start-2 row-span-2  lg:col-start-2">

@@ -2,15 +2,24 @@
 
 import LogoutBtn from "@/components/auth/LogoutBtn"
 import { Icons } from "@/components/icons"
-import { buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { siteConfig } from "@/config/site"
+import { cn } from "@/lib/utils"
 import { Menu } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
+import { useState } from "react"
 
-export function SideBar() {
+export function SideBar({ setOpen }: { setOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
     const pathname = usePathname()
+    const router = useRouter()
+    const handleClick = (link: string) => {
+        router.push(link)
+        if (setOpen) {
+            setOpen(false)
+        }
+    }
     return (
         <div className="flex h-screen flex-col bg-background border-r p-4 relative md:fixed top-0">
             <Link href="/" className="flex pt-4 pb-8">
@@ -21,20 +30,18 @@ export function SideBar() {
                     const Icon = Icons[link.title as keyof typeof Icons]
 
                     return (
-                        <Link
+                        <Button
                             key={link.title}
-                            className={buttonVariants({
-                                variant: "ghost",
-                                size: "dashboardbtn",
-                                className: pathname === link.href ? "px-2 bg-accent/80 " : "px-2",
-                            })}
-                            href={link.href}
+                            variant="ghost"
+                            size="dashboardbtn"
+                            className={cn(pathname === link.href ? "px-2 bg-accent/80 " : "px-2")}
+                            onClick={() => handleClick(link.href)}
                         >
                             <div className="flex w-full items-center justify-start gap-4">
                                 <Icon className="h-8 rounded-sm" />
                                 <span className=" capitalize">{link.title}</span>
                             </div>
-                        </Link>
+                        </Button>
                     )
                 })}
                 <div className=" flex flex-col gap-4">
@@ -44,20 +51,18 @@ export function SideBar() {
                         {siteConfig.languageNav.map(link => {
                             const Icon = Icons[link.title as keyof typeof Icons]
                             return (
-                                <Link
+                                <Button
                                     key={link.title}
-                                    className={buttonVariants({
-                                        variant: "ghost",
-                                        size: "dashboardbtn",
-                                        className: pathname === link.href ? "px-2  bg-accent/80" : "px-2",
-                                    })}
-                                    href={link.href}
+                                    variant="ghost"
+                                    size="dashboardbtn"
+                                    className={cn(pathname === link.href ? "px-2 bg-accent/80 " : "px-2")}
+                                    onClick={() => handleClick(link.href)}
                                 >
                                     <div className="flex w-full items-center justify-start gap-4">
                                         <Icon className="h-7 rounded-sm" />
                                         <span className="capitalize">{link.title}</span>
                                     </div>
-                                </Link>
+                                </Button>
                             )
                         })}
                     </div>
@@ -72,13 +77,14 @@ export function SideBar() {
 }
 
 export function MobileSidebar() {
+    const [open, setOpen] = useState(false)
     return (
-        <Sheet>
+        <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger className="flex md:hidden left-2 bg-border border z-50 hover:bg-muted">
                 <Menu />
             </SheetTrigger>
             <SheetContent side={"left"} className=" p-0 w-fit flex md:hidden ">
-                <SideBar />
+                <SideBar setOpen={setOpen} />
             </SheetContent>
         </Sheet>
     )
