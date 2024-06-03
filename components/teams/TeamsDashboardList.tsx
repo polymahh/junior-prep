@@ -2,6 +2,7 @@
 
 import { buttonVariants } from "../ui/button"
 import Card from "./Card"
+import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useQuery } from "@tanstack/react-query"
@@ -16,6 +17,7 @@ function TeamDashboardList() {
         queryFn: () => teamsApi.getTeams(),
     })
 
+    console.log("🚀 ~ TeamDashboardList ~ data:", data)
     return (
         <div className="flex h-full flex-col gap-6 border p-4 rounded-lg">
             <div className=" flex justify-between  pb-1">
@@ -32,9 +34,9 @@ function TeamDashboardList() {
                     <ExternalLink className="h-4" />
                 </Link>
             </div>
-            <div className="flex h-full flex-col gap-6 ">
+            <div className="flex h-full flex-col gap-6 grow">
                 {isSuccess &&
-                    data?.teams?.map((team: any) => <Card key={team.id} project={team.Project[0]} {...team} />)}
+                    data?.teams?.map((team: any) => <TeamCard key={team.id} project={team.Project[0]} {...team} />)}
             </div>
         </div>
     )

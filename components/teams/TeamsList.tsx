@@ -2,6 +2,7 @@
 
 import { buttonVariants } from "../ui/button"
 import Card from "./Card"
+import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 import { useQuery } from "@tanstack/react-query"
@@ -18,8 +19,10 @@ function TeamList() {
     })
 
     return (
-        <div className="flex h-full flex-col gap-6 ">
+        <div className="flex h-full flex-col gap-6 container px-0 sm:px-4 ">
             <div className=" flex justify-between  pb-1">
+                {/* TODO: add search and sort */}
+                {/* TODO: add infinite scroll */}
                 <Link
                     href={"teams/create"}
                     className={buttonVariants({
@@ -32,9 +35,9 @@ function TeamList() {
                     Create Team
                 </Link>
             </div>
-            <div className="grid grid-cols-1 xl:grid-cols-2 items-start h-full flex-col gap-6 ">
+            <div className="grid grid-cols-1    gap-4 ">
                 {isSuccess &&
-                    data?.teams?.map((team: any) => <Card key={team.id} project={team.Project[0]} {...team} />)}
+                    data?.teams?.map((team: any) => <TeamCard key={team.id} project={team.Project[0]} {...team} />)}
             </div>
         </div>
     )

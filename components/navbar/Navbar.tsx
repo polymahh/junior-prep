@@ -14,15 +14,11 @@ function Navbar() {
     let page = pathname.split("/").pop()
 
     useEffect(() => {
-        if (window.scrollY > 0) {
-            setPosition(0)
-        }
-    }, [])
-
-    useEffect(() => {
         const handleScroll = () => {
             setPosition(window.scrollY)
         }
+        handleScroll()
+        // TODO : add a debounce
         window.addEventListener("scroll", handleScroll)
         return () => {
             window.removeEventListener("scroll", handleScroll)
