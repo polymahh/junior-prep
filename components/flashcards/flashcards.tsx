@@ -82,8 +82,10 @@ function Flashcards({
                 return
         }
         currentFlashcard.UserAnswer[0].response = response
-
-        let newFlashcards: Flashcard[] = [...flashcards]
+        currentFlashcard.UserAnswer[0].lastReviewed = new Date().toISOString()
+        // let newFlashcards: Flashcard[] = [...flashcards]
+        let newFlashcards: Flashcard[] = flashcards
+        console.log("🚀 ~ handleResponse ~ newFlashcards:", newFlashcards)
         let shuffledFlashcards = shuffleArray(newFlashcards)
         let nextIndex = findIndex(shuffledFlashcards)
 
@@ -100,16 +102,19 @@ function Flashcards({
             },
             {
                 onSuccess: data => {
-                    setActiveFlashcard(shuffledFlashcards[nextIndex])
+                    console.log("🚀 ~ On Success:", newFlashcards)
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({
                         queryKey: ["seven_days_activity"],
                         refetchType: "active",
                     })
-                    api?.scrollPrev()
                 },
             },
         )
+        // card will optimisticly be changed without confirming the server success
+        // TODO: add an error toast if the server fails
+        setActiveFlashcard(shuffledFlashcards[nextIndex])
+        api?.scrollPrev()
     }
 
     return (
