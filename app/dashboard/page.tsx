@@ -1,38 +1,26 @@
-"use client"
-
-import { redirect } from "next/navigation"
-import { useQuery } from "@tanstack/react-query"
-import { Layout } from "lucide-react"
-
-import { authApi } from "@/lib/api/authApi"
 import ChartCard from "@/components/chartCard"
 import CoursesList from "@/components/coursesList"
 import ProfileCard from "@/components/profileCard"
-import TeamsCard from "@/components/teams/TeamsList"
+import TeamDashboardList from "@/components/teams/TeamsDashboardList"
 
-// export const dynamic = "no-cache"
 const Dashboard = () => {
-  return (
-    <div className="container m-auto flex flex-col gap-4 py-4">
-      <div className="flex h-12 w-full items-center justify-start gap-2 rounded-md bg-secondary px-4 ">
-        <Layout className=" h-10 rounded-sm" />
-        <h1 className="text-lg font-semibold">Dashboard</h1>
-      </div>
-      <div className="grid grid-cols-[auto_300px] grid-rows-[160px] auto-rows-fr gap-4">
-        <div className="col-span-2 ">
-          <ProfileCard />
+    return (
+        <div className="container max-w-[1440px] px-2 sm:px-4 flex flex-col gap-4 py-4">
+            <div className="grid grid-cols-1 lg:grid-cols-[auto_300px] auto-rows-[minmax(160px,auto)]  gap-4">
+                <div className=" col-span-1  lg:col-span-2 ">
+                    <ProfileCard />
+                </div>
+                <div className="min-h-[300px]">
+                    <ChartCard />
+                </div>
+                <div className="lg:row-start-2 row-span-2  lg:col-start-2">
+                    <CoursesList />
+                </div>
+                <div className="lg:row-start-3 lg:col-start-1">
+                    <TeamDashboardList />
+                </div>
+            </div>
         </div>
-        <div className="row-span-2">
-          <ChartCard />
-        </div>
-        <div className="row-start-2 row-span-4 col-start-2">
-          <CoursesList />
-        </div>
-        <div className="row-start-4 row-span-2 col-start-1">
-          <TeamsCard />
-        </div>
-      </div>
-    </div>
-  )
+    )
 }
 export default Dashboard

@@ -4,34 +4,33 @@ import { buttonVariants } from "../ui/button"
 import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { useQuery } from "@tanstack/react-query"
-import { Plus } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 
-function TeamList() {
+function TeamDashboardList() {
     const { data, isSuccess } = useQuery({
         queryKey: ["teams"],
         queryFn: () => teamsApi.getTeams(),
     })
 
     return (
-        <div className="flex h-full flex-col gap-6 container px-0 sm:px-4 ">
+        <div className="flex h-full flex-col gap-6 border p-4 rounded-lg">
             <div className=" flex justify-between  pb-1">
-                {/* TODO: add search and sort */}
-                {/* TODO: add infinite scroll */}
+                <span className="text-lg font-semibold">Teams:</span>
                 <Link
-                    href={"teams/create"}
                     className={buttonVariants({
-                        variant: "outline",
-                        size: "sm",
-                        className: "rounded-full",
+                        variant: "link",
+                        size: "link",
+                        className: "justify-start",
                     })}
+                    href={"/dashboard/teams"}
                 >
-                    <Plus className="h-5 w-5 mr-1" />
-                    Create Team
+                    <span>See More</span>
+                    <ExternalLink className="h-4" />
                 </Link>
             </div>
-            <div className="grid grid-cols-1    gap-4 ">
+            <div className="flex h-full flex-col gap-6 grow">
                 {isSuccess &&
                     data?.teams?.map((team: any) => <TeamCard key={team.id} project={team.Project[0]} {...team} />)}
             </div>
@@ -39,4 +38,4 @@ function TeamList() {
     )
 }
 
-export default TeamList
+export default TeamDashboardList

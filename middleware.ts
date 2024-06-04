@@ -1,4 +1,5 @@
 import { extractPayload, generateAccessToken } from "./lib/jwt-tokens"
+import { User } from "./types/user"
 import { cookies } from "next/headers"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -24,10 +25,12 @@ export default async function middleware(req: NextRequest) {
 
             if (typeof refreshPayload === "boolean") return unauthorizedReturn
 
-            const newAccessToken = await generateAccessToken(
-                refreshPayload.id as string,
-                refreshPayload.email as string,
-            )
+            const newAccessToken = await generateAccessToken({
+                id: refreshPayload.id,
+                email: refreshPayload.email,
+                username: refreshPayload.username,
+                image: refreshPayload.image,
+            } as User)
 
             const headers = new Headers(req.headers)
             headers.set("x-user-data", JSON.stringify({ id: refreshPayload.id, email: refreshPayload.email }))

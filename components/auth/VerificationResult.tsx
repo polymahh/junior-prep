@@ -3,7 +3,7 @@
 import { buttonVariants } from "../ui/button"
 import { authApi } from "@/lib/api/authApi"
 import { useMutation } from "@tanstack/react-query"
-import { ArrowRight, CircleAlert, MailCheck, MessageCircleWarning } from "lucide-react"
+import { ArrowRight, MailCheck, MessageCircleWarning } from "lucide-react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import React, { useEffect } from "react"

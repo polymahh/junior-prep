@@ -1,15 +1,16 @@
+import { User } from "@/types/user"
 import { JWTPayload, SignJWT, jwtVerify } from "jose"
 
-async function generateAccessToken(id: string, email: string): Promise<string> {
-    return new SignJWT({ id, email })
+async function generateAccessToken(user: User): Promise<string> {
+    return new SignJWT({ ...user })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("15m")
         .sign(new TextEncoder().encode(process.env.JWT_REFRESH_SECRET as string))
 }
 
-async function generateRefreshToken(id: string, email: string): Promise<string> {
-    return new SignJWT({ id, email })
+async function generateRefreshToken(user: User): Promise<string> {
+    return new SignJWT({ ...user })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
         .setExpirationTime("4w")

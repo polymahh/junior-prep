@@ -1,11 +1,9 @@
 "use client"
 
-import { Button, buttonVariants } from "../ui/button"
-import { authApi } from "@/lib/api/authApi"
-import { UseMutateFunction, useMutation } from "@tanstack/react-query"
-import { ArrowRight, Loader2, MailCheck, PartyPopper } from "lucide-react"
+import { buttonVariants } from "../ui/button"
+import { ArrowRight, PartyPopper } from "lucide-react"
 import Link from "next/link"
-import React, { useEffect } from "react"
+import React from "react"
 
 function WelcomeNote({ username }: { username: string }) {
     return (

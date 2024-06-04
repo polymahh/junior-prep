@@ -54,12 +54,11 @@ function Comments({ comments, teamId }: { comments: CommentType[]; teamId: strin
     useEffect(() => updateComments(), [comments])
 
     return (
-        <div className="border h-full rounded-lg flex flex-col gap-6 p-4 col-span-2">
-            <div className="border-b pb-1 flex justify-between">
+        <div className=" h-full rounded-lg flex flex-col gap-6 p-4 col-span-2">
+            <div className=" pb-1 flex justify-between">
                 <span className="text-lg font-semibold">Discussion</span>
             </div>
             <div className="space-y-2">
-                <div className="text-lg">Add comment</div>
                 <CommentInput type="comment" teamId={teamId} />
             </div>
             {displayComments.length ? (
