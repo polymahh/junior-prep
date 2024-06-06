@@ -36,7 +36,6 @@ export async function GET(req: Request, { params }: { params: { teamId: string }
                     select: {
                         username: true,
                         image: true,
-                        githubId: true,
                     },
                 },
             },

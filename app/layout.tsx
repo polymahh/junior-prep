@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site"
 import { fontMono, fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import type { Metadata } from "next"
+import { getServerSession } from "next-auth"
 
 export const metadata: Metadata = {
     title: {
@@ -19,6 +20,7 @@ export const metadata: Metadata = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+    const session = await getServerSession()
     return (
         <>
             <html lang="en" suppressHydrationWarning>
@@ -29,7 +31,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                         fontMono.variable,
                     )}
                 >
-                    <Providers>
+                    <Providers session={session}>
                         <div className="relative flex min-h-screen flex-col ">{children}</div>
                     </Providers>
                 </body>

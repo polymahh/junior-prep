@@ -35,7 +35,7 @@ function ProjectInfo({
                             </Avatar>
                             <div>
                                 <Link
-                                    href={`https://github.com/${creator?.githubId}`}
+                                    href={`https://github.com/${creator?.username}`}
                                     className="flex items-center gap-1 text-highlight"
                                 >
                                     <Icons.gitHub className=" h-4 w-4" />

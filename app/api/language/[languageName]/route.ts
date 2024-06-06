@@ -1,19 +1,18 @@
 import { db } from "@/db"
+import { authOptions } from "@/lib/authOptions"
 import { userAnswerSchema } from "@/lib/validators/user_answer"
 import { userResponse } from "@prisma/client"
 import { jwtVerify } from "jose"
+import { getServerSession } from "next-auth/next"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
 export async function GET(req: Request, { params }: { params: { languageName: string } }) {
-    try {
-        const cookieStore = cookies()
-        const accessToken = cookieStore.get("_acc__token")?.value
-        if (!accessToken) {
-            return NextResponse.json({ message: "no access" }, { status: 401 })
-        }
-        const { payload } = await jwtVerify(accessToken, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
+    const session = await getServerSession(authOptions)
+    console.log("🚀 ~ GET ~ session:", session)
 
+    if (!session) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+    try {
         const { languageName } = params
         console.log("🚀 ~ languageName:", languageName)
 

@@ -2,29 +2,11 @@
 
 import { Icons } from "../icons"
 import { Button } from "../ui/button"
-import { authApi } from "@/lib/api/authApi"
-import { useMutation } from "@tanstack/react-query"
-import { useRouter } from "next/navigation"
+import { signOut, useSession } from "next-auth/react"
 
 function LogoutBtn() {
-    const router = useRouter()
-    const { mutate, isPending } = useMutation({
-        mutationFn: () => {
-            return authApi.logout()
-        },
-        onSuccess() {
-            router.push(`/home`)
-        },
-    })
-
     return (
-        <Button
-            variant="ghost"
-            size="dashboardbtn"
-            className="px-2 w-full "
-            isLoading={isPending}
-            onClick={() => mutate()}
-        >
+        <Button variant="ghost" size="dashboardbtn" className="px-2 w-full " onClick={() => signOut()}>
             <div className="flex w-full items-center justify-start gap-4 self-end">
                 <Icons.logout className="h-8 rounded-sm" />
                 <span className="capitalize">Logout</span>

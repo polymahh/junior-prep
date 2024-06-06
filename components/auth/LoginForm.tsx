@@ -1,27 +1,22 @@
 "use client"
 
+import { toast } from "../ui/use-toast"
 import OAuthButtons from "./OAuthButton"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { authApi } from "@/lib/api/authApi"
 import { LoginType, loginSchema } from "@/lib/validators/auth"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import React, { useEffect } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 
 function LoginForm() {
     const router = useRouter()
-    const params = useSearchParams()
-    const callback = params.get("callbackUrl")
-    const { isSuccess: logedin } = useQuery({
-        queryKey: ["profile"],
-        queryFn: () => authApi.getProfile(),
-    })
-
+    const searchParams = useSearchParams()
+    const callback = searchParams.get("callbackUrl")
     const form = useForm<LoginType>({
         resolver: zodResolver(loginSchema),
         defaultValues: {
@@ -30,26 +25,26 @@ function LoginForm() {
         },
     })
 
-    const { mutateAsync, isPending, isSuccess } = useMutation({
-        mutationFn: async (userDetails: LoginType) => {
-            const data = await authApi.signin(userDetails)
-            return data
-        },
-        onSuccess: () => {
-            router.push(callback ?? "/dashboard")
-            window.location.href = callback ?? "/dashboard"
-        },
-    })
+    const {
+        formState: { isSubmitting, errors, isSubmitSuccessful },
+    } = form
 
-    useEffect(() => {
-        if (logedin) {
-            // router.push(callback ?? "/dashboard")
-            window.location.href = callback ?? "/dashboard"
+    async function onSubmit(values: LoginType) {
+        const loginData = await signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+        })
+
+        if (loginData?.error) {
+            toast({
+                title: "Something went Wrong!",
+                description: loginData.error,
+                variant: "destructive",
+            })
+        } else {
+            router.push(callback ? callback : "/dashboard")
         }
-    }, [logedin])
-
-    function onSubmit(values: LoginType) {
-        mutateAsync(values)
     }
     return (
         <Form {...form}>
@@ -112,7 +107,11 @@ function LoginForm() {
                         Forgot Password?
                     </Link>
                 </div>
-                <Button type="submit" className="py-4 text-lg w-full" isLoading={isPending || isSuccess}>
+                <Button
+                    type="submit"
+                    className="py-4 text-lg w-full"
+                    isLoading={isSubmitting || (isSubmitSuccessful && !errors)}
+                >
                     Login
                 </Button>
             </form>
