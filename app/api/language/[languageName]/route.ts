@@ -1,27 +1,22 @@
 import { db } from "@/db"
-import { authOptions } from "@/lib/authOptions"
 import { userAnswerSchema } from "@/lib/validators/user_answer"
 import { userResponse } from "@prisma/client"
-import { jwtVerify } from "jose"
-import { getServerSession } from "next-auth/next"
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(req: Request, { params }: { params: { languageName: string } }) {
-    const session = await getServerSession(authOptions)
-    console.log("🚀 ~ GET ~ session:", session)
+export async function GET(req: NextRequest, { params }: { params: { languageName: string } }) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
 
-    if (!session) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
         const { languageName } = params
-        console.log("🚀 ~ languageName:", languageName)
 
         const formattedDate = new Date().toISOString().split("T")[0]
         const timeSpent = await db.timeSpent.findUnique({
             where: {
                 createdAt_userId: {
                     createdAt: new Date(formattedDate),
-                    userId: payload.id as string,
+                    userId: token?.id as string,
                 },
             },
         })
@@ -38,7 +33,7 @@ export async function GET(req: Request, { params }: { params: { languageName: st
                         question: true,
                         UserAnswer: {
                             where: {
-                                userId: payload.id as string, //TODO: user id will come from cookie
+                                userId: token.id as string,
                             },
                             select: {
                                 response: true,
@@ -54,33 +49,22 @@ export async function GET(req: Request, { params }: { params: { languageName: st
 
         return NextResponse.json({ flashcards, timeSpent, message: "flashcards found" }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ GET ~ error:", error)
         return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
 }
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
         const body = await req.json()
         const data = userAnswerSchema.parse(body)
 
-        const cookieStore = cookies()
-        const _acc__token = cookieStore.get("_acc__token")
-
-        if (!_acc__token) {
-            return NextResponse.json({ message: "no access" }, { status: 401 })
-        }
-
-        const { payload } = await jwtVerify(_acc__token.value, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
-
-        if (!payload) {
-            return NextResponse.json({ message: "no access" }, { status: 401 })
-        }
         const answers = await db.userAnswer.upsert({
             where: {
                 flashcardId_userId: {
-                    flashcardId: data.answer.flashcardId as number,
-                    userId: payload.id as string,
+                    flashcardId: data.answer.flashcardId,
+                    userId: token.id,
                 },
             },
             update: {
@@ -91,7 +75,7 @@ export async function POST(req: Request) {
             create: {
                 ...data.answer,
                 response: data?.answer.response as userResponse,
-                userId: payload.id as string,
+                userId: token.id,
             },
         })
 
@@ -101,7 +85,7 @@ export async function POST(req: Request) {
             where: {
                 createdAt_userId: {
                     createdAt: new Date(formattedDate),
-                    userId: payload.id as string,
+                    userId: token.id as string,
                 },
             },
             update: {
@@ -110,7 +94,7 @@ export async function POST(req: Request) {
             },
             create: {
                 time: data?.time,
-                userId: payload.id as string,
+                userId: token.id as string,
                 createdAt: new Date(formattedDate),
                 totalCards: 1,
             },

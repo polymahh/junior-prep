@@ -2,6 +2,7 @@
 
 import { queryClient } from "../providers"
 import { Button } from "../ui/button"
+import { toast } from "../ui/use-toast"
 import LanguageInfo from "./language-info"
 import { Timer } from "./time_tracker"
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel"
@@ -85,7 +86,6 @@ function Flashcards({
         currentFlashcard.UserAnswer[0].lastReviewed = new Date().toISOString()
         // let newFlashcards: Flashcard[] = [...flashcards]
         let newFlashcards: Flashcard[] = flashcards
-        console.log("🚀 ~ handleResponse ~ newFlashcards:", newFlashcards)
         let shuffledFlashcards = shuffleArray(newFlashcards)
         let nextIndex = findIndex(shuffledFlashcards)
 
@@ -101,18 +101,23 @@ function Flashcards({
                 },
             },
             {
-                onSuccess: data => {
-                    console.log("🚀 ~ On Success:", newFlashcards)
+                onSuccess: () => {
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({
                         queryKey: ["seven_days_activity"],
                         refetchType: "active",
                     })
                 },
+                onError: () => {
+                    toast({
+                        title: "Something went Wrong!",
+                        description: "Please reload Page!",
+                        variant: "destructive",
+                    })
+                },
             },
         )
         // card will optimisticly be changed without confirming the server success
-        // TODO: add an error toast if the server fails
         setActiveFlashcard(shuffledFlashcards[nextIndex])
         api?.scrollPrev()
     }

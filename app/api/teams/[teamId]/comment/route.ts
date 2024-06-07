@@ -1,5 +1,6 @@
 import { db } from "@/db"
 import { commentSchema } from "@/lib/validators/comment"
+import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(request: NextRequest, { params }: { params: { teamId: string } }) {
@@ -17,23 +18,19 @@ export async function GET(request: NextRequest, { params }: { params: { teamId: 
             orderBy: [{ updateAt: "desc" }, { parentId: "desc" }],
         })
 
-        // if (!project) return NextResponse.json({ message: `There is no team with the id: ${teamId}` }, { status: 404 })
-
         return NextResponse.json(comments, { status: 200 })
     } catch (error) {
-        console.log("GET: teams/[teamId]/comment", error)
         return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
 }
 
-export async function POST(req: Request, { params }: { params: { teamId: string } }) {
-    const { teamId } = params
-    const user = req.headers.get("x-user-data")
+export async function POST(req: NextRequest, { params }: { params: { teamId: string } }) {
+    // const user = req.headers.get("x-user-data") //TODO: ask pipas about this
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+    const { teamId } = params // TODO: validate query
 
     if (!teamId) return NextResponse.json({ message: "missing team Id" }, { status: 400 })
-    if (!user) return NextResponse.json({ message: "missing user" }, { status: 400 })
-
-    const { id } = JSON.parse(user)
 
     try {
         const body = await req.json()
@@ -51,7 +48,7 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
             data: {
                 content: comment,
                 parentId: parent,
-                userId: id,
+                userId: token.id,
                 ProjectId: project.id,
             },
             include: {
@@ -62,7 +59,6 @@ export async function POST(req: Request, { params }: { params: { teamId: string 
 
         return NextResponse.json(newComment, { status: 201 })
     } catch (error) {
-        console.log("POST: teams/[teamId]/comment", error)
         return NextResponse.json({ message: "something went wrong" }, { status: 500 })
     }
 }

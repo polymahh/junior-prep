@@ -1,12 +1,10 @@
 import { db } from "@/db"
-import { getServerSession } from "next-auth"
-import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
-    const session = await getServerSession()
-    console.log("🚀 ~ GET ~ session:", session)
-
-    if (!session) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+export async function GET(req: NextRequest) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
 
     try {
         const today = new Date()
@@ -14,7 +12,7 @@ export async function GET() {
 
         const sevenDaysActivity = await db.user.findUnique({
             where: {
-                email: session?.user.email as string,
+                id: token?.id as string,
             },
             select: {
                 timeSpent: {

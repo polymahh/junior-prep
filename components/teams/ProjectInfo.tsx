@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { userRoleType } from "@/lib/validators/userRole"
 import { Project, Role, User } from "@prisma/client"
 import { ExternalLink } from "lucide-react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import React from "react"
 
@@ -13,14 +14,17 @@ function ProjectInfo({
     project,
     roles,
     creatorRole,
+    creatorId,
     id,
 }: {
     creator: User
     project: Project
     roles: Role[]
     creatorRole: userRoleType
+    creatorId: string
     id: string
 }) {
+    const { data } = useSession()
     return (
         <div className=" flex h-full flex-col rounded-lg p-2 ">
             {/* creator info */}
@@ -50,12 +54,15 @@ function ProjectInfo({
                             </span>
                             <Link
                                 href={project?.githubRepo ?? ""}
+                                target="_blank"
                                 className="flex items-center justify-center gap-1 min-w-[150px] self-start rounded-sm bg-secondary p-1"
                             >
                                 <span>{project?.name}</span> <ExternalLink className="h-5 pt-1" />
                             </Link>
                         </div>
-                        <EditTeam team={{ creator, project, roles, creatorRole, id }} />
+                        {creatorId === data?.user?.id ? (
+                            <EditTeam team={{ creator, project, roles, creatorRole, id }} />
+                        ) : null}
                     </div>
                 </div>
 
@@ -75,9 +82,9 @@ function ProjectInfo({
 
             {/* project info */}
             <div className=" flex flex-col gap-8 pt-6 h-full  ">
-                <div className="flex flex-col grow justify-start gap-4 ">
+                <div className="flex flex-col grow justify-start gap-4  ">
                     <span className=" text-lg font-semibold">Description:</span>
-                    <p className="border rounded-lg p-4">{project?.description}</p>
+                    <p className="border rounded-lg p-4 min-h-[200px]">{project?.description}</p>
                 </div>
             </div>
         </div>

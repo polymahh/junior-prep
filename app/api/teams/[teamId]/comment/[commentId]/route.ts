@@ -1,23 +1,22 @@
 import { db } from "@/db"
 import { commentSchema } from "@/lib/validators/comment"
+import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function PUT(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
-    const { teamId, commentId } = params
-    const user = req.headers.get("x-user-data")
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+    const { teamId, commentId } = params // TODO: validate query
 
     if (!commentId || !teamId) return NextResponse.json({ message: "Missing params" }, { status: 400 })
-    if (!user) return NextResponse.json({ message: "Missing user" }, { status: 400 })
-
-    const { id } = JSON.parse(user)
 
     try {
         const body = await req.json()
 
         const { comment } = commentSchema.parse(body)
-
+        //TODO: ask pipas about this
         const oldComment = await db.comment.findUnique({
-            where: { id: commentId, project: { teamId }, userId: id },
+            where: { id: commentId, project: { teamId }, userId: token.id },
         })
 
         if (!oldComment)
@@ -45,17 +44,15 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
-    const { teamId, commentId } = params
-    const user = req.headers.get("x-user-data")
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+    const { teamId, commentId } = params // TODO: validate query
 
-    if (!commentId || !teamId) return NextResponse.json({ message: "Missing param" }, { status: 400 })
-    if (!user) return NextResponse.json({ message: "Missing user" }, { status: 400 })
-
-    const { id } = JSON.parse(user)
+    if (!commentId || !teamId) return NextResponse.json({ message: "Missing params" }, { status: 400 })
 
     try {
         const oldComment = await db.comment.findFirst({
-            where: { id: commentId, project: { teamId }, userId: id },
+            where: { id: commentId, project: { teamId }, userId: token.id },
         })
 
         if (!oldComment)

@@ -1,37 +1,19 @@
 import { db } from "@/db"
 import { teamSchema } from "@/lib/validators/teams"
 import { roleName } from "@prisma/client"
-import { jwtVerify } from "jose"
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
         const body = await req.json()
         const { name, description, repo, roles, creatorRole } = teamSchema.parse(body)
 
-        const cookieStore = cookies()
-        const _acc__token = cookieStore.get("_acc__token")
-
-        if (!_acc__token) {
-            return NextResponse.json({ message: "no access" }, { status: 401 })
-        }
-
-        const { payload } = await jwtVerify(_acc__token.value, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
-
-        if (!payload) {
-            return NextResponse.json({ message: "no access" }, { status: 401 })
-        }
-
-        const user = await db.user.findUnique({
-            where: {
-                email: payload.email as string,
-            },
-        })
-
         const team = await db.team.create({
             data: {
-                creatorId: user?.id!,
+                creatorId: token?.id!,
                 creatorRole: creatorRole,
                 Project: {
                     create: {
@@ -49,12 +31,11 @@ export async function POST(req: Request) {
         })
         return NextResponse.json({ team: team, message: "team created successfully" }, { status: 201 })
     } catch (error) {
-        console.log("🚀 ~ file: teams route.ts:45 ~ POST ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
     try {
         const teams = await db.team.findMany({
             include: {
@@ -85,7 +66,6 @@ export async function GET(req: Request) {
 
         return NextResponse.json({ teams, message: "teams list success" }, { status: 200 })
     } catch (error) {
-        console.log("🚀 ~ file: route.ts:90 ~ GET ~ error:", error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
     }
 }

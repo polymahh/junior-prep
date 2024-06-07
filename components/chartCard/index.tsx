@@ -15,9 +15,9 @@ function ChartCard() {
     })
 
     useEffect(() => {
-        const sevenDays = []
-        const today = new Date()
         if (isSuccess) {
+            const sevenDays = []
+            const today = new Date()
             for (let i = 0; i < 7; i++) {
                 const day = new Date(today)
                 const name = new Date(day.setDate(today.getDate() - i)).toISOString().split("T")[0]
