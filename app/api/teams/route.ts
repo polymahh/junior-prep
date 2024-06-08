@@ -2,6 +2,7 @@ import { db } from "@/db"
 import { teamSchema } from "@/lib/validators/teams"
 import { roleName } from "@prisma/client"
 import { getToken } from "next-auth/jwt"
+import router from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -11,10 +12,13 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
         const { name, description, repo, roles, creatorRole } = teamSchema.parse(body)
 
+        const search_terms = `${name}|${roles.map(role => `${role.roleName}|${role.stack}|${token.username}`)}`
+
         const team = await db.team.create({
             data: {
                 creatorId: token?.id!,
                 creatorRole: creatorRole,
+                searchTerms: search_terms,
                 Project: {
                     create: {
                         name,
@@ -35,8 +39,9 @@ export async function POST(req: NextRequest) {
     }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
     try {
+        console.log("🚀 ~ GET ~ query:", req.nextUrl)
         const teams = await db.team.findMany({
             include: {
                 Project: {
