@@ -122,6 +122,7 @@ model Team {
   id          String    @id @default(cuid())
   creatorId   String?
   creatorRole roleName?
+  searchTerms String
 
   creator User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
   Project Project[]

@@ -1,5 +1,6 @@
-import LoginForm from "@/components/auth/LoginForm"
+import OAuthButtons from "@/components/auth/OAuthButton"
 import { Icons } from "@/components/icons"
+import { ChevronUp } from "lucide-react"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import React from "react"
@@ -15,7 +16,13 @@ async function Login() {
                 <Icons.logo />
                 <h2 className="text-muted-foreground">Login to your account</h2>
             </div>
-            <LoginForm />
+            <div>
+                <OAuthButtons />
+                <div className="bg- p-2 rounded-sm text-sm text-muted-foreground my-4 max-w-[300px] text-center">
+                    <p>Connect With GitHub for a better experiance colaborating and creating projects </p>
+                </div>
+            </div>
+            {/* <LoginForm /> */}
         </div>
     )
 }

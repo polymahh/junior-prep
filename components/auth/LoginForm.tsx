@@ -48,10 +48,6 @@ function LoginForm() {
     }
     return (
         <Form {...form}>
-            <div>
-                <OAuthButtons />
-            </div>
-
             <div className="mt-2 flex w-full items-center before:flex-1 before:border-t before:border-border after:flex-1  after:border-t after:border-border max-w-xl">
                 <p className="mx-4 mb-0 text-center font-semibold ">OR</p>
             </div>
@@ -87,16 +83,6 @@ function LoginForm() {
                 />
 
                 <div className="w-full text-sm flex justify-between">
-                    {/* <div className="items-center flex space-x-2">
-            <Checkbox id="terms1" />
-            <label
-              htmlFor="terms1"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-            >
-              Remember me
-            </label>
-          </div> */}
-
                     <Link
                         className={buttonVariants({
                             variant: "link",

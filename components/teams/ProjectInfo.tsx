@@ -35,7 +35,9 @@ function ProjectInfo({
                         <div className="flex flex-wrap grow items-center gap-4">
                             <Avatar className="h-16 w-16">
                                 <AvatarImage src={creator?.image || ""} alt="creator image" />
-                                <AvatarFallback className="text-2xl">PM</AvatarFallback>
+                                <AvatarFallback className="text-2xl">
+                                    {creator?.username ? creator?.username[0].toUpperCase() : "?"}
+                                </AvatarFallback>
                             </Avatar>
                             <div>
                                 <Link

@@ -68,43 +68,12 @@ export const authOptions: NextAuthOptions = {
             return token
         },
 
-        session({ token, session, user }) {
+        session({ token, session }) {
             if (token && session.user) {
                 session.user.username = token.username as string
                 session.user.id = token.id as string
             }
             return session
-        },
-        async signIn({ user, account, profile, email }) {
-            console.log("🚀 ~ signIn ~ user:", user, account, profile)
-            return true
-            //     if (account?.provider === "github") {
-            //         const email = profile?.email
-            //         const existingUser = await db.user.findUnique({
-            //             where: { email },
-            //         })
-
-            //         if (existingUser) {
-            //             // Link GitHub account to existing user
-            //             throw new Error("Email used Connect with password")
-
-            //         } else {
-            //             // Create a new user with the GitHub account
-            //             await db.user.create({
-            //                 data: {
-            //                     email: email as string,
-            //                     name: account.name as string,
-            //                     username: account.login as string,
-            //                     image: account.avatar_url as string,
-            //                     provider: account.provider as provider,
-            //                     githubConnected: new Date().toISOString(),
-            //                 },
-            //             })
-
-            //             return true
-            //         }
-            //     }
-            //     return true
         },
     },
     pages: {

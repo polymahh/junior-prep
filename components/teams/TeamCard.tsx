@@ -89,7 +89,7 @@ export default function TeamCard({
                 </div>
                 <div className="flex flex-wrap gap-1 justify-between items-center text-muted-foreground">
                     <div className="flex items-baseline gap-4 justify-between">
-                        <div className="text-xs text-muted-foreground">By:{creator.username}</div>
+                        <div className="text-xs text-muted-foreground">By:{creator?.username ?? "missing?"}</div>
                     </div>
                     <span className="text-xs text-muted-foreground hidden xs:block">
                         {new Date(project?.createdAt).toISOString().split("T")[0]}
