@@ -2,14 +2,37 @@
 
 import { axios } from "../axios"
 import { newCommentType } from "../validators/comment"
-import { teamType } from "../validators/teams"
+import { filterType, teamType } from "../validators/teams"
+
+interface filterTypeWithKey extends filterType {
+    [key: string]: string | undefined
+}
 
 export const teamsApi = {
-    getTeams: async () => {
-        const response = await axios.get("api/teams")
-        const result = await response.data
-        return result
+    getTeams: async ({ search, statusSort, dateSort, limit, length }: filterType) => {
+        let queryParams = new URLSearchParams()
+        const params: filterTypeWithKey = {
+            search,
+            statusSort,
+            dateSort,
+            limit,
+            length,
+        }
+        for (const key in params) {
+            if (params[key]) {
+                queryParams.append(key, params[key] as string)
+            }
+        }
+        const result = await axios.get(`api/teams?${queryParams.toString()}`)
+        console.log("🚀 ~ getTeams: ~ result:", result)
+        return result.data.teams
     },
+    // getTeams: async () => {
+    //     const response = await axios.get("api/teams")
+    //     console.log("🚀 ~ getTeams: ~ response:", response)
+    //     const result = await response.data
+    //     return result
+    // },
     getTeam: async (teamId: string) => {
         const response = await axios.get(`api/teams/${teamId}`)
         const result = await response.data.team

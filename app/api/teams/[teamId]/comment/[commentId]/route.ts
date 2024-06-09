@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server"
 export async function PUT(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
     const token = await getToken({ req })
     if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
-    const { teamId, commentId } = params // TODO: validate query
+    const { teamId, commentId } = params
 
     if (!commentId || !teamId) return NextResponse.json({ message: "Missing params" }, { status: 400 })
 
@@ -16,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
         const { comment } = commentSchema.parse(body)
         //TODO: ask pipas about this
         const oldComment = await db.comment.findUnique({
-            where: { id: commentId, project: { teamId }, userId: token.id },
+            where: { id: commentId, TeamId: teamId, userId: token.id },
         })
 
         if (!oldComment)
@@ -46,13 +46,13 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
 export async function DELETE(req: NextRequest, { params }: { params: { teamId: string; commentId: string } }) {
     const token = await getToken({ req })
     if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
-    const { teamId, commentId } = params // TODO: validate query
+    const { teamId, commentId } = params
 
     if (!commentId || !teamId) return NextResponse.json({ message: "Missing params" }, { status: 400 })
 
     try {
         const oldComment = await db.comment.findFirst({
-            where: { id: commentId, project: { teamId }, userId: token.id },
+            where: { id: commentId, TeamId: teamId, userId: token.id },
         })
 
         if (!oldComment)

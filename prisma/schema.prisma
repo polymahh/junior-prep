@@ -86,47 +86,37 @@ model Session {
   @@index([userId])
 }
 
-model Project {
-  id          String    @id @default(cuid())
-  name        String
-  description String
-  githubRepo  String
-  isCompleted Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updateAt    DateTime  @updatedAt
-  teamId      String    @unique
-  team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  comments    comment[]
-
-  @@index([teamId])
-}
-
 model comment {
   id        String   @id @default(cuid())
   content   String
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
   userId    String
-  ProjectId String
+  TeamId    String
   parentId  String?
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project  Project   @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
+  team     Team      @relation(fields: [TeamId], references: [id], onDelete: Cascade)
   parent   comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: Cascade)
   children comment[] @relation("comment_children")
 
-  @@index([ProjectId])
+  @@index([TeamId])
 }
 
 model Team {
   id          String    @id @default(cuid())
+  name        String
   creatorId   String?
   creatorRole roleName?
+  isCompleted Boolean   @default(false)
+  description String
+  githubRepo  String
   searchTerms String
-
-  creator User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
-  Project Project[]
-  Role    Role[]
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  creator     User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  comments    comment[]
+  roles       Role[]
 
   @@index([id])
 }

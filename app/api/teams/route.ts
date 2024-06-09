@@ -2,7 +2,6 @@ import { db } from "@/db"
 import { teamSchema } from "@/lib/validators/teams"
 import { roleName } from "@prisma/client"
 import { getToken } from "next-auth/jwt"
-import router from "next/navigation"
 import { NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
@@ -12,21 +11,19 @@ export async function POST(req: NextRequest) {
         const body = await req.json()
         const { name, description, repo, roles, creatorRole } = teamSchema.parse(body)
 
-        const search_terms = `${name}|${roles.map(role => `${role.roleName}|${role.stack}|${token.username}`)}`
-
+        const search_terms = `${name}|${roles.map(role => `${role.roleName}|${role.stack}`).join("|")}|${
+            token.username
+        }`.toLowerCase()
+        //TODO: add a check for banned/restricted users
         const team = await db.team.create({
             data: {
                 creatorId: token?.id!,
                 creatorRole: creatorRole,
                 searchTerms: search_terms,
-                Project: {
-                    create: {
-                        name,
-                        description,
-                        githubRepo: repo,
-                    },
-                },
-                Role: {
+                name,
+                description,
+                githubRepo: repo,
+                roles: {
                     createMany: {
                         data: roles as { stack: string; roleName: roleName }[],
                     },
@@ -39,25 +36,42 @@ export async function POST(req: NextRequest) {
     }
 }
 
+type Order = "asc" | "desc"
+
 export async function GET(req: NextRequest) {
+    console.log("🚀 ~ GET ~ req:", req.url)
     try {
-        console.log("🚀 ~ GET ~ query:", req.nextUrl)
+        const order = req.nextUrl.searchParams.get("dateSort") || "asc"
+        const status = req.nextUrl.searchParams.get("statusSort")
+        console.log("🚀 ~ GET ~ status:", status)
+
+        const search = req.nextUrl.searchParams.get("search")?.toLowerCase()
+        const offset = +(req.nextUrl.searchParams.get("length") ?? 0)
+        const limit = +(req.nextUrl.searchParams.get("limit") ?? 10)
+
         const teams = await db.team.findMany({
+            skip: offset,
+            take: limit,
+            where: {
+                AND: [
+                    {
+                        searchTerms: {
+                            contains: search || "",
+                        },
+                    },
+                    status && (status === "completed" || status === "inprogress")
+                        ? { isCompleted: status === "completed" }
+                        : {
+                              OR: [{ isCompleted: true }, { isCompleted: false }],
+                          },
+                ],
+            },
+            orderBy: {
+                createdAt: order as Order,
+            },
+
             include: {
-                Project: {
-                    select: {
-                        name: true,
-                        githubRepo: true,
-                        description: true,
-                        isCompleted: true,
-                        createdAt: true,
-                    },
-                    take: 1,
-                    orderBy: {
-                        createdAt: "desc",
-                    },
-                },
-                Role: true,
+                roles: true,
                 creator: {
                     select: {
                         username: true,
@@ -68,6 +82,7 @@ export async function GET(req: NextRequest) {
                 },
             },
         })
+        console.log("🚀 ~ GET ~ teamssss:", teams)
 
         return NextResponse.json({ teams, message: "teams list success" }, { status: 200 })
     } catch (error) {

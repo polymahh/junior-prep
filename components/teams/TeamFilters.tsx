@@ -9,7 +9,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Search } from "lucide-react"
+import { Filter, Search, SlidersHorizontal } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
 function TeamFilters({
@@ -18,52 +18,64 @@ function TeamFilters({
     setSearch,
     search,
 }: {
-    setStatusSort: React.Dispatch<React.SetStateAction<string>>
-    setDateSort: React.Dispatch<React.SetStateAction<string>>
+    setStatusSort: React.Dispatch<React.SetStateAction<any>>
+    setDateSort: React.Dispatch<React.SetStateAction<any>>
     setSearch: React.Dispatch<React.SetStateAction<string>>
     search: string
 }) {
     const handleSearch = (e: any) => setSearch(e.target.value)
 
-    return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-4">
-                <Input type="text" placeholder="Search ..." value={search} onChange={handleSearch} className="flex-1" />
-                <div className="flex items-center gap-2">
-                    <Select onValueChange={setDateSort}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Sort by Date" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>By date</SelectLabel>
-                                <SelectItem value="all">All</SelectItem>
-                                <SelectItem value="des">New First</SelectItem>
-                                <SelectItem value="asc">Old First</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Select onValueChange={setStatusSort}>
-                        <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Sort by Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel className="border-b">By Status</SelectLabel>
-                                <SelectItem value="all">All</SelectItem>
-                                <SelectItem value="des">Completed</SelectItem>
-                                <SelectItem value="asc">In Progress</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
+    const handleFilter = (e: any) => {
+        console.log("🚀 ~ handleFilter ~ e:", e)
+    }
 
-                <Button className="rounded-md">
-                    <Search className="w-6 h-6 mr-2" /> Apply
-                </Button>
+    return (
+        <div className="flex flex-col xl:flex-row  gap-2">
+            <div className=" flex gap-4 relative">
+                <Input
+                    type="text"
+                    placeholder="Search ..."
+                    value={search}
+                    onChange={handleSearch}
+                    className="w-[330px] pr-10"
+                />
+                <Search className="w-5 h-5 mr-2 absolute top-2 right-1 text-border" />
             </div>
+            <div className="flex  gap-2 w-full">
+                <span className="flex items-center gap-1 text-muted-foreground">
+                    <SlidersHorizontal className="w-5 h-5" />
+                    Filters:
+                </span>
+                <Select onValueChange={setDateSort}>
+                    <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="By Date" className="text-sm" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup className="text-sm">
+                            <SelectLabel>By date</SelectLabel>
+                            <SelectItem value="all">All</SelectItem>
+                            <SelectItem value="desc">New First</SelectItem>
+                            <SelectItem value="asc">Old First</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+                <Select onValueChange={setStatusSort}>
+                    <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="By Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectGroup>
+                            <SelectLabel>By Status</SelectLabel>
+                            <SelectItem value="completed">Completed</SelectItem>
+                            <SelectItem value="inprogress">In Progress</SelectItem>
+                        </SelectGroup>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            {/* <Button className="rounded-md" variant={"outline"}>
+                    <Filter className="w-5 h-5 mr-2" /> Filter
+                </Button> */}
         </div>
     )
 }

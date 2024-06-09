@@ -23,16 +23,7 @@ export async function GET(req: Request, { params }: { params: { teamId: string }
                 id: teamId,
             },
             include: {
-                Project: {
-                    select: {
-                        name: true,
-                        githubRepo: true,
-                        description: true,
-                        isCompleted: true,
-                        createdAt: true,
-                    },
-                },
-                Role: true,
+                roles: true,
                 creator: {
                     select: {
                         username: true,
@@ -42,11 +33,9 @@ export async function GET(req: Request, { params }: { params: { teamId: string }
             },
         })
 
-        const { Project, Role: roles, ...rest } = team!
-
         return NextResponse.json(
             {
-                team: { project: Project[0], roles, ...rest },
+                team,
                 message: "team with ID found",
             },
             { status: 201 },
@@ -64,7 +53,7 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
         const body = await req.json()
         const { name, description, repo, isCompleted, roles } = updateTeam.parse(body)
 
-        const { teamId } = params //TODO: validate query
+        const { teamId } = params
 
         if (!teamId) {
             return NextResponse.json({ message: "Missing Team Id" }, { status: 400 })
@@ -76,13 +65,12 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
                 creatorId: token.id,
             },
             data: {
-                Project: {
-                    update: {
-                        where: { teamId },
-                        data: { name, description, githubRepo: repo, isCompleted },
-                    },
-                },
-                Role: {
+                name,
+                description,
+                githubRepo: repo,
+                isCompleted,
+
+                roles: {
                     upsert: roles.map((role: any) => ({
                         where: { roleName_teamId: { teamId, roleName: role.roleName } },
                         update: {
@@ -104,7 +92,6 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
             },
         })
 
-        //TODO: test with deffirent account
         return NextResponse.json({ team: project, message: "Team found" }, { status: 201 })
     } catch (error) {
         console.log(error)

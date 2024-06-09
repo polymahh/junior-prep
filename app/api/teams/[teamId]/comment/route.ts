@@ -10,7 +10,7 @@ export async function GET(request: NextRequest, { params }: { params: { teamId: 
         if (!teamId) return NextResponse.json({ message: "Team identifier is missing!" }, { status: 400 })
 
         const comments = await db.comment.findMany({
-            where: { project: { teamId } },
+            where: { TeamId: teamId },
             include: {
                 user: { select: { image: true, name: true, username: true } },
                 _count: { select: { children: true } },
@@ -26,9 +26,10 @@ export async function GET(request: NextRequest, { params }: { params: { teamId: 
 
 export async function POST(req: NextRequest, { params }: { params: { teamId: string } }) {
     // const user = req.headers.get("x-user-data") //TODO: ask pipas about this
+    //TODO: add a check for banned/restricted users
     const token = await getToken({ req })
     if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
-    const { teamId } = params // TODO: validate query
+    const { teamId } = params
 
     if (!teamId) return NextResponse.json({ message: "missing team Id" }, { status: 400 })
 
@@ -37,8 +38,8 @@ export async function POST(req: NextRequest, { params }: { params: { teamId: str
 
         const { comment, parent } = commentSchema.parse(body)
 
-        const project = await db.project.findFirst({
-            where: { teamId },
+        const project = await db.team.findFirst({
+            where: { id: teamId },
             select: { id: true },
         })
 
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest, { params }: { params: { teamId: str
                 content: comment,
                 parentId: parent,
                 userId: token.id,
-                ProjectId: project.id,
+                TeamId: project.id,
             },
             include: {
                 user: { select: { image: true, name: true, username: true } },
