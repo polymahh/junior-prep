@@ -1,5 +1,7 @@
 import * as z from "zod"
 
+const alphanumericRegex = new RegExp(/^[A-z0-9\s]+$/i)
+const numberRegex = new RegExp(/^\d+$/)
 const RoleName = z.enum(["FRONTEND", "BACKEND", "DESIGN", "SENIOR"])
 
 export const teamSchema = z.object({
@@ -76,4 +78,13 @@ export const updateTeam = z.object({
         }),
 })
 
+export const teamFilters = z.object({
+    search: z.string().regex(alphanumericRegex).max(255).optional(),
+    statusSort: z.enum(["completed", "inprogress"]).optional(),
+    dateSort: z.enum(["asc", "desc"]).optional(),
+    length: z.string().regex(numberRegex).max(3).optional(),
+    limit: z.string().regex(numberRegex).max(3).optional(),
+})
+
 export type teamType = z.infer<typeof teamSchema>
+export type filterType = z.infer<typeof teamFilters>

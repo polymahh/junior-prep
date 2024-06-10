@@ -2,6 +2,7 @@
 
 import { queryClient } from "../providers"
 import { Button } from "../ui/button"
+import { toast } from "../ui/use-toast"
 import LanguageInfo from "./language-info"
 import { Timer } from "./time_tracker"
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel"
@@ -82,8 +83,9 @@ function Flashcards({
                 return
         }
         currentFlashcard.UserAnswer[0].response = response
-
-        let newFlashcards: Flashcard[] = [...flashcards]
+        currentFlashcard.UserAnswer[0].lastReviewed = new Date().toISOString()
+        // let newFlashcards: Flashcard[] = [...flashcards]
+        let newFlashcards: Flashcard[] = flashcards
         let shuffledFlashcards = shuffleArray(newFlashcards)
         let nextIndex = findIndex(shuffledFlashcards)
 
@@ -99,22 +101,30 @@ function Flashcards({
                 },
             },
             {
-                onSuccess: data => {
-                    setActiveFlashcard(shuffledFlashcards[nextIndex])
+                onSuccess: () => {
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({
                         queryKey: ["seven_days_activity"],
                         refetchType: "active",
                     })
-                    api?.scrollPrev()
+                },
+                onError: () => {
+                    toast({
+                        title: "Something went Wrong!",
+                        description: "Please reload Page!",
+                        variant: "destructive",
+                    })
                 },
             },
         )
+        // card will optimisticly be changed without confirming the server success
+        setActiveFlashcard(shuffledFlashcards[nextIndex])
+        api?.scrollPrev()
     }
 
     return (
         <div className="grow relative z-10 rounded-xl  p-2 group flex flex-col  justify-center items-center  ">
-            <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-4 pb-4 px-4 lg:px-12 gap-6 overflow-hidden">
+            <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] px-4 lg:px-12 gap-6 overflow-hidden">
                 <div className="text-sm text-muted-foreground top-4 right-4 flex justify-between gap-1 items-center w-full ">
                     <div>
                         <LanguageInfo flashcards={flashcards} activeFlashcard={activeFlashcard} />

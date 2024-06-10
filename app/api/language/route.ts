@@ -1,26 +1,21 @@
 import { db } from "@/db"
-import { jwtVerify } from "jose"
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
+
     try {
-        const cookieStore = cookies()
-        const accessToken = cookieStore.get("_acc__token")?.value
-        if (!accessToken) {
-            return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-        }
-        const { payload } = await jwtVerify(accessToken, new TextEncoder().encode(process.env.JWT_REFRESH_SECRET))
-
         const today = new Date()
         const sevenDaysAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000) // Subtract 7 days in milliseconds
 
         const sevenDaysActivity = await db.user.findUnique({
             where: {
-                id: payload.id as string,
+                id: token?.id as string,
             },
             select: {
-                TimeSpent: {
+                timeSpent: {
                     where: {
                         createdAt: {
                             gte: sevenDaysAgo,

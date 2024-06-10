@@ -20,7 +20,7 @@ enum roleName {
 
 enum provider {
   LOCAL
-  GITHUB
+  github
 }
 
 enum userResponse {
@@ -36,39 +36,54 @@ model User {
   username        String?       @unique
   password        String?
   email           String        @unique
-  provider        provider
   emailVerified   DateTime?
+  provider        provider
+  githubConnected DateTime?
   image           String?
   createdAt       DateTime      @default(now())
   updateAt        DateTime      @updatedAt
-  githubId        String?
-  discordId       String?
-  discordVerified DateTime?
-  UserRole        UserRole[]
-  Request         Request[]
-  comment         comment[]
-  UserAnswer      UserAnswer[]
-  Course          Course[]
-  Interaction     Interaction[]
-  Team            Team[]
-  TimeSpent       TimeSpent[]
+  accounts        Account[]
+  sessions        Session[]
+  requests        Request[]
+  comments        comment[]
+  userAnswers     UserAnswer[]
+  courses         Course[]
+  interactions    Interaction[]
+  teams           Team[]
+  timeSpent       TimeSpent[]
+  userRoles       UserRole[]
 
   @@index([id])
 }
 
-model Project {
-  id          String    @id @default(cuid())
-  name        String
-  description String
-  githubRepo  String
-  isCompleted Boolean   @default(false)
-  createdAt   DateTime  @default(now())
-  updateAt    DateTime  @updatedAt
-  teamId      String    @unique
-  team        Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
-  comments    comment[]
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
-  @@index([teamId])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 model comment {
@@ -77,25 +92,31 @@ model comment {
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
   userId    String
-  ProjectId String
+  TeamId    String
   parentId  String?
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project  Project   @relation(fields: [ProjectId], references: [id], onDelete: Cascade)
+  team     Team      @relation(fields: [TeamId], references: [id], onDelete: Cascade)
   parent   comment?  @relation("comment_children", fields: [parentId], references: [id], onDelete: Cascade)
   children comment[] @relation("comment_children")
 
-  @@index([ProjectId])
+  @@index([TeamId])
 }
 
 model Team {
   id          String    @id @default(cuid())
+  name        String
   creatorId   String?
   creatorRole roleName?
-
-  creator User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
-  Project Project[]
-  Role    Role[]
+  isCompleted Boolean   @default(false)
+  description String
+  githubRepo  String
+  searchTerms String
+  createdAt   DateTime  @default(now())
+  updateAt    DateTime  @updatedAt
+  creator     User?     @relation(fields: [creatorId], references: [id], onDelete: SetNull)
+  comments    comment[]
+  roles       Role[]
 
   @@index([id])
 }
@@ -119,7 +140,7 @@ model Role {
 model Request {
   id         String   @id @default(cuid())
   userEmail  String
-  user       User     @relation(fields: [userEmail], references: [id])
+  user       User     @relation(fields: [userEmail], references: [id], onDelete: Cascade)
   roleId     String
   role       Role     @relation(fields: [roleId], references: [id])
   isAccepted Boolean  @default(false)
@@ -131,7 +152,7 @@ model UserRole {
   roleId    String
   role      Role    @relation(fields: [roleId], references: [id])
   userEmail String
-  user      User    @relation(fields: [userEmail], references: [id])
+  user      User    @relation(fields: [userEmail], references: [id], onDelete: Cascade)
   isAdmin   Boolean @default(false)
 
   @@unique([roleId, userEmail])
@@ -141,7 +162,7 @@ model UserRole {
 model TimeSpent {
   id         Int      @id @default(autoincrement())
   userId     String
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   time       String
   totalCards Int
   updatedAt  DateTime @updatedAt
@@ -152,7 +173,7 @@ model TimeSpent {
 
 model UserAnswer {
   userId       String
-  user         User         @relation(fields: [userId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   flashcardId  Int
   flashcard    Flashcard    @relation(fields: [flashcardId], references: [id], onDelete: Cascade)
   languageName String
@@ -187,7 +208,7 @@ model Language {
 model Course {
   id             String           @id @default(cuid())
   userId         String
-  user           User             @relation(fields: [userId], references: [id])
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   roleId         String
   role           Role             @relation(fields: [roleId], references: [id])
   isAccepted     DateTime
@@ -199,18 +220,18 @@ model Course {
 
 model LanguageCourse {
   languageName String
-  language     Language @relation(fields: [languageName], references: [languageName])
+  language     Language @relation(fields: [languageName], references: [languageName], onDelete: Cascade)
   courseId     String
-  course       Course   @relation(fields: [courseId], references: [id])
+  course       Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([courseId])
 }
 
 model Interaction {
   courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   visitorId String
-  visitor   User     @relation(fields: [visitorId], references: [id])
+  visitor   User     @relation(fields: [visitorId], references: [id], onDelete: Cascade)
   liked     Boolean  @default(false)
   playCount Int
   createdAt DateTime @default(now())
@@ -220,6 +241,9 @@ model Interaction {
 }
 
 model VerificationToken {
-  email String @unique
-  token String
+  email   String
+  token   String   @unique
+  expires DateTime
+
+  @@unique([email, token])
 }

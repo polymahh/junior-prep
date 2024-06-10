@@ -14,6 +14,7 @@ function TeamPreview({ teamId }: { teamId: string }) {
         queryKey: ["teams", teamId],
         queryFn: () => teamsApi.getTeam(teamId),
     })
+    console.log("🚀 ~ TeamPreview ~ data:", data)
 
     const { data: comments, isLoading: isCommentsLoading } = useQuery({
         queryKey: ["comments", teamId],
@@ -22,6 +23,7 @@ function TeamPreview({ teamId }: { teamId: string }) {
 
     if (isTeamLoading) return <div>Loading ...</div>
 
+    console.log("🚀 ~ TeamPreview ~ comments:", comments)
     return isTeamSuccess ? (
         <>
             <div className="grid grid-cols-[auto_300px] grid-rows-[160px] gap-4">

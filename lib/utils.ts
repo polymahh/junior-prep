@@ -22,7 +22,6 @@ export const shuffleArray = <T>(array: T[]) => {
 }
 
 export function findIndex(arr: Flashcard[]) {
-    console.log("🚀 ~ findIndex ~ arr:", arr)
     // Find the next flashcard with the earliest next review date
     let earliestNextReviewDate = Infinity
     let nextIndex = 0

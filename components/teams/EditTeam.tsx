@@ -12,7 +12,7 @@ function EditTeam({ team }: any) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger className="self-start">
+            <DialogTrigger className="self-start" asChild>
                 <Button variant="secondary" size="sm" className="absolute top-2 right-2 px-2 " aria-label="Edit">
                     <Pencil className="  h-4" />
                     Edit

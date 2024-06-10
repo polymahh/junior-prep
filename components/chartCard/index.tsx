@@ -15,9 +15,9 @@ function ChartCard() {
     })
 
     useEffect(() => {
-        const sevenDays = []
-        const today = new Date()
         if (isSuccess) {
+            const sevenDays = []
+            const today = new Date()
             for (let i = 0; i < 7; i++) {
                 const day = new Date(today)
                 const name = new Date(day.setDate(today.getDate() - i)).toISOString().split("T")[0]
@@ -26,7 +26,7 @@ function ChartCard() {
                     sevenDays.unshift({
                         name: name.split("-").slice(1).reverse().join("/"),
                         totalCards: val.totalCards,
-                        time: (Number(val.time) / 60).toFixed(1),
+                        time: (Number(val.time) / 60).toFixed(0),
                     })
                 } else {
                     sevenDays.unshift({
@@ -74,14 +74,26 @@ const CustomTooltip = ({ active, payload, label }: any) => {
             <div className="bg-muted p-2 rounded-sm">
                 <p className="text-muted-foreground text-sm">{`${label}`}</p>
                 <div>
-                    {payload.map((pld: any) => (
-                        <div className="flex gap-1" key={pld.dataKey}>
-                            <span className="text-sm">{`${pld.dataKey}:`}</span>
-                            <span className="text-sm" style={{ color: pld.fill }}>
-                                {pld.value}
-                            </span>
-                        </div>
-                    ))}
+                    {payload.map((pld: any) => {
+                        if (pld.dataKey === "time") {
+                            return (
+                                <div className="flex gap-1" key={pld.dataKey}>
+                                    <span className="text-sm">{`${pld.dataKey}:`}</span>
+                                    <span className="text-sm" style={{ color: pld.fill }}>
+                                        {pld.value} min
+                                    </span>
+                                </div>
+                            )
+                        } else
+                            return (
+                                <div className="flex gap-1" key={pld.dataKey}>
+                                    <span className="text-sm">{`${pld.dataKey}:`}</span>
+                                    <span className="text-sm" style={{ color: pld.fill }}>
+                                        {pld.value}
+                                    </span>
+                                </div>
+                            )
+                    })}
                 </div>
             </div>
         )

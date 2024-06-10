@@ -1,6 +1,29 @@
 -- CreateEnum
 CREATE TYPE "roleName" AS ENUM ('FRONTEND', 'BACKEND', 'DESIGN', 'SENIOR');
 
+-- CreateEnum
+CREATE TYPE "provider" AS ENUM ('LOCAL', 'github');
+
+-- CreateEnum
+CREATE TYPE "userResponse" AS ENUM ('again', 'hard', 'good', 'easy');
+
+-- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "name" TEXT,
+    "username" TEXT,
+    "password" TEXT,
+    "email" TEXT NOT NULL,
+    "emailVerified" TIMESTAMP(3),
+    "provider" "provider" NOT NULL,
+    "githubConnected" TIMESTAMP(3),
+    "image" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
@@ -30,24 +53,6 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
-    "name" TEXT,
-    "username" TEXT,
-    "password" TEXT,
-    "email" TEXT NOT NULL,
-    "emailVerified" TIMESTAMP(3),
-    "image" TEXT,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
-    "githubId" TEXT,
-    "discordId" TEXT,
-    "discordVerified" TIMESTAMP(3),
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -67,8 +72,9 @@ CREATE TABLE "comment" (
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
-    "userEmail" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
     "ProjectId" TEXT NOT NULL,
+    "parentId" TEXT,
 
     CONSTRAINT "comment_pkey" PRIMARY KEY ("id")
 );
@@ -77,7 +83,7 @@ CREATE TABLE "comment" (
 CREATE TABLE "Team" (
     "id" TEXT NOT NULL,
     "creatorId" TEXT,
-    "creatorRole" "roleName" NOT NULL,
+    "creatorRole" "roleName",
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
 );
@@ -114,22 +120,35 @@ CREATE TABLE "UserRole" (
 );
 
 -- CreateTable
-CREATE TABLE "UserAnswer" (
-    "id" TEXT NOT NULL,
+CREATE TABLE "TimeSpent" (
+    "id" SERIAL NOT NULL,
     "userId" TEXT NOT NULL,
-    "flashcardId" TEXT NOT NULL,
-    "answer" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
+    "time" TEXT NOT NULL,
+    "totalCards" INTEGER NOT NULL,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "UserAnswer_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "TimeSpent_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "UserAnswer" (
+    "userId" TEXT NOT NULL,
+    "flashcardId" INTEGER NOT NULL,
+    "languageName" TEXT NOT NULL,
+    "response" "userResponse" NOT NULL,
+    "easeFactor" DOUBLE PRECISION NOT NULL,
+    "interval" DOUBLE PRECISION NOT NULL,
+    "lastReviewed" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- CreateTable
 CREATE TABLE "Flashcard" (
-    "id" TEXT NOT NULL,
-    "languageId" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
+    "languageName" TEXT NOT NULL,
     "answer" TEXT NOT NULL,
+    "question" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
 
@@ -138,10 +157,7 @@ CREATE TABLE "Flashcard" (
 
 -- CreateTable
 CREATE TABLE "Language" (
-    "id" TEXT NOT NULL,
-    "languageName" TEXT NOT NULL,
-
-    CONSTRAINT "Language_pkey" PRIMARY KEY ("id")
+    "languageName" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -158,7 +174,7 @@ CREATE TABLE "Course" (
 
 -- CreateTable
 CREATE TABLE "LanguageCourse" (
-    "languageId" TEXT NOT NULL,
+    "languageName" TEXT NOT NULL,
     "courseId" TEXT NOT NULL
 );
 
@@ -180,6 +196,15 @@ CREATE TABLE "VerificationToken" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE INDEX "User_id_idx" ON "User"("id");
+
+-- CreateIndex
 CREATE INDEX "Account_userId_idx" ON "Account"("userId");
 
 -- CreateIndex
@@ -190,15 +215,6 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 
 -- CreateIndex
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE INDEX "User_id_idx" ON "User"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Project_teamId_key" ON "Project"("teamId");
@@ -225,6 +241,12 @@ CREATE INDEX "UserRole_userEmail_idx" ON "UserRole"("userEmail");
 CREATE UNIQUE INDEX "UserRole_roleId_userEmail_key" ON "UserRole"("roleId", "userEmail");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "TimeSpent_createdAt_userId_key" ON "TimeSpent"("createdAt", "userId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "UserAnswer_flashcardId_userId_key" ON "UserAnswer"("flashcardId", "userId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Language_languageName_key" ON "Language"("languageName");
 
 -- CreateIndex
@@ -249,10 +271,13 @@ ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Project" ADD CONSTRAINT "Project_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comment" ADD CONSTRAINT "comment_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("email") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "comment" ADD CONSTRAINT "comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comment" ADD CONSTRAINT "comment_ProjectId_fkey" FOREIGN KEY ("ProjectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "comment" ADD CONSTRAINT "comment_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Team" ADD CONSTRAINT "Team_creatorId_fkey" FOREIGN KEY ("creatorId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -261,7 +286,7 @@ ALTER TABLE "Team" ADD CONSTRAINT "Team_creatorId_fkey" FOREIGN KEY ("creatorId"
 ALTER TABLE "Role" ADD CONSTRAINT "Role_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Request" ADD CONSTRAINT "Request_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Request" ADD CONSTRAINT "Request_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Request" ADD CONSTRAINT "Request_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -270,31 +295,37 @@ ALTER TABLE "Request" ADD CONSTRAINT "Request_roleId_fkey" FOREIGN KEY ("roleId"
 ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserRole" ADD CONSTRAINT "UserRole_userEmail_fkey" FOREIGN KEY ("userEmail") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "TimeSpent" ADD CONSTRAINT "TimeSpent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_flashcardId_fkey" FOREIGN KEY ("flashcardId") REFERENCES "Flashcard"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Flashcard" ADD CONSTRAINT "Flashcard_languageId_fkey" FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_flashcardId_fkey" FOREIGN KEY ("flashcardId") REFERENCES "Flashcard"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_languageName_fkey" FOREIGN KEY ("languageName") REFERENCES "Language"("languageName") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Flashcard" ADD CONSTRAINT "Flashcard_languageName_fkey" FOREIGN KEY ("languageName") REFERENCES "Language"("languageName") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Course" ADD CONSTRAINT "Course_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Course" ADD CONSTRAINT "Course_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LanguageCourse" ADD CONSTRAINT "LanguageCourse_languageId_fkey" FOREIGN KEY ("languageId") REFERENCES "Language"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "LanguageCourse" ADD CONSTRAINT "LanguageCourse_languageName_fkey" FOREIGN KEY ("languageName") REFERENCES "Language"("languageName") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "LanguageCourse" ADD CONSTRAINT "LanguageCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "LanguageCourse" ADD CONSTRAINT "LanguageCourse_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Interaction" ADD CONSTRAINT "Interaction_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Interaction" ADD CONSTRAINT "Interaction_courseId_fkey" FOREIGN KEY ("courseId") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Interaction" ADD CONSTRAINT "Interaction_visitorId_fkey" FOREIGN KEY ("visitorId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Interaction" ADD CONSTRAINT "Interaction_visitorId_fkey" FOREIGN KEY ("visitorId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;

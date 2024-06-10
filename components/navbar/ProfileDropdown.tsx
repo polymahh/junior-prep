@@ -9,34 +9,28 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { authApi } from "@/lib/api/authApi"
-import { useQuery } from "@tanstack/react-query"
 import { User } from "lucide-react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 
 function ProfileDropdown() {
-    const { data } = useQuery({
-        queryKey: ["profile"],
-        queryFn: () => {
-            return authApi.getProfile()
-        },
-    })
+    const { data } = useSession()
 
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-                        <AvatarFallback>{data?.user.username?.[0] || "JP"}</AvatarFallback>
+                        <AvatarImage src={data?.user?.image ?? ""} alt="@shadcn" />
+                        <AvatarFallback className="uppercase">{data?.user.username?.[0] || "JP"}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount style={{ marginTop: "4px" }}>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{data?.user.username}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{data?.user.email}</p>
+                        <p className="text-sm font-medium leading-none">{data?.user?.username}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{data?.user?.email}</p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />

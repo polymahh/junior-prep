@@ -1,6 +1,7 @@
 import { db } from "@/db"
 import { updateTeam } from "@/lib/validators/teams"
-import { NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
+import { NextRequest, NextResponse } from "next/server"
 
 export async function GET(req: Request, { params }: { params: { teamId: string } }) {
     try {
@@ -22,31 +23,19 @@ export async function GET(req: Request, { params }: { params: { teamId: string }
                 id: teamId,
             },
             include: {
-                Project: {
-                    select: {
-                        name: true,
-                        githubRepo: true,
-                        description: true,
-                        isCompleted: true,
-                        createdAt: true,
-                    },
-                },
-                Role: true,
+                roles: true,
                 creator: {
                     select: {
                         username: true,
                         image: true,
-                        githubId: true,
                     },
                 },
             },
         })
 
-        const { Project, Role: roles, ...rest } = team!
-
         return NextResponse.json(
             {
-                team: { project: Project[0], roles, ...rest },
+                team,
                 message: "team with ID found",
             },
             { status: 201 },
@@ -57,7 +46,9 @@ export async function GET(req: Request, { params }: { params: { teamId: string }
     }
 }
 
-export async function PUT(req: Request, { params }: { params: { teamId: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: { teamId: string } }) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
         const body = await req.json()
         const { name, description, repo, isCompleted, roles } = updateTeam.parse(body)
@@ -71,15 +62,15 @@ export async function PUT(req: Request, { params }: { params: { teamId: string }
         const project = await db.team.update({
             where: {
                 id: teamId,
+                creatorId: token.id,
             },
             data: {
-                Project: {
-                    update: {
-                        where: { teamId },
-                        data: { name, description, githubRepo: repo, isCompleted },
-                    },
-                },
-                Role: {
+                name,
+                description,
+                githubRepo: repo,
+                isCompleted,
+
+                roles: {
                     upsert: roles.map((role: any) => ({
                         where: { roleName_teamId: { teamId, roleName: role.roleName } },
                         update: {
@@ -100,17 +91,6 @@ export async function PUT(req: Request, { params }: { params: { teamId: string }
                 },
             },
         })
-        console.log("🚀 ~ project test with upset and delete many:", project)
-
-        if (!project) {
-            return NextResponse.json({ message: "Team not found" }, { status: 400 })
-        }
-
-        //TODO: get the user from token
-
-        // if(project?.team.creatorId !== session?.user?.email){
-        //     return NextResponse.json({message:"You are not authorized"},{status:401})
-        // }
 
         return NextResponse.json({ team: project, message: "Team found" }, { status: 201 })
     } catch (error) {
@@ -119,9 +99,11 @@ export async function PUT(req: Request, { params }: { params: { teamId: string }
     }
 }
 
-export async function DELETE(req: Request, { params }: { params: { teamId: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: { teamId: string } }) {
+    const token = await getToken({ req })
+    if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
-        const { teamId } = params
+        const { teamId } = params //TODO: validate query
 
         if (!teamId) {
             return NextResponse.json(
@@ -134,19 +116,14 @@ export async function DELETE(req: Request, { params }: { params: { teamId: strin
             )
         }
 
-        const team = await db.team.findUnique({
-            where: {
-                id: teamId,
-            },
-        })
-
         await db.team.delete({
             where: {
                 id: teamId,
+                creatorId: token.id,
             },
         })
 
-        return NextResponse.json({ team: team, message: "team with ID found" }, { status: 201 })
+        return NextResponse.json({ message: "team deleted" }, { status: 201 })
     } catch (error) {
         console.log(error)
         return NextResponse.json({ message: "Something went wrong!" }, { status: 500 })
