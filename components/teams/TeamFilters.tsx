@@ -52,8 +52,6 @@ function TeamFilters({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup className="text-sm">
-                            <SelectLabel>By date</SelectLabel>
-                            <SelectItem value="all">All</SelectItem>
                             <SelectItem value="desc">New First</SelectItem>
                             <SelectItem value="asc">Old First</SelectItem>
                         </SelectGroup>
@@ -65,17 +63,12 @@ function TeamFilters({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
-                            <SelectLabel>By Status</SelectLabel>
                             <SelectItem value="completed">Completed</SelectItem>
                             <SelectItem value="inprogress">In Progress</SelectItem>
                         </SelectGroup>
                     </SelectContent>
                 </Select>
             </div>
-
-            {/* <Button className="rounded-md" variant={"outline"}>
-                    <Filter className="w-5 h-5 mr-2" /> Filter
-                </Button> */}
         </div>
     )
 }

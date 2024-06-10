@@ -36,15 +36,10 @@ export async function POST(req: NextRequest) {
     }
 }
 
-type Order = "asc" | "desc"
-
 export async function GET(req: NextRequest) {
-    console.log("🚀 ~ GET ~ req:", req.url)
     try {
-        const order = req.nextUrl.searchParams.get("dateSort") || "asc"
+        const order = req.nextUrl.searchParams.get("dateSort") || "desc"
         const status = req.nextUrl.searchParams.get("statusSort")
-        console.log("🚀 ~ GET ~ status:", status)
-
         const search = req.nextUrl.searchParams.get("search")?.toLowerCase()
         const offset = +(req.nextUrl.searchParams.get("length") ?? 0)
         const limit = +(req.nextUrl.searchParams.get("limit") ?? 10)
@@ -67,7 +62,7 @@ export async function GET(req: NextRequest) {
                 ],
             },
             orderBy: {
-                createdAt: order as Order,
+                createdAt: order === "asc" ? "asc" : "desc",
             },
 
             include: {
@@ -82,7 +77,6 @@ export async function GET(req: NextRequest) {
                 },
             },
         })
-        console.log("🚀 ~ GET ~ teamssss:", teams)
 
         return NextResponse.json({ teams, message: "teams list success" }, { status: 200 })
     } catch (error) {

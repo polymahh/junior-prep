@@ -3,15 +3,23 @@
 import { buttonVariants } from "../ui/button"
 import TeamCard from "./TeamCard"
 import { teamsApi } from "@/lib/api/teamsApi"
+import { TeamCardType } from "@/types/global"
 import { useQuery } from "@tanstack/react-query"
 import { ExternalLink } from "lucide-react"
 import Link from "next/link"
 import React from "react"
 
 function TeamDashboardList() {
-    const { data, isSuccess } = useQuery({
-        queryKey: ["teams"],
-        queryFn: () => teamsApi.getTeams(),
+    const { data, isSuccess, isLoading } = useQuery({
+        queryKey: ["teams", "new"],
+        queryFn: () =>
+            teamsApi.getTeams({
+                search: "",
+                statusSort: undefined,
+                dateSort: undefined,
+                limit: "5",
+                length: "0",
+            }),
     })
 
     return (
@@ -31,8 +39,8 @@ function TeamDashboardList() {
                 </Link>
             </div>
             <div className="flex h-full flex-col gap-6 grow">
-                {isSuccess &&
-                    data?.teams?.map((team: any) => <TeamCard key={team.id} project={team.Project[0]} {...team} />)}
+                {isLoading ? <div>Loading ...</div> : null}
+                {isSuccess && data?.map((team: TeamCardType, index: number) => <TeamCard key={index} {...team} />)}
             </div>
         </div>
     )

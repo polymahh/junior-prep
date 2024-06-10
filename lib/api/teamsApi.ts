@@ -24,15 +24,9 @@ export const teamsApi = {
             }
         }
         const result = await axios.get(`api/teams?${queryParams.toString()}`)
-        console.log("🚀 ~ getTeams: ~ result:", result)
         return result.data.teams
     },
-    // getTeams: async () => {
-    //     const response = await axios.get("api/teams")
-    //     console.log("🚀 ~ getTeams: ~ response:", response)
-    //     const result = await response.data
-    //     return result
-    // },
+
     getTeam: async (teamId: string) => {
         const response = await axios.get(`api/teams/${teamId}`)
         const result = await response.data.team
