@@ -73,6 +73,7 @@ function CommentInput({
                             <FormControl>
                                 <Textarea
                                     placeholder={type === "comment" ? "Write your comment..." : "Write your reply..."}
+                                    id={type === "comment" ? "comment" : ""}
                                     {...field}
                                 />
                             </FormControl>
