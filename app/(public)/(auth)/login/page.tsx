@@ -1,6 +1,5 @@
 import OAuthButtons from "@/components/auth/OAuthButton"
 import { Icons } from "@/components/icons"
-import { ChevronUp } from "lucide-react"
 import { getServerSession } from "next-auth"
 import { redirect } from "next/navigation"
 import React from "react"

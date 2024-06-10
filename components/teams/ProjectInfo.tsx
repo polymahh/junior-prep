@@ -2,8 +2,7 @@ import { Icons } from "../icons"
 import { RoleBadge } from "../ui/role-badge"
 import EditTeam from "./EditTeam"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { userRoleType } from "@/lib/validators/userRole"
-import { Role, Team, User } from "@prisma/client"
+import { TeamCardType } from "@/types/global"
 import { ExternalLink } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
@@ -19,15 +18,7 @@ function ProjectInfo({
     creatorId,
     githubRepo,
     id,
-}: Team & { roles: Role[]; creator: User }) {
-    // }: {
-    //     creator: User
-    //     name:string
-    //     roles: Role[]
-    //     creatorRole: userRoleType
-    //     creatorId: string
-    //     id: string
-    // }
+}: TeamCardType) {
     const { data } = useSession()
     return (
         <div className=" flex h-full flex-col rounded-lg p-2 ">

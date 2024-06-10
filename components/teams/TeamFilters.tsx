@@ -1,16 +1,7 @@
-import { Button } from "../ui/button"
 import { Input } from "../ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectLabel,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Filter, Search, SlidersHorizontal } from "lucide-react"
-import React, { useEffect, useState } from "react"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Search, SlidersHorizontal } from "lucide-react"
+import React from "react"
 
 function TeamFilters({
     setStatusSort,
@@ -24,11 +15,6 @@ function TeamFilters({
     search: string
 }) {
     const handleSearch = (e: any) => setSearch(e.target.value)
-
-    const handleFilter = (e: any) => {
-        console.log("🚀 ~ handleFilter ~ e:", e)
-    }
-
     return (
         <div className="flex flex-col xl:flex-row  gap-2">
             <div className=" flex gap-4 relative">

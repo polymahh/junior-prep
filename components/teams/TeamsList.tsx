@@ -7,11 +7,10 @@ import useDebounce from "@/hooks/useDebounce"
 import useScrollObserver from "@/hooks/useScrollObserver"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { TeamCardType } from "@/types/global"
-import { Team } from "@prisma/client"
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery } from "@tanstack/react-query"
 import { ChevronDown, Plus } from "lucide-react"
 import Link from "next/link"
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useState } from "react"
 
 function TeamList() {
     const [teams, setTeams] = useState<TeamCardType[]>([])
@@ -21,12 +20,7 @@ function TeamList() {
     const limit = "10"
     const debounceValue = useDebounce(search, 9000)
 
-    // const { data, isSuccess } = useQuery({
-    //     queryKey: ["teams"],
-    //     queryFn: () => teamsApi.getTeams(),
-    // })
-
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error, isSuccess } = useInfiniteQuery({
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
         queryKey: ["teams", { debounceValue, statusSort, dateSort }],
         getNextPageParam: (lastPage: TeamCardType[], pages) => {
             if (lastPage?.length === 0) {
@@ -35,7 +29,6 @@ function TeamList() {
             return pages?.length
         },
         retry: false,
-        // enabled: enableCall,
         initialPageParam: 0,
         queryFn: async ({ pageParam }) =>
             teamsApi.getTeams({
@@ -48,12 +41,6 @@ function TeamList() {
     })
 
     const lastItem = useScrollObserver(fetchNextPage, isFetchingNextPage, hasNextPage, error)
-
-    useEffect(() => {
-        console.log("🚀 ~ TeamFilters ~ dateSort:", dateSort)
-        console.log("🚀 ~ TeamFilters ~ statusSort:", statusSort)
-        console.log("🚀 ~ TeamList ~ data:", data)
-    }, [dateSort, statusSort, debounceValue, isSuccess])
 
     useEffect(() => {
         setTeams((data?.pages as TeamCardType[][])?.flat())
