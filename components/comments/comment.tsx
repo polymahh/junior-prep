@@ -6,6 +6,8 @@ import CommentActions from "./commentActions"
 import CommentInput from "./commentInput"
 import { timeAgo } from "@/lib/utils"
 import { CommentType } from "@/types/global"
+import { useSession } from "next-auth/react"
+import Link from "next/link"
 import { CSSProperties, useState } from "react"
 
 const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSSProperties; teamId: string }) => {
@@ -15,23 +17,32 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
     const handleUpdateInputClose = () => setIsUpdateInputOpen(false)
     const handleReplyInputClose = () => setIsReplyInputOpen(false)
 
+    const { data } = useSession()
+    console.log("🚀 ~ Comment ~ session:", data?.user, comment)
+
     return (
         <div className="flex items-start gap-4 group" style={style}>
-            <Avatar className="shrink-0">
-                <AvatarImage alt="@shadcn" src={comment.user.image || "/user-avatar-placeholder.webp"} />
+            {/* <Avatar className="shrink-0">
+                <AvatarImage alt="@shadcn" src={comment.user.image || ""} />
                 <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1 space-y-2">
+            </Avatar> */}
+            <div className="flex-1 space-y-2 ">
                 <Collapsible onOpenChange={(open: boolean) => setIsUpdateInputOpen(open)} open={isUpdateInputOpen}>
-                    <div className="flex items-center gap-x-4 pt-2">
-                        <div className="font-medium text-gray-700 dark:text-gray-300 group-hover:text-foreground">
+                    <div className="flex items-center gap-x-4 pt-2 ">
+                        <Link
+                            href={`https://github.com/${comment.user.username}`}
+                            target="_blank"
+                            className="font-medium text-muted-foreground group-hover:text-foreground"
+                        >
                             @{comment.user.username}
-                        </div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400">{timeAgo(comment.createdAt)}</div>
+                        </Link>
+                        <div className="text-xs text-muted-foreground ">{timeAgo(comment.createdAt)}</div>
                         {/* We should check if the comment user id is the same as the logged in user id. I coudnt because there is no user provider yet \: */}
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                            <CommentActions commentId={comment.id} teamId={teamId} />
-                        </div>
+                        {data?.user.id === comment?.userId ? (
+                            <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <CommentActions commentId={comment.id} teamId={teamId} />
+                            </div>
+                        ) : null}
                     </div>
                     <CollapsibleContent>
                         <CommentInput
@@ -44,22 +55,30 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
                     </CollapsibleContent>
                 </Collapsible>
                 {isUpdateInputOpen || (
-                    <p className="space-x-2">
-                        <span>{comment.content}</span>
-                        <span className="text-gray-700 text-xs">
-                            {new Date(comment.createdAt) < new Date(comment.updateAt) && "Edited"}
-                        </span>
-                    </p>
+                    <div className="flex">
+                        <Link href={`https://github.com/${comment.user.username}`} target="_blank">
+                            <Avatar className="shrink-0">
+                                <AvatarImage alt="@shadcn" src={comment.user.image || ""} />
+                                <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                            </Avatar>
+                        </Link>
+                        <p className="ml-4 p-2 grow  bg-muted rounded-md">
+                            <p>{comment.content}</p>
+                            <span className="text-muted-foreground text-xs">
+                                {new Date(comment.createdAt) < new Date(comment.updateAt) ? "edited" : ""}
+                            </span>
+                        </p>
+                    </div>
                 )}
                 <Collapsible onOpenChange={(open: boolean) => setIsReplyInputOpen(open)} open={isReplyInputOpen}>
                     <CollapsibleTrigger asChild>
-                        <span className="!bg-transparent text-sm hover:underline cursor-pointer">Reply</span>
+                        <span className="ml-4 text-sm hover:underline cursor-pointer">Reply</span>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="mt-4 space-y-4">
                         <div className="flex items-start gap-4">
                             <Avatar className="shrink-0">
-                                <AvatarImage alt="@jaredpalmer" src="/user-avatar-placeholder.webp" />
-                                <AvatarFallback>Y</AvatarFallback>
+                                <AvatarImage alt="@shadcn" src={comment.user.image || ""} />
+                                <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
                             </Avatar>
                             <CommentInput
                                 type="reply"
