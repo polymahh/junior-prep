@@ -2,6 +2,7 @@
 
 import { Button } from "../ui/button"
 import { Checkbox } from "../ui/checkbox"
+import { Switch } from "../ui/switch"
 import { toast } from "../ui/use-toast"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
@@ -10,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { cn } from "@/lib/utils"
 import { teamSchema, teamType } from "@/lib/validators/teams"
+import { TeamCardType } from "@/types/global"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Role } from "@prisma/client"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -34,12 +36,18 @@ const defaultRoles = [
     },
     {
         active: false,
-        roleName: "SENIOR",
+        roleName: "FULLSTACK",
         stack: "",
     },
 ] as const
 
-function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatch<React.SetStateAction<boolean>> }) {
+function CreateTeamForm({
+    team,
+    setOpen,
+}: {
+    team?: TeamCardType
+    setOpen?: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const router = useRouter()
 
     const form = useForm<teamType>({
@@ -47,23 +55,22 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
         mode: "onChange",
         defaultValues: !!team
             ? {
-                  name: team?.project?.name,
-                  description: team?.project?.description,
-                  repo: team?.project?.githubRepo,
+                  name: team?.name,
+                  description: team?.description,
+                  repo: team?.githubRepo,
                   roles: defaultRoles.map(role => {
                       let temp_role = team?.roles.find((r: Role) => role.roleName === r.roleName)
                       if (temp_role) {
                           return { ...temp_role, active: true }
                       } else return role
                   }),
-                  creatorRole: team?.creatorRole,
+                  isCompleted: team?.isCompleted,
               }
             : {
                   name: "",
                   description: "",
                   repo: "",
                   roles: [...defaultRoles],
-                  creatorRole: "",
               },
     })
 
@@ -86,7 +93,7 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
                 .filter(role => role.active)
                 .map(role => ({ stack: role.stack, roleName: role.roleName })),
             repo: values.repo,
-            creatorRole: values.creatorRole,
+            isCompleted: !team ? false : values.isCompleted,
         }
         mutateAsync(teamData, {
             onSuccess: async data => {
@@ -96,7 +103,6 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
                     await queryClient.setQueryData(["teams", data.team.id], (oldData: any) => {
                         return {
                             ...oldData,
-                            creatorRole: teamData.creatorRole,
                             project: {
                                 ...oldData.project,
                                 description: teamData.description,
@@ -137,6 +143,22 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
                         <br />
                         - what this project about <br />- roles needed and stack used
                     </div>
+                )}
+                {!!team && (
+                    <FormField
+                        control={form.control}
+                        name="isCompleted"
+                        render={({ field }) => (
+                            <FormItem className="w-full flex items-center gap-4">
+                                <FormLabel className="text-lg  h-6">Project completed ?</FormLabel>
+                                <FormControl>
+                                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                </FormControl>
+
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 )}
                 <FormField
                     control={form.control}
@@ -240,7 +262,7 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
                         </div>
                     )
                 })}
-                <FormField
+                {/* <FormField
                     control={form.control}
                     name="creatorRole"
                     render={({ field }) => (
@@ -266,7 +288,7 @@ function CreateTeamForm({ team, setOpen }: { team?: any; setOpen?: React.Dispatc
                             </Select>
                         </FormItem>
                     )}
-                />
+                /> */}
                 <Button type="submit" className="self-center" isLoading={isPending}>
                     {!team ? "Create Team" : "Edit Team"}
                 </Button>

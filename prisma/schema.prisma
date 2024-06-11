@@ -15,7 +15,7 @@ enum roleName {
   FRONTEND
   BACKEND
   DESIGN
-  SENIOR
+  FULLSTACK
 }
 
 enum provider {
@@ -107,7 +107,6 @@ model Team {
   id          String    @id @default(cuid())
   name        String
   creatorId   String?
-  creatorRole roleName?
   isCompleted Boolean   @default(false)
   description String
   githubRepo  String

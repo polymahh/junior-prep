@@ -1,7 +1,9 @@
 import { Icons } from "../icons"
 import { RoleBadge } from "../ui/role-badge"
 import EditTeam from "./EditTeam"
+import DeleteTeam from "./delete_team"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { cn } from "@/lib/utils"
 import { TeamCardType } from "@/types/global"
 import { ExternalLink } from "lucide-react"
 import { useSession } from "next-auth/react"
@@ -14,10 +16,12 @@ function ProjectInfo({
     description,
     roles,
     createdAt,
-    creatorRole,
     creatorId,
     githubRepo,
     id,
+    isCompleted,
+    searchTerms,
+    updateAt,
 }: TeamCardType) {
     const { data } = useSession()
     return (
@@ -25,7 +29,8 @@ function ProjectInfo({
             {/* creator info */}
             <div className="flex flex-col sm:flex-row w-full gap-2">
                 <div className="flex flex-col gap-4 grow">
-                    <span className="text-lg font-semibold ">Name: {name}</span>
+                    <span className="text-lg font-semibold ">Project Name: {name}</span>
+
                     <div className="flex relative gap-6 flex-col justify-between rounded-lg border  p-4">
                         <div className="flex flex-wrap grow items-center gap-4">
                             <Avatar className="h-16 w-16">
@@ -56,8 +61,35 @@ function ProjectInfo({
                             >
                                 <span>{name}</span> <ExternalLink className="h-5 pt-1" />
                             </Link>
+                            <span
+                                className={cn(
+                                    "self-start text-[9px] text-primary px-1 py-0.5 uppercase rounded-sm mt-4",
+                                    isCompleted ? "bg-again/40" : "bg-easy/70",
+                                )}
+                            >
+                                {isCompleted ? "Completed" : "In progress"}
+                            </span>
                         </div>
-                        {creatorId === data?.user?.id ? <EditTeam team={{ creator, roles, creatorRole, id }} /> : null}
+                        {creatorId === data?.user?.id ? (
+                            <div>
+                                <EditTeam
+                                    team={{
+                                        creator,
+                                        name,
+                                        description,
+                                        roles,
+                                        createdAt,
+                                        creatorId,
+                                        githubRepo,
+                                        id,
+                                        isCompleted,
+                                        searchTerms,
+                                        updateAt,
+                                    }}
+                                />
+                                <DeleteTeam id={id} />
+                            </div>
+                        ) : null}
                     </div>
                 </div>
 

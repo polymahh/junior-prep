@@ -97,7 +97,7 @@ const TeamFiltersWrapper = ({
             </div>
             <div className="md:hidden ">
                 <Sheet>
-                    <SheetTrigger>
+                    <SheetTrigger asChild>
                         <Button variant="outline" className="rounded-sm gap-1 text-muted-foreground">
                             <SlidersHorizontal /> Filters
                         </Button>

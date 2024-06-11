@@ -2,7 +2,7 @@ import * as z from "zod"
 
 const alphanumericRegex = new RegExp(/^[A-z0-9\s]+$/i)
 const numberRegex = new RegExp(/^\d+$/)
-const RoleName = z.enum(["FRONTEND", "BACKEND", "DESIGN", "SENIOR"])
+const RoleName = z.enum(["FRONTEND", "BACKEND", "DESIGN", "FULLSTACK"])
 
 export const teamSchema = z.object({
     name: z
@@ -12,7 +12,6 @@ export const teamSchema = z.object({
         .max(50, { message: "Username must be less than 50 characters" }),
     description: z.string(),
     repo: z.string().url({ message: "Invalid Url" }),
-    creatorRole: RoleName.optional(),
     roles: z
         .array(
             z
@@ -39,6 +38,7 @@ export const teamSchema = z.object({
         .nonempty({
             message: "You have to select at least one role.",
         }),
+    isCompleted: z.boolean().optional(),
 })
 
 export const updateTeam = z.object({

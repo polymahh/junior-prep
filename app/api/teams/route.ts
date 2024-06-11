@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
         const body = await req.json()
-        const { name, description, repo, roles, creatorRole } = teamSchema.parse(body)
+        const { name, description, repo, roles } = teamSchema.parse(body)
 
         const search_terms = `${name}|${roles.map(role => `${role.roleName}|${role.stack}`).join("|")}|${
             token.username
@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
         const team = await db.team.create({
             data: {
                 creatorId: token?.id!,
-                creatorRole: creatorRole,
                 searchTerms: search_terms,
                 name,
                 description,
