@@ -262,33 +262,7 @@ function CreateTeamForm({
                         </div>
                     )
                 })}
-                {/* <FormField
-                    control={form.control}
-                    name="creatorRole"
-                    render={({ field }) => (
-                        <FormItem className="w-full">
-                            <FormLabel className="text-lg">Your Role</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select a Role" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <FormDescription className="w-full">choose your role as a team member</FormDescription>
-                                <SelectContent>
-                                    {form
-                                        .getValues("roles")
-                                        .filter(r => r.active)
-                                        .map(role => (
-                                            <SelectItem key={role.roleName} value={role.roleName}>
-                                                {role.roleName}
-                                            </SelectItem>
-                                        ))}
-                                </SelectContent>
-                            </Select>
-                        </FormItem>
-                    )}
-                /> */}
+
                 <Button type="submit" className="self-center" isLoading={isPending}>
                     {!team ? "Create Team" : "Edit Team"}
                 </Button>

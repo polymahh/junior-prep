@@ -130,7 +130,6 @@ model Role {
   team      Team       @relation(fields: [teamId], references: [id], onDelete: Cascade)
   UserRole  UserRole[]
   Request   Request[]
-  Course    Course[]
 
   @@unique([roleName, teamId])
   @@index([teamId])
@@ -206,15 +205,14 @@ model Language {
 
 model Course {
   id             String           @id @default(cuid())
-  userId         String
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  roleId         String
-  role           Role             @relation(fields: [roleId], references: [id])
-  isAccepted     DateTime
+  isPromotion    Boolean          @default(false)
   createdAt      DateTime         @default(now())
   updateAt       DateTime         @updatedAt
+  like_count     Int
   LanguageCourse LanguageCourse[]
   Interaction    Interaction[]
+  User           User?            @relation(fields: [userId], references: [id])
+  userId         String?
 }
 
 model LanguageCourse {
@@ -231,8 +229,6 @@ model Interaction {
   course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   visitorId String
   visitor   User     @relation(fields: [visitorId], references: [id], onDelete: Cascade)
-  liked     Boolean  @default(false)
-  playCount Int
   createdAt DateTime @default(now())
   updateAt  DateTime @updatedAt
 

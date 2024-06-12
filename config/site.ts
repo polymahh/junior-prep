@@ -27,20 +27,29 @@ export const siteConfig = {
 
     languageNav: [
         {
+            icon: "javascript",
             title: "javascript",
             href: "/dashboard/javascript",
         },
         {
+            icon: "react",
             title: "react",
             href: "/dashboard/react",
         },
         {
-            title: "html",
-            href: "/dashboard/html",
+            icon: "html_css",
+            title: "html/css",
+            href: "/dashboard/html_css",
         },
         {
-            title: "css",
-            href: "/dashboard/css",
+            icon: "ui_ux",
+            title: "ui/ux",
+            href: "/dashboard/ui_ux",
+        },
+        {
+            icon: "nodejs",
+            title: "nodejs",
+            href: "/dashboard/nodejs",
         },
     ],
 }

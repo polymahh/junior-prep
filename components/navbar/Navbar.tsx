@@ -40,7 +40,7 @@ function Navbar() {
             <MobileSidebar />
 
             <Icon className="h-6 w-6 hidden md:block" />
-            <h1 className="text-lg font-semibold flex-1 capitalize">{page}</h1>
+            <h1 className="text-lg font-semibold flex-1 capitalize">{page?.split("_").join("/")}</h1>
             <div className="ml-auto ">
                 <ProfileDropdown />
             </div>

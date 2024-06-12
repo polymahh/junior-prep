@@ -18,7 +18,7 @@ async function Login() {
             <div>
                 <OAuthButtons />
                 <div className="bg- p-2 rounded-sm text-sm text-muted-foreground my-4 max-w-[300px] text-center">
-                    <p>Connect With GitHub for a better experiance colaborating and creating projects </p>
+                    <p>Connect With GitHub for a better experience colaborating and creating projects </p>
                 </div>
             </div>
             {/* <LoginForm /> */}
