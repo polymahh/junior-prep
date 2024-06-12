@@ -3,6 +3,7 @@
 import { buttonVariants } from "../ui/button"
 import TeamCard from "./TeamCard"
 import TeamFilters from "./TeamFilters"
+import TeamFiltersWrapper from "./TeamFilters"
 import useDebounce from "@/hooks/useDebounce"
 import useScrollObserver from "@/hooks/useScrollObserver"
 import { teamsApi } from "@/lib/api/teamsApi"
@@ -49,7 +50,7 @@ function TeamList() {
     return (
         <div className="flex h-full flex-col gap-6 container px-0 sm:px-4 ">
             <div className=" flex justify-between pb-12 items-start gap-4">
-                <TeamFilters
+                <TeamFiltersWrapper
                     setDateSort={setDateSort}
                     setStatusSort={setStatusSort}
                     setSearch={setSearch}

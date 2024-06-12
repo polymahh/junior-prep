@@ -10,10 +10,9 @@ const Numbercard = ({ name, number }: { name: string; number: number }) => {
         <TooltipProvider>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    {/* <Button variant="outline"> */}
                     <div
                         className={cn(
-                            "h-6 w-6 rounded-md flex justify-center items-center text-white cursor-pointer",
+                            "h-6 min-w-[26px]  rounded-md flex justify-center items-center text-white cursor-pointer",
                             name === "again" && "bg-again",
                             name === "hard" && "bg-hard",
                             name === "good" && "bg-good",
@@ -22,9 +21,8 @@ const Numbercard = ({ name, number }: { name: string; number: number }) => {
                     >
                         {number}
                     </div>
-                    {/* </Button> */}
                 </TooltipTrigger>
-                <TooltipContent>{"Taged " + name}</TooltipContent>
+                <TooltipContent>{name}</TooltipContent>
             </Tooltip>
         </TooltipProvider>
     )
@@ -62,7 +60,6 @@ function LanguageInfo({ flashcards, activeFlashcard }: { flashcards: Flashcard[]
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            {/* <Button variant="outline"> */}
                             <span
                                 className={cn(
                                     "h-6 w-6 rounded-md text-white cursor-pointer ",

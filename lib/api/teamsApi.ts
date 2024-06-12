@@ -29,8 +29,7 @@ export const teamsApi = {
 
     getTeam: async (teamId: string) => {
         const response = await axios.get(`api/teams/${teamId}`)
-        const result = await response.data.team
-        return result
+        return response.data.team
     },
 
     newTeam: async (teamsDetails: teamType) => {
@@ -41,9 +40,14 @@ export const teamsApi = {
     updateTeam: async (teamsDetails: teamType, teamId: string) => {
         const response = await axios.put(`api/teams/${teamId}`, teamsDetails)
         const result = await response.data
+        console.log("🚀 ~ updateTeam: ~ teamsDetails:", teamsDetails)
         return result
     },
 
+    deleteTeam: async (teamId: string) => {
+        const response = await axios.delete(`api/teams/${teamId}`)
+        return response.data
+    },
     newTeamComment: async (teamId: string, commentDetails: newCommentType) => {
         const response = await axios.post(`api/teams/${teamId}/comment`, commentDetails)
         return await response.data

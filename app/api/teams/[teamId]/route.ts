@@ -59,6 +59,10 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
             return NextResponse.json({ message: "Missing Team Id" }, { status: 400 })
         }
 
+        const search_terms = `${name}|${roles.map(role => `${role.roleName}|${role.stack}`).join("|")}|${
+            token.username
+        }`.toLowerCase()
+
         const project = await db.team.update({
             where: {
                 id: teamId,
@@ -69,7 +73,7 @@ export async function PUT(req: NextRequest, { params }: { params: { teamId: stri
                 description,
                 githubRepo: repo,
                 isCompleted,
-
+                searchTerms: search_terms,
                 roles: {
                     upsert: roles.map((role: any) => ({
                         where: { roleName_teamId: { teamId, roleName: role.roleName } },
@@ -103,7 +107,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { teamId: s
     const token = await getToken({ req })
     if (!token) return NextResponse.json({ message: "Unauthorised" }, { status: 401 })
     try {
-        const { teamId } = params //TODO: validate query
+        const { teamId } = params
+        //TODO: check if user is restricted or banned
 
         if (!teamId) {
             return NextResponse.json(

@@ -11,7 +11,7 @@ const roleBadgeVariants = cva(
                 FRONTEND: "border-transparent bg-sky-500 text-white hover:bg-sky-500/80",
                 BACKEND: "border-transparent bg-fuchsia-700 text-white hover:bg-fuchsia-700/80",
                 DESIGN: "border-transparent bg-red-500 text-white hover:bg-red-500/80",
-                SENIOR: "border-transparent bg-yellow-500 text-white hover:bg-yellow-500/80",
+                FULLSTACK: "border-transparent bg-yellow-500 text-white hover:bg-yellow-500/80",
             },
         },
         defaultVariants: {

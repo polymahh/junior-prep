@@ -1,12 +1,22 @@
 import { Button } from "../ui/button"
 import { RoleBadge } from "../ui/role-badge"
+import { toast } from "../ui/use-toast"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { TeamCardType } from "@/types/global"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-import { Bookmark, LinkIcon, MessageSquareText, SquareArrowOutUpRight } from "lucide-react"
+import {
+    Bookmark,
+    Check,
+    CheckCheck,
+    ClipboardCopy,
+    LinkIcon,
+    MessageSquareText,
+    Share,
+    SquareArrowOutUpRight,
+} from "lucide-react"
 import { useRouter } from "next/navigation"
-import React, { forwardRef } from "react"
+import React, { forwardRef, useState } from "react"
 
 export const TeamCard = forwardRef<HTMLDivElement, TeamCardType>(
     ({ name, description, createdAt, isCompleted, roles, creator, id }, ref) => {
@@ -15,17 +25,38 @@ export const TeamCard = forwardRef<HTMLDivElement, TeamCardType>(
             {
                 name: "Comment",
                 icon: <MessageSquareText className="h-4" />,
-                // action: () => router.push(`/dashboard/teams/${id}#comment`)
+                action: (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    router.push(`/dashboard/teams/${id}#comment`)
+                },
             },
             {
-                name: "Bookmark",
-                icon: <Bookmark className=" h-4" />,
-                // action : () => window.b
+                name: "Copy Link",
+                icon: <ClipboardCopy className=" h-4" />,
+                action: (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    navigator.clipboard.writeText(`${window.location.origin}/dashboard/teams/${id}`)
+                    toast({
+                        description: (
+                            <span className="flex text-sm text-easy items-center gap-1">
+                                Link Copied!
+                                <CheckCheck />
+                            </span>
+                        ),
+                    })
+                },
             },
             {
-                name: "share",
-                icon: <LinkIcon className="h-4" />,
-                // action: () => Clipboard.writeText(window.location.href),
+                name: "Share",
+                icon: <Share className="h-4" />,
+                action: (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    navigator.share({
+                        title: name,
+                        text: description,
+                        url: `${window.location.origin}/dashboard/teams/${id}`,
+                    })
+                },
             },
         ]
         return (
@@ -91,13 +122,13 @@ export const TeamCard = forwardRef<HTMLDivElement, TeamCardType>(
                             {new Date(createdAt).toISOString().split("T")[0]}
                         </span>
                         <div className="flex items-baseline gap-1">
-                            {actions.map((action, index) => {
+                            {actions.map(action => {
                                 return (
-                                    <TooltipProvider key={index} delayDuration={100}>
+                                    <TooltipProvider key={action.name} delayDuration={100}>
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <Button
-                                                    key={action.name}
+                                                    onClick={action.action}
                                                     variant={"ghost"}
                                                     size={"icon"}
                                                     className="h-8 px-1 rounded-sm"

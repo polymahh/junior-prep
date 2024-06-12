@@ -1,12 +1,12 @@
 import LanguageFlashcards from "@/components/flashcards/language_flashcards"
 
-const React = () => {
+const HtmlCss = async () => {
     return (
-        <div className=" w-full p-0 sm:p-4 sm:pt-0 h-full flex flex-col gap-4  ">
+        <div className=" w-full p-2 md:p-4 h-full flex flex-col gap-4  ">
             <div className="grow flex flex-col w-full  ">
-                <LanguageFlashcards language="react" />
+                <LanguageFlashcards language="html_css" />
             </div>
         </div>
     )
 }
-export default React
+export default HtmlCss

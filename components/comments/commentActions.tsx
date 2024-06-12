@@ -15,7 +15,7 @@ import { teamsApi } from "@/lib/api/teamsApi"
 import { CommentType } from "@/types/global"
 import { CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { useMutation } from "@tanstack/react-query"
-import { Ellipsis } from "lucide-react"
+import { ChevronDown, ChevronLeft, ChevronRight, Ellipsis } from "lucide-react"
 
 const CommentActions = ({ teamId, commentId }: { teamId: string; commentId: string }) => {
     const { mutateAsync: deleteMutate, isPending: isDeleting } = useMutation({
@@ -30,9 +30,9 @@ const CommentActions = ({ teamId, commentId }: { teamId: string; commentId: stri
         <Dialog>
             <DropdownMenu>
                 <DropdownMenuTrigger className="flex items-center">
-                    <Ellipsis size={20} />
+                    <ChevronDown size={16} />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent side="right">
+                <DropdownMenuContent side="bottom">
                     <DropdownMenuItem>
                         <CollapsibleTrigger>Edit comment</CollapsibleTrigger>
                     </DropdownMenuItem>

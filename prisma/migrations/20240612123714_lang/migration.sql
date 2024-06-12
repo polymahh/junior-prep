@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "roleName" AS ENUM ('FRONTEND', 'BACKEND', 'DESIGN', 'SENIOR');
+CREATE TYPE "roleName" AS ENUM ('FRONTEND', 'BACKEND', 'DESIGN', 'FULLSTACK');
 
 -- CreateEnum
 CREATE TYPE "provider" AS ENUM ('LOCAL', 'github');
@@ -53,27 +53,13 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "Project" (
-    "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
-    "description" TEXT NOT NULL,
-    "githubRepo" TEXT NOT NULL,
-    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updateAt" TIMESTAMP(3) NOT NULL,
-    "teamId" TEXT NOT NULL,
-
-    CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "comment" (
     "id" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
     "userId" TEXT NOT NULL,
-    "ProjectId" TEXT NOT NULL,
+    "TeamId" TEXT NOT NULL,
     "parentId" TEXT,
 
     CONSTRAINT "comment_pkey" PRIMARY KEY ("id")
@@ -82,8 +68,14 @@ CREATE TABLE "comment" (
 -- CreateTable
 CREATE TABLE "Team" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "creatorId" TEXT,
-    "creatorRole" "roleName",
+    "isCompleted" BOOLEAN NOT NULL DEFAULT false,
+    "description" TEXT NOT NULL,
+    "githubRepo" TEXT NOT NULL,
+    "searchTerms" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updateAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
 );
@@ -163,11 +155,11 @@ CREATE TABLE "Language" (
 -- CreateTable
 CREATE TABLE "Course" (
     "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "roleId" TEXT NOT NULL,
-    "isAccepted" TIMESTAMP(3) NOT NULL,
+    "isPromotion" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL,
+    "like_count" INTEGER NOT NULL,
+    "userId" TEXT,
 
     CONSTRAINT "Course_pkey" PRIMARY KEY ("id")
 );
@@ -182,8 +174,6 @@ CREATE TABLE "LanguageCourse" (
 CREATE TABLE "Interaction" (
     "courseId" TEXT NOT NULL,
     "visitorId" TEXT NOT NULL,
-    "liked" BOOLEAN NOT NULL DEFAULT false,
-    "playCount" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updateAt" TIMESTAMP(3) NOT NULL
 );
@@ -217,13 +207,7 @@ CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
 CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Project_teamId_key" ON "Project"("teamId");
-
--- CreateIndex
-CREATE INDEX "Project_teamId_idx" ON "Project"("teamId");
-
--- CreateIndex
-CREATE INDEX "comment_ProjectId_idx" ON "comment"("ProjectId");
+CREATE INDEX "comment_TeamId_idx" ON "comment"("TeamId");
 
 -- CreateIndex
 CREATE INDEX "Team_id_idx" ON "Team"("id");
@@ -268,13 +252,10 @@ ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId"
 ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "comment" ADD CONSTRAINT "comment_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "comment" ADD CONSTRAINT "comment_ProjectId_fkey" FOREIGN KEY ("ProjectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "comment" ADD CONSTRAINT "comment_TeamId_fkey" FOREIGN KEY ("TeamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comment" ADD CONSTRAINT "comment_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "comment"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -313,10 +294,7 @@ ALTER TABLE "UserAnswer" ADD CONSTRAINT "UserAnswer_languageName_fkey" FOREIGN K
 ALTER TABLE "Flashcard" ADD CONSTRAINT "Flashcard_languageName_fkey" FOREIGN KEY ("languageName") REFERENCES "Language"("languageName") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Course" ADD CONSTRAINT "Course_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Course" ADD CONSTRAINT "Course_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "LanguageCourse" ADD CONSTRAINT "LanguageCourse_languageName_fkey" FOREIGN KEY ("languageName") REFERENCES "Language"("languageName") ON DELETE CASCADE ON UPDATE CASCADE;

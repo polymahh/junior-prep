@@ -49,7 +49,7 @@ export function SideBar({ setOpen }: { setOpen?: React.Dispatch<React.SetStateAc
                     <div className="relative flex flex-col gap-3 pl-6">
                         <div className="absolute -top-2 left-4 h-full border-l border-dashed" />
                         {siteConfig.languageNav.map(link => {
-                            const Icon = Icons[link.title as keyof typeof Icons]
+                            const Icon = Icons[link.icon as keyof typeof Icons]
                             return (
                                 <Button
                                     key={link.title}
