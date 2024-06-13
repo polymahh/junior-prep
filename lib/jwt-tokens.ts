@@ -1,4 +1,4 @@
-import { User } from "@/types/user"
+import { User } from "@prisma/client"
 import { JWTPayload, SignJWT, jwtVerify } from "jose"
 
 async function generateAccessToken(user: User): Promise<string> {

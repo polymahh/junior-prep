@@ -15,7 +15,7 @@ import { teamsApi } from "@/lib/api/teamsApi"
 import { CommentType } from "@/types/global"
 import { CollapsibleTrigger } from "@radix-ui/react-collapsible"
 import { useMutation } from "@tanstack/react-query"
-import { ChevronDown, ChevronLeft, ChevronRight, Ellipsis } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 
 const CommentActions = ({ teamId, commentId }: { teamId: string; commentId: string }) => {
     const { mutateAsync: deleteMutate, isPending: isDeleting } = useMutation({

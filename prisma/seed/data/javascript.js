@@ -3,14 +3,15 @@ export const data = {
     questions: [
         {
             id: 1,
-            question: "Explain the difference between 'undefined' and 'undeclared' variables in JavaScript.",
-            answer: "'Undefined' variables are those that have been declared but not assigned a value or have been explicitly set to undefined. 'Undeclared' variables, on the other hand, are those that have not been declared at all and result in a ReferenceError when accessed.",
+            question: "What is JavaScript?",
+            answer: "JavaScript is a high-level, interpreted programming language primarily used for creating interactive webpages.",
         },
         {
             id: 2,
-            question: "What is a closure in JavaScript, and how does it work?",
-            answer: "A closure is a function that has access to its outer function's scope even after the outer function has finished executing. Closures are created when a function is defined within another function and has access to the outer function's variables.",
+            question: "What are the data types in JavaScript?",
+            answer: "JavaScript has six primitive data types: string, number, boolean, null, undefined, and symbol, along with the object type.",
         },
+
         {
             id: 3,
             question: "Explain the concept of hoisting in JavaScript.",
@@ -33,8 +34,8 @@ export const data = {
         },
         {
             id: 7,
-            question: "Explain the concept of prototypal inheritance in JavaScript.",
-            answer: "Prototypal inheritance is a mechanism in JavaScript where objects can inherit properties and methods from other objects (prototypes). Each object has a prototype chain that links it to a series of prototypes, allowing it to access properties and methods defined on those prototypes.",
+            question: "What is a closure in JavaScript, and how does it work?",
+            answer: "A closure is a function that has access to its outer function's scope even after the outer function has finished executing. Closures are created when a function is defined within another function and has access to the outer function's variables.",
         },
         {
             id: 8,
@@ -103,8 +104,8 @@ export const data = {
         },
         {
             id: 21,
-            question: "Explain the concept of the prototype chain in JavaScript inheritance.",
-            answer: "The prototype chain is a mechanism in JavaScript that allows objects to inherit properties and methods from other objects (prototypes). Each object has a prototype property that links it to its prototype object, forming a chain of prototypes.",
+            question: "What is the purpose of the 'Object.freeze()' method in JavaScript?",
+            answer: "The 'Object.freeze()' method in JavaScript is used to freeze an object, preventing new properties from being added, existing properties from being removed or modified, and the prototype from being modified. It provides a way to create immutable objects.",
         },
         {
             id: 22,
@@ -128,13 +129,13 @@ export const data = {
         },
         {
             id: 26,
-            question: "What is the purpose of the 'Object.create()' method in JavaScript?",
-            answer: "The 'Object.create()' method in JavaScript is used to create a new object with the specified prototype object and properties. It provides a way to create objects with specific prototype chains and inheritance hierarchies.",
+            question: "Explain the concept of callback functions in JavaScript.",
+            answer: "Callback functions in JavaScript are functions that are passed as arguments to other functions and executed after a specific event or action occurs. They are commonly used in asynchronous programming to handle the result of an asynchronous operation.",
         },
         {
             id: 27,
-            question: "Explain the concept of the event loop in JavaScript.",
-            answer: "The event loop is a fundamental concept in JavaScript that handles asynchronous operations by continuously checking the call stack and message queue. It ensures that asynchronous tasks are executed in the order they were queued and that the main thread remains responsive.",
+            question: "Explain the concept of currying in JavaScript.",
+            answer: "Currying is a functional programming technique in JavaScript where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It enables partial application of functions and enhances code reusability.",
         },
         {
             id: 28,
@@ -148,358 +149,19 @@ export const data = {
         },
         {
             id: 30,
-            question: "What is the purpose of the 'Object.freeze()' method in JavaScript?",
-            answer: "The 'Object.freeze()' method in JavaScript is used to freeze an object, preventing new properties from being added, existing properties from being removed or modified, and the prototype from being modified. It provides a way to create immutable objects.",
+            question: "Explain the concept of prototypal inheritance in JavaScript.",
+            answer: "Prototypal inheritance is a mechanism in JavaScript where objects can inherit properties and methods from other objects (prototypes). Each object has a prototype chain that links it to a series of prototypes, allowing it to access properties and methods defined on those prototypes.",
         },
         {
             id: 31,
-            question: "Explain the concept of currying in JavaScript.",
-            answer: "Currying is a functional programming technique in JavaScript where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It enables partial application of functions and enhances code reusability.",
+            question: "How do you handle errors in JavaScript?",
+            answer: "Errors in JavaScript can be handled using try-catch blocks, where code that might throw an exception is placed in the try block and handled in the catch block.",
         },
+
         {
             id: 32,
-            question: "What are the differences between 'var', 'let', and 'const' in JavaScript?",
-            answer: "'var' is function-scoped and can be redeclared and reassigned. 'let' and 'const' are block-scoped and cannot be redeclared within the same scope. 'let' variables can be reassigned, while 'const' variables are read-only and cannot be reassigned once declared.",
-        },
-        {
-            id: 33,
-            question: "Explain the concept of promises in JavaScript.",
-            answer: "Promises in JavaScript are objects representing the eventual completion or failure of an asynchronous operation. They provide a way to handle asynchronous code more elegantly using chained then() methods to handle success and catch() method to handle errors.",
-        },
-        {
-            id: 34,
-            question: "What is object destructuring in JavaScript, and how does it work?",
-            answer: "Object destructuring in JavaScript allows developers to extract multiple properties from an object and assign them to variables in a single statement. It provides a convenient way to access and work with object properties.",
-        },
-        {
-            id: 35,
-            question: "Explain the concept of 'this' keyword in JavaScript.",
-            answer: "The 'this' keyword in JavaScript refers to the object that the function is bound to at runtime. Its value depends on how the function is called. In a global context, 'this' refers to the global object (e.g., window in a browser). In a method, 'this' refers to the object that owns the method. In a constructor, 'this' refers to the newly created object.",
-        },
-        {
-            id: 36,
-            question: "What is the difference between '===' and '==' in JavaScript?",
-            answer: "'===' is the strict equality operator in JavaScript, which checks for both value and type equality without type conversion. '==' is the equality operator, which performs type coercion if the operands are of different types before comparing their values.",
-        },
-        {
-            id: 37,
-            question: "Explain the concept of callback functions in JavaScript.",
-            answer: "Callback functions in JavaScript are functions that are passed as arguments to other functions and executed after a specific event or action occurs. They are commonly used in asynchronous programming to handle the result of an asynchronous operation.",
-        },
-        {
-            id: 38,
-            question: "What are closures in JavaScript, and how do they work?",
-            answer: "Closures in JavaScript are functions that have access to their outer function's scope even after the outer function has finished executing. They are created when a function is defined within another function and have access to the outer function's variables.",
-        },
-        {
-            id: 39,
-            question: "Explain the concept of arrow functions in JavaScript.",
-            answer: "Arrow functions in JavaScript are a concise way to write anonymous functions. They have a shorter syntax compared to regular functions and do not have their own 'this' context, lexically inheriting 'this' from the surrounding code.",
-        },
-        {
-            id: 40,
-            question: "What is the purpose of 'use strict' in JavaScript?",
-            answer: "'use strict' is a directive introduced in ECMAScript 5 that enables strict mode in JavaScript, which imposes stricter parsing and error handling rules. It helps catch common coding errors and prohibits certain unsafe or deprecated features, promoting safer and more optimized code.",
-        },
-        {
-            id: 41,
-            question: "Explain the concept of event bubbling and capturing in JavaScript.",
-            answer: "Event bubbling and capturing are two phases of event propagation in the DOM. During the bubbling phase, events are first captured at the target element and then bubbled up through its ancestors. During the capturing phase, events are captured at the outermost ancestor and then propagated down to the target element.",
-        },
-        {
-            id: 42,
-            question: "What are the different ways to create objects in JavaScript?",
-            answer: "Objects in JavaScript can be created using object literals, constructor functions with the 'new' keyword, Object.create() method, and ES6 class syntax.",
-        },
-        {
-            id: 43,
-            question: "Explain the concept of prototypal inheritance in JavaScript.",
-            answer: "Prototypal inheritance is a mechanism in JavaScript where objects can inherit properties and methods from other objects (prototypes). Each object has a prototype property that links it to a series of prototypes, allowing it to access properties and methods defined on those prototypes.",
-        },
-        {
-            id: 44,
-            question: "What are modules in JavaScript, and how do they work?",
-            answer: "Modules in JavaScript are reusable pieces of code that can be imported and exported between different files or modules. They help organize code, promote encapsulation, and facilitate code reuse and maintenance.",
-        },
-        {
-            id: 45,
-            question: "Explain the concept of higher-order functions in JavaScript.",
-            answer: "Higher-order functions in JavaScript are functions that can accept other functions as arguments or return functions as results. They enable functional programming paradigms such as map, filter, reduce, and provide flexibility and composability in code.",
-        },
-        {
-            id: 46,
-            question: "What is the purpose of the 'Object.keys()' method in JavaScript?",
-            answer: "The 'Object.keys()' method in JavaScript is used to return an array of a given object's own enumerable property names. It provides a convenient way to iterate over an object's properties.",
-        },
-        {
-            id: 47,
-            question: "Explain the concept of the event loop in JavaScript.",
-            answer: "The event loop is a fundamental concept in JavaScript that handles asynchronous operations by continuously checking the call stack and message queue. It ensures that asynchronous tasks are executed in the order they were queued and that the main thread remains responsive.",
-        },
-        {
-            id: 48,
-            question: "What are generators in JavaScript, and how do they work?",
-            answer: "Generators in JavaScript are special functions that can be paused and resumed, allowing for more flexible control flow and asynchronous programming. They are defined using the function* syntax and yield keyword.",
-        },
-        {
-            id: 49,
-            question: "Explain the concept of the 'async/await' syntax in JavaScript.",
-            answer: "The 'async/await' syntax in JavaScript provides a more readable and concise way to work with asynchronous code. It allows functions to pause execution until a promise is resolved, using the 'async' keyword to define asynchronous functions and 'await' keyword to pause execution.",
-        },
-        {
-            id: 50,
-            question: "What is the purpose of the 'Object.freeze()' method in JavaScript?",
-            answer: "The 'Object.freeze()' method in JavaScript is used to freeze an object, preventing new properties from being added, existing properties from being removed or modified, and the prototype from being modified. It provides a way to create immutable objects.",
-        },
-        {
-            id: 51,
-            question: "Explain the concept of currying in JavaScript.",
-            answer: "Currying is a functional programming technique in JavaScript where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It enables partial application of functions and enhances code reusability.",
-        },
-        {
-            id: 52,
-            question: "What are the differences between 'var', 'let', and 'const' in JavaScript?",
-            answer: "'var' is function-scoped and can be redeclared and reassigned. 'let' and 'const' are block-scoped and cannot be redeclared within the same scope. 'let' variables can be reassigned, while 'const' variables are read-only and cannot be reassigned once declared.",
-        },
-        {
-            id: 53,
-            question: "Explain the concept of promises in JavaScript.",
-            answer: "Promises in JavaScript are objects representing the eventual completion or failure of an asynchronous operation. They provide a way to handle asynchronous code more elegantly using chained then() methods to handle success and catch() method to handle errors.",
-        },
-        {
-            id: 54,
-            question: "What is object destructuring in JavaScript, and how does it work?",
-            answer: "Object destructuring in JavaScript allows developers to extract multiple properties from an object and assign them to variables in a single statement. It provides a convenient way to access and work with object properties.",
-        },
-        {
-            id: 55,
-            question: "Explain the concept of 'this' keyword in JavaScript.",
-            answer: "The 'this' keyword in JavaScript refers to the object that the function is bound to at runtime. Its value depends on how the function is called. In a global context, 'this' refers to the global object (e.g., window in a browser). In a method, 'this' refers to the object that owns the method. In a constructor, 'this' refers to the newly created object.",
-        },
-        {
-            id: 56,
-            question: "What is the difference between '===' and '==' in JavaScript?",
-            answer: "'===' is the strict equality operator in JavaScript, which checks for both value and type equality without type conversion. '==' is the equality operator, which performs type coercion if the operands are of different types before comparing their values.",
-        },
-        {
-            id: 57,
-            question: "Explain the concept of callback functions in JavaScript.",
-            answer: "Callback functions in JavaScript are functions that are passed as arguments to other functions and executed after a specific event or action occurs. They are commonly used in asynchronous programming to handle the result of an asynchronous operation.",
-        },
-        {
-            id: 58,
-            question: "What are closures in JavaScript, and how do they work?",
-            answer: "Closures in JavaScript are functions that have access to their outer function's scope even after the outer function has finished executing. They are created when a function is defined within another function and have access to the outer function's variables.",
-        },
-        {
-            id: 59,
-            question: "Explain the concept of arrow functions in JavaScript.",
-            answer: "Arrow functions in JavaScript are a concise way to write anonymous functions. They have a shorter syntax compared to regular functions and do not have their own 'this' context, lexically inheriting 'this' from the surrounding code.",
-        },
-        {
-            id: 60,
-            question: "What is the purpose of 'use strict' in JavaScript?",
-            answer: "'use strict' is a directive introduced in ECMAScript 5 that enables strict mode in JavaScript, which imposes stricter parsing and error handling rules. It helps catch common coding errors and prohibits certain unsafe or deprecated features, promoting safer and more optimized code.",
-        },
-        {
-            id: 61,
-            question: "Explain the concept of event bubbling and capturing in JavaScript.",
-            answer: "Event bubbling and capturing are two phases of event propagation in the DOM. During the bubbling phase, events are first captured at the target element and then bubbled up through its ancestors. During the capturing phase, events are captured at the outermost ancestor and then propagated down to the target element.",
-        },
-        {
-            id: 62,
-            question: "What are the different ways to create objects in JavaScript?",
-            answer: "Objects in JavaScript can be created using object literals, constructor functions with the 'new' keyword, Object.create() method, and ES6 class syntax.",
-        },
-        {
-            id: 63,
-            question: "Explain the concept of prototypal inheritance in JavaScript.",
-            answer: "Prototypal inheritance is a mechanism in JavaScript where objects can inherit properties and methods from other objects (prototypes). Each object has a prototype property that links it to a series of prototypes, allowing it to access properties and methods defined on those prototypes.",
-        },
-        {
-            id: 64,
-            question: "What are modules in JavaScript, and how do they work?",
-            answer: "Modules in JavaScript are reusable pieces of code that can be imported and exported between different files or modules. They help organize code, promote encapsulation, and facilitate code reuse and maintenance.",
-        },
-        {
-            id: 65,
-            question: "Explain the concept of higher-order functions in JavaScript.",
-            answer: "Higher-order functions in JavaScript are functions that can accept other functions as arguments or return functions as results. They enable functional programming paradigms such as map, filter, reduce, and provide flexibility and composability in code.",
-        },
-        {
-            id: 66,
-            question: "What is the purpose of the 'Object.keys()' method in JavaScript?",
-            answer: "The 'Object.keys()' method in JavaScript is used to return an array of a given object's own enumerable property names. It provides a convenient way to iterate over an object's properties.",
-        },
-        {
-            id: 67,
-            question: "Explain the concept of the event loop in JavaScript.",
-            answer: "The event loop is a fundamental concept in JavaScript that handles asynchronous operations by continuously checking the call stack and message queue. It ensures that asynchronous tasks are executed in the order they were queued and that the main thread remains responsive.",
-        },
-        {
-            id: 68,
-            question: "What are generators in JavaScript, and how do they work?",
-            answer: "Generators in JavaScript are special functions that can be paused and resumed, allowing for more flexible control flow and asynchronous programming. They are defined using the function* syntax and yield keyword.",
-        },
-        {
-            id: 69,
-            question: "Explain the concept of the 'async/await' syntax in JavaScript.",
-            answer: "The 'async/await' syntax in JavaScript provides a more readable and concise way to work with asynchronous code. It allows functions to pause execution until a promise is resolved, using the 'async' keyword to define asynchronous functions and 'await' keyword to pause execution.",
-        },
-        {
-            id: 70,
-            question: "What is the purpose of the 'Object.freeze()' method in JavaScript?",
-            answer: "The 'Object.freeze()' method in JavaScript is used to freeze an object, preventing new properties from being added, existing properties from being removed or modified, and the prototype from being modified. It provides a way to create immutable objects.",
-        },
-        {
-            id: 71,
-            question: "Explain the concept of currying in JavaScript.",
-            answer: "Currying is a functional programming technique in JavaScript where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It enables partial application of functions and enhances code reusability.",
-        },
-        {
-            id: 72,
-            question: "What are the differences between 'var', 'let', and 'const' in JavaScript?",
-            answer: "'var' is function-scoped and can be redeclared and reassigned. 'let' and 'const' are block-scoped and cannot be redeclared within the same scope. 'let' variables can be reassigned, while 'const' variables are read-only and cannot be reassigned once declared.",
-        },
-        {
-            id: 73,
-            question: "Explain the concept of promises in JavaScript.",
-            answer: "Promises in JavaScript are objects representing the eventual completion or failure of an asynchronous operation. They provide a way to handle asynchronous code more elegantly using chained then() methods to handle success and catch() method to handle errors.",
-        },
-        {
-            id: 74,
-            question: "What is object destructuring in JavaScript, and how does it work?",
-            answer: "Object destructuring in JavaScript allows developers to extract multiple properties from an object and assign them to variables in a single statement. It provides a convenient way to access and work with object properties.",
-        },
-        {
-            id: 75,
-            question: "Explain the concept of 'this' keyword in JavaScript.",
-            answer: "The 'this' keyword in JavaScript refers to the object that the function is bound to at runtime. Its value depends on how the function is called. In a global context, 'this' refers to the global object (e.g., window in a browser). In a method, 'this' refers to the object that owns the method. In a constructor, 'this' refers to the newly created object.",
-        },
-        {
-            id: 76,
-            question: "What is the difference between '===' and '==' in JavaScript?",
-            answer: "'===' is the strict equality operator in JavaScript, which checks for both value and type equality without type conversion. '==' is the equality operator, which performs type coercion if the operands are of different types before comparing their values.",
-        },
-        {
-            id: 77,
-            question: "Explain the concept of callback functions in JavaScript.",
-            answer: "Callback functions in JavaScript are functions that are passed as arguments to other functions and executed after a specific event or action occurs. They are commonly used in asynchronous programming to handle the result of an asynchronous operation.",
-        },
-        {
-            id: 78,
-            question: "What are closures in JavaScript, and how do they work?",
-            answer: "Closures in JavaScript are functions that have access to their outer function's scope even after the outer function has finished executing. They are created when a function is defined within another function and have access to the outer function's variables.",
-        },
-        {
-            id: 79,
-            question: "Explain the concept of arrow functions in JavaScript.",
-            answer: "Arrow functions in JavaScript are a concise way to write anonymous functions. They have a shorter syntax compared to regular functions and do not have their own 'this' context, lexically inheriting 'this' from the surrounding code.",
-        },
-        {
-            id: 80,
-            question: "What is the purpose of 'use strict' in JavaScript?",
-            answer: "'use strict' is a directive introduced in ECMAScript 5 that enables strict mode in JavaScript, which imposes stricter parsing and error handling rules. It helps catch common coding errors and prohibits certain unsafe or deprecated features, promoting safer and more optimized code.",
-        },
-        {
-            id: 81,
-            question: "Explain the concept of event bubbling and capturing in JavaScript.",
-            answer: "Event bubbling and capturing are two phases of event propagation in the DOM. During the bubbling phase, events are first captured at the target element and then bubbled up through its ancestors. During the capturing phase, events are captured at the outermost ancestor and then propagated down to the target element.",
-        },
-        {
-            id: 82,
-            question: "What are the different ways to create objects in JavaScript?",
-            answer: "Objects in JavaScript can be created using object literals, constructor functions with the 'new' keyword, Object.create() method, and ES6 class syntax.",
-        },
-        {
-            id: 83,
-            question: "Explain the concept of prototypal inheritance in JavaScript.",
-            answer: "Prototypal inheritance is a mechanism in JavaScript where objects can inherit properties and methods from other objects (prototypes). Each object has a prototype property that links it to a series of prototypes, allowing it to access properties and methods defined on those prototypes.",
-        },
-        {
-            id: 84,
-            question: "What are modules in JavaScript, and how do they work?",
-            answer: "Modules in JavaScript are reusable pieces of code that can be imported and exported between different files or modules. They help organize code, promote encapsulation, and facilitate code reuse and maintenance.",
-        },
-        {
-            id: 85,
-            question: "Explain the concept of higher-order functions in JavaScript.",
-            answer: "Higher-order functions in JavaScript are functions that can accept other functions as arguments or return functions as results. They enable functional programming paradigms such as map, filter, reduce, and provide flexibility and composability in code.",
-        },
-        {
-            id: 86,
-            question: "What is the purpose of the 'Object.keys()' method in JavaScript?",
-            answer: "The 'Object.keys()' method in JavaScript is used to return an array of a given object's own enumerable property names. It provides a convenient way to iterate over an object's properties.",
-        },
-        {
-            id: 87,
-            question: "Explain the concept of the event loop in JavaScript.",
-            answer: "The event loop is a fundamental concept in JavaScript that handles asynchronous operations by continuously checking the call stack and message queue. It ensures that asynchronous tasks are executed in the order they were queued and that the main thread remains responsive.",
-        },
-        {
-            id: 88,
-            question: "What are generators in JavaScript, and how do they work?",
-            answer: "Generators in JavaScript are special functions that can be paused and resumed, allowing for more flexible control flow and asynchronous programming. They are defined using the function* syntax and yield keyword.",
-        },
-        {
-            id: 89,
-            question: "Explain the concept of the 'async/await' syntax in JavaScript.",
-            answer: "The 'async/await' syntax in JavaScript provides a more readable and concise way to work with asynchronous code. It allows functions to pause execution until a promise is resolved, using the 'async' keyword to define asynchronous functions and 'await' keyword to pause execution.",
-        },
-        {
-            id: 90,
-            question: "What is the purpose of the 'Object.freeze()' method in JavaScript?",
-            answer: "The 'Object.freeze()' method in JavaScript is used to freeze an object, preventing new properties from being added, existing properties from being removed or modified, and the prototype from being modified. It provides a way to create immutable objects.",
-        },
-        {
-            id: 91,
-            question: "Explain the concept of currying in JavaScript.",
-            answer: "Currying is a functional programming technique in JavaScript where a function with multiple arguments is transformed into a sequence of functions, each taking a single argument. It enables partial application of functions and enhances code reusability.",
-        },
-        {
-            id: 92,
-            question: "What are the differences between 'var', 'let', and 'const' in JavaScript?",
-            answer: "'var' is function-scoped and can be redeclared and reassigned. 'let' and 'const' are block-scoped and cannot be redeclared within the same scope. 'let' variables can be reassigned, while 'const' variables are read-only and cannot be reassigned once declared.",
-        },
-        {
-            id: 93,
-            question: "Explain the concept of promises in JavaScript.",
-            answer: "Promises in JavaScript are objects representing the eventual completion or failure of an asynchronous operation. They provide a way to handle asynchronous code more elegantly using chained then() methods to handle success and catch() method to handle errors.",
-        },
-        {
-            id: 94,
-            question: "What is object destructuring in JavaScript, and how does it work?",
-            answer: "Object destructuring in JavaScript allows developers to extract multiple properties from an object and assign them to variables in a single statement. It provides a convenient way to access and work with object properties.",
-        },
-        {
-            id: 95,
-            question: "Explain the concept of 'this' keyword in JavaScript.",
-            answer: "The 'this' keyword in JavaScript refers to the object that the function is bound to at runtime. Its value depends on how the function is called. In a global context, 'this' refers to the global object (e.g., window in a browser). In a method, 'this' refers to the object that owns the method. In a constructor, 'this' refers to the newly created object.",
-        },
-        {
-            id: 96,
-            question: "What is the difference between '===' and '==' in JavaScript?",
-            answer: "'===' is the strict equality operator in JavaScript, which checks for both value and type equality without type conversion. '==' is the equality operator, which performs type coercion if the operands are of different types before comparing their values.",
-        },
-        {
-            id: 97,
-            question: "Explain the concept of callback functions in JavaScript.",
-            answer: "Callback functions in JavaScript are functions that are passed as arguments to other functions and executed after a specific event or action occurs. They are commonly used in asynchronous programming to handle the result of an asynchronous operation.",
-        },
-        {
-            id: 98,
-            question: "What are closures in JavaScript, and how do they work?",
-            answer: "Closures in JavaScript are functions that have access to their outer function's scope even after the outer function has finished executing. They are created when a function is defined within another function and have access to the outer function's variables.",
-        },
-        {
-            id: 99,
-            question: "Explain the concept of arrow functions in JavaScript.",
-            answer: "Arrow functions in JavaScript are a concise way to write anonymous functions. They have a shorter syntax compared to regular functions and do not have their own 'this' context, lexically inheriting 'this' from the surrounding code.",
-        },
-        {
-            id: 100,
-            question: "What is the purpose of 'use strict' in JavaScript?",
-            answer: "'use strict' is a directive introduced in ECMAScript 5 that enables strict mode in JavaScript, which imposes stricter parsing and error handling rules. It helps catch common coding errors and prohibits certain unsafe or deprecated features, promoting safer and more optimized code.",
+            question: "Explain the concept of lexical scoping in JavaScript.",
+            answer: "Lexical scoping means that the accessibility of variables is determined by their physical location within the source code, based on the placement of variable declarations within nested functions.",
         },
     ],
 }

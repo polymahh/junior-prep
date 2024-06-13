@@ -6,9 +6,9 @@ import Link from "next/link"
 
 export default function Home() {
     return (
-        <section className="container relative grid items-center justify-center gap-16 pt-10 pb-8 md:py-16">
-            <div className="absolute w-full h-screen bg-gradient-linear top-32 -z-10"></div>
-            <div className="flex max-w-[980px] flex-col items-center gap-6 text-center">
+        <section className="container  grid items-center justify-center gap-16 pt-10  md:py-16">
+            <div className="absolute w-full h-screen bg-gradient-linear top-32 left-0 -z-10"></div>
+            <div className="flex mx-auto max-w-[980px] flex-col items-center gap-6  text-center">
                 <h1 className="text-4xl font-extrabold leading-tight tracking-tighter sm:text-5xl md:text-7xl">
                     Ace Your Interviews with{" "}
                     <span className="relative whitespace-nowrap">
@@ -41,7 +41,7 @@ export default function Home() {
                 <Icons.trophy className="absolute w-40 -right-28 top-2/3" />
             </div>
             <div className="flex flex-col items-center gap-6 py-12 ">
-                <p className="text-2xl font-semibold ">To collaborate or Contribute</p>
+                <p className="text-2xl font-semibold text-center">To collaborate or Contribute</p>
                 <div className="flex gap-6">
                     <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
                         <div

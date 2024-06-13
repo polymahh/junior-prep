@@ -29,7 +29,7 @@ function CoursesList() {
     ]
     return (
         <div className="relative rounded-lg border p-4 flex flex-col  h-full">
-            <div className="absolute top-0 left-0 h-full bg-black/75 rounded-lg w-full flex justify-center items-center">
+            <div className="absolute top-0 left-0 h-full bg-background/80 rounded-lg w-full flex justify-center items-center cursor-not-allowed">
                 <span className="font-bold text-3xl ">Coming soon ...</span>
             </div>
             <div className="rounded-sm border-b p-1">

@@ -40,7 +40,6 @@ export const teamsApi = {
     updateTeam: async (teamsDetails: teamType, teamId: string) => {
         const response = await axios.put(`api/teams/${teamId}`, teamsDetails)
         const result = await response.data
-        console.log("🚀 ~ updateTeam: ~ teamsDetails:", teamsDetails)
         return result
     },
 

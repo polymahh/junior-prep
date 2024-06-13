@@ -2,7 +2,6 @@
 
 import { buttonVariants } from "../ui/button"
 import TeamCard from "./TeamCard"
-import TeamFilters from "./TeamFilters"
 import TeamFiltersWrapper from "./TeamFilters"
 import useDebounce from "@/hooks/useDebounce"
 import useScrollObserver from "@/hooks/useScrollObserver"

@@ -5,18 +5,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { cn } from "@/lib/utils"
 import { TeamCardType } from "@/types/global"
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
-import {
-    Bookmark,
-    Check,
-    CheckCheck,
-    ClipboardCopy,
-    LinkIcon,
-    MessageSquareText,
-    Share,
-    SquareArrowOutUpRight,
-} from "lucide-react"
+import { CheckCheck, ClipboardCopy, MessageSquareText, Share, SquareArrowOutUpRight } from "lucide-react"
 import { useRouter } from "next/navigation"
-import React, { forwardRef, useState } from "react"
+import React, { forwardRef } from "react"
 
 export const TeamCard = forwardRef<HTMLDivElement, TeamCardType>(
     ({ name, description, createdAt, isCompleted, roles, creator, id }, ref) => {
