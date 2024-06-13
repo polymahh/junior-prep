@@ -4,11 +4,12 @@ import React, { ReactNode } from "react"
 
 function PublicLayout({ children }: { children: ReactNode }) {
     return (
-        <>
+        <section className="flex flex-col justify-between min-h-screen">
             <SiteHeader />
-            <div className="flex-1">{children}</div>
+            <div className=" overflow-x-hidden grow ">{children}</div>
+
             <SiteFooter />
-        </>
+        </section>
     )
 }
 

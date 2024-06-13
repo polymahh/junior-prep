@@ -10,7 +10,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "../ui/alert-dialog"
-import { Button, buttonVariants } from "../ui/button"
+import { Button } from "../ui/button"
 import { toast } from "../ui/use-toast"
 import { teamsApi } from "@/lib/api/teamsApi"
 import { useMutation } from "@tanstack/react-query"

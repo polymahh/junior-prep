@@ -11,3 +11,15 @@ export interface TeamCardType extends Team {
     roles: Role[]
     creator: User
 }
+
+export interface NavItem {
+    title: string
+    href?: string
+    disabled?: boolean
+    external?: boolean
+}
+
+export interface Token {
+    id: string
+    email: string
+}
