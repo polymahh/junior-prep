@@ -20,7 +20,7 @@ export const siteConfig = {
         },
     ],
     links: {
-        discord: "https://discord.gg/4jfGJENm",
+        discord: "https://discord.gg/uYHYYMvrAd",
         github: "https://github.com/polymahh/junior-prep",
         login: "/login",
         register: "/register",
