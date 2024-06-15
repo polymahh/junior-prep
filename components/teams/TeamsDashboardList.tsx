@@ -17,7 +17,7 @@ function TeamDashboardList() {
                 search: "",
                 statusSort: undefined,
                 dateSort: undefined,
-                limit: "5",
+                limit: "4",
                 length: "0",
             }),
     })
@@ -25,7 +25,7 @@ function TeamDashboardList() {
     return (
         <div className="flex h-full flex-col gap-6 border p-4 rounded-lg">
             <div className=" flex justify-between  pb-1">
-                <span className="text-lg font-semibold">Teams:</span>
+                <span className="text-lg font-semibold">Latest Teams:</span>
                 <Link
                     className={buttonVariants({
                         variant: "link",

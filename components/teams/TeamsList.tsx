@@ -18,7 +18,7 @@ function TeamList() {
     const [dateSort, setDateSort] = useState(undefined)
     const [statusSort, setStatusSort] = useState(undefined)
     const limit = "10"
-    const debounceValue = useDebounce(search, 9000)
+    const debounceValue = useDebounce(search, 1000)
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
         queryKey: ["teams", { debounceValue, statusSort, dateSort }],
