@@ -1,8 +1,10 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-    name: "Next.js",
-    description: "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    name: "Junior-Prep",
+    description:
+        "An open-source project for junior web developers to practice interview questions, record your progress and find teams to collaborate with",
+    url: "https://junior-prep.com",
     sidebarNav: [
         {
             title: "dashboard",

@@ -75,7 +75,7 @@ function CreateTeamForm({
 
     form.watch("roles")
 
-    const { mutateAsync, isPending } = useMutation({
+    const { mutateAsync, isPending, isSuccess } = useMutation({
         mutationFn: async (values: any) => {
             const data = !team ? await teamsApi.newTeam(values) : await teamsApi.updateTeam(values, team.id)
             return data
@@ -114,9 +114,8 @@ function CreateTeamForm({
                         setOpen(false)
                         queryClient.invalidateQueries({ queryKey: ["teams", `${team.id}`] })
                     }
-
-                    queryClient.invalidateQueries({ queryKey: ["teams"] })
                 }
+                queryClient.invalidateQueries({ queryKey: ["teams"] })
             },
             onError: err => {
                 console.log("toast errr", err)
@@ -223,7 +222,6 @@ function CreateTeamForm({
                                                 <Checkbox
                                                     checked={field.value}
                                                     onCheckedChange={(checked: boolean) => {
-                                                        console.log("🚀 ~ {defaultRoles.map ~ checked:", checked)
                                                         form.setValue(`roles.${idx}.active`, checked)
                                                     }}
                                                 />
@@ -262,7 +260,7 @@ function CreateTeamForm({
                     )
                 })}
 
-                <Button type="submit" className="self-center" isLoading={isPending}>
+                <Button type="submit" className="self-center" isLoading={isPending || isSuccess}>
                     {!team ? "Create Team" : "Edit Team"}
                 </Button>
             </form>

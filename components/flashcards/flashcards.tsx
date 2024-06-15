@@ -105,7 +105,6 @@ function Flashcards({
                     queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
                     queryClient.invalidateQueries({
                         queryKey: ["seven_days_activity"],
-                        refetchType: "active",
                     })
                 },
                 onError: () => {
