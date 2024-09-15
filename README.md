@@ -17,11 +17,7 @@ junior-prep is a website for junior web developers to practice interview questio
 ## Features
 
 -   practice interview questions
-(The aim of these questions / answers is not to be perfectly accurate word for word.)
-    -   anki like system to study
-    -   relevant and updated questions
-    -   track your daily progress
-
+    (The aim of these questions / answers is not to be perfectly accurate word for word.) - anki like system to study - relevant and updated questions (please contribute if you can) - track your daily progress
 
 -   Find Teams collaborating on portfolio worthy projects
     -   learn how to collaborate with a team
@@ -34,10 +30,9 @@ junior-prep is a website for junior web developers to practice interview questio
 ## How can I contribute?
 
 -   you can report issues in our website here [issues](https://github.com/polymahh/junior-prep/issues)
--   you can suggest new questions/answers in our [discord](https://discord.gg/uYHYYMvrAd) 
+-   you can suggest new questions/answers in our [discord](https://discord.gg/uYHYYMvrAd)
     or as an [issue](https://github.com/polymahh/junior-prep/issues/new)
     start your issue's title with (card suggestion)
-
 
 ## License
 
