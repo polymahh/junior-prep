@@ -1,3 +1,5 @@
+"use client"
+
 import { Icons } from "../icons"
 import { RoleBadge } from "../ui/role-badge"
 import EditTeam from "./EditTeam"
@@ -8,7 +10,7 @@ import { TeamCardType } from "@/types/global"
 import { ExternalLink } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
-import React from "react"
+import React, { useEffect } from "react"
 
 function ProjectInfo({
     creator,
@@ -24,6 +26,7 @@ function ProjectInfo({
     updateAt,
 }: TeamCardType) {
     const { data } = useSession()
+
     return (
         <div className=" flex h-full flex-col rounded-lg p-2 ">
             {/* creator info */}

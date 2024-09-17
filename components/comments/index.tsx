@@ -1,3 +1,5 @@
+"use client"
+
 import Comment from "./comment"
 import CommentInput from "./commentInput"
 import { CommentType } from "@/types/global"

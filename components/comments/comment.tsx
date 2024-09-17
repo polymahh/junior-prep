@@ -64,26 +64,28 @@ const Comment = ({ comment, style, teamId }: { comment: CommentType; style?: CSS
                         </div>
                     </div>
                 )}
-                <Collapsible onOpenChange={(open: boolean) => setIsReplyInputOpen(open)} open={isReplyInputOpen}>
-                    <CollapsibleTrigger asChild>
-                        <span className="ml-14 text-sm hover:underline cursor-pointer">Reply</span>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent className="mt-4 space-y-4">
-                        <div className="flex items-start gap-4">
-                            <Avatar className="shrink-0">
-                                <AvatarImage alt="@shadcn" src={comment.user.image || ""} />
-                                <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
-                            </Avatar>
-                            <CommentInput
-                                type="reply"
-                                teamId={teamId}
-                                currentCommentId={comment.id as string}
-                                content={comment.content}
-                                closeInput={handleReplyInputClose}
-                            />
-                        </div>
-                    </CollapsibleContent>
-                </Collapsible>
+                {!isUpdateInputOpen && (
+                    <Collapsible onOpenChange={(open: boolean) => setIsReplyInputOpen(open)} open={isReplyInputOpen}>
+                        <CollapsibleTrigger asChild>
+                            <span className="ml-14 text-sm hover:underline cursor-pointer">Reply</span>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-4 space-y-4">
+                            <div className="flex items-start gap-4">
+                                <Avatar className="shrink-0 ">
+                                    <AvatarImage alt="@shadcn" src={data?.user.image || ""} />
+                                    <AvatarFallback>{comment.user.username?.slice(0, 2).toUpperCase()}</AvatarFallback>
+                                </Avatar>
+                                <CommentInput
+                                    type="reply"
+                                    teamId={teamId}
+                                    currentCommentId={comment.id as string}
+                                    content={comment.content}
+                                    closeInput={handleReplyInputClose}
+                                />
+                            </div>
+                        </CollapsibleContent>
+                    </Collapsible>
+                )}
             </div>
         </div>
     )
