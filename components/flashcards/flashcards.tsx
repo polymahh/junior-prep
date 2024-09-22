@@ -28,7 +28,7 @@ function Flashcards({
     const [current, setCurrent] = useState(0)
 
     const { mutate } = useMutation({
-        mutationKey: ["javascript_flashcards"],
+        mutationKey: [`${language}_flashcards`],
         mutationFn: async (answer: userAnswerType) => {
             const data = await flashcardsApi.sendAnswer(answer)
             return data
@@ -102,7 +102,7 @@ function Flashcards({
             },
             {
                 onSuccess: () => {
-                    queryClient.setQueryData(["javascript_flashcards"], () => newFlashcards)
+                    queryClient.setQueryData([`${language}_flashcards`], () => newFlashcards)
                     queryClient.invalidateQueries({
                         queryKey: ["seven_days_activity"],
                     })
@@ -123,10 +123,10 @@ function Flashcards({
 
     return (
         <div className="grow relative z-10 rounded-xl pt-8  group flex flex-col  justify-start items-center  ">
-            <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] pt-4 pb-4 px-2 xs:px-4 lg:px-12 gap-6 overflow-hidden">
+            <div className="relative flex flex-col justify-between mx-auto border rounded-xl h-full max-h-[600px] w-full max-w-[800px] py-4 px-2 xs:px-4 lg:px-12 gap-6 overflow-hidden">
                 <div className="text-sm text-muted-foreground top-4 right-4 flex flex-col-reverse items-start justify-between sm:flex-row sm:items-center gap-1  w-full ">
                     <div>
-                        <LanguageInfo flashcards={flashcards} activeFlashcard={activeFlashcard} />
+                        <LanguageInfo flashcards={flashcards} activeFlashcard={activeFlashcard} language={language} />
                     </div>
                     <Timer />
                 </div>

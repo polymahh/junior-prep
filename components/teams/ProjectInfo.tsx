@@ -10,7 +10,7 @@ import { TeamCardType } from "@/types/global"
 import { ExternalLink } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 function ProjectInfo({
     creator,
@@ -25,7 +25,14 @@ function ProjectInfo({
     searchTerms,
     updateAt,
 }: TeamCardType) {
+    const [canEdit, setCanEdit] = useState(false)
     const { data } = useSession()
+
+    useEffect(() => {
+        if (data?.user?.id === creatorId) {
+            setCanEdit(true)
+        }
+    }, [data?.user?.id, creatorId])
 
     return (
         <div className=" flex h-full flex-col rounded-lg p-2 ">
@@ -73,7 +80,7 @@ function ProjectInfo({
                                 {isCompleted ? "Completed" : "In progress"}
                             </span>
                         </div>
-                        {creatorId === data?.user?.id ? (
+                        {canEdit ? (
                             <div>
                                 <EditTeam
                                     team={{

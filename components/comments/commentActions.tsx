@@ -22,7 +22,7 @@ const CommentActions = ({ teamId, commentId }: { teamId: string; commentId: stri
         mutationFn: async () => await teamsApi.deleteTeamComment(teamId, commentId),
         onSuccess: () =>
             queryClient.setQueryData(["comments", teamId], (comments: CommentType[]) => {
-                return comments.filter(comment => comment.id !== commentId)
+                return [...comments.filter(comment => comment.id !== commentId)]
             }),
     })
 

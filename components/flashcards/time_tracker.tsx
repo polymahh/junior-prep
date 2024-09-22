@@ -17,16 +17,16 @@ export const Timer = () => {
     })
 
     useEffect(() => {
+        console.log("🚀 ~ useEffect ~ previousTime:", data)
         const storage_Time = localStorage.getItem("timeSpent")?.split(",")
+        const serverDate = data?.updatedAt.split("T")[0]
         if (isSuccess) {
             if (storage_Time && data?.time) {
                 const previousTime = parseInt(storage_Time[1])
                 const previousDate = storage_Time[0]
-                if (previousTime && previousDate === today) {
-                    setTime(data?.time > previousTime ? data?.time : previousTime)
-                } else {
-                    setTime(data?.time)
-                }
+                if (parseInt(data?.time) > previousTime) {
+                    setTime(serverDate === today ? parseInt(data?.time) : 0)
+                } else setTime(previousDate === today ? previousTime : 0)
             }
         } else if (storage_Time) {
             if (storage_Time[0] === today) {
@@ -34,7 +34,7 @@ export const Timer = () => {
             } else {
                 setTime(0)
             }
-        }
+        } else setTime(0)
     }, [isSuccess])
 
     useEffect(() => {

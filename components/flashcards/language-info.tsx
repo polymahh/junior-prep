@@ -28,9 +28,17 @@ const Numbercard = ({ name, number }: { name: string; number: number }) => {
     )
 }
 
-function LanguageInfo({ flashcards, activeFlashcard }: { flashcards: Flashcard[]; activeFlashcard: Flashcard }) {
+function LanguageInfo({
+    flashcards,
+    activeFlashcard,
+    language,
+}: {
+    flashcards: Flashcard[]
+    activeFlashcard: Flashcard
+    language: string
+}) {
     const isMutatingPosts = useIsMutating({
-        mutationKey: ["javascript_flashcards"],
+        mutationKey: [`${language}_flashcards`],
     })
 
     const cardsByResponse = useMemo(() => trackcards(), [isMutatingPosts])

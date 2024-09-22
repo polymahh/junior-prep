@@ -10,7 +10,7 @@ import React from "react"
 
 function LanguageFlashcards({ language }: { language: string }) {
     const { data, isLoading, isError } = useQuery({
-        queryKey: ["javascript_flashcards"],
+        queryKey: [`${language}_flashcards`],
         queryFn: async () => {
             const result = await flashcardsApi.getFlashcards(language)
             const cardsArray = result?.flashcards.Flashcard?.map((question: Flashcard) => {
